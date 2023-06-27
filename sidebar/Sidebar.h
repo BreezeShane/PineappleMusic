@@ -8,14 +8,22 @@
 
 #include <QWidget>
 #include <QFrame>
+#include <QListWidget>
 
 class Sidebar : public QFrame
 {
     Q_OBJECT
+
+
 public:
+    QListWidget *contentLists{};
+
     explicit Sidebar(QWidget *parent = nullptr);
     void setupUI();
+    void setupContentLists();
     ~Sidebar() override;
+
+
 };
 
 

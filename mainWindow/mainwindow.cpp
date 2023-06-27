@@ -1,6 +1,7 @@
 #include <QApplication>
 #include <QDesktopWidget>
 #include <QVBoxLayout>
+#include <iostream>
 #include "mainwindow.h"
 #include "sidebar/Sidebar.h"
 #include "topBar/TopBar.h"
@@ -31,34 +32,40 @@ MainWindow::MainWindow(QWidget *parent)
     setCentralWidget(centralwidget);
 
     // 主布局---水平布局
-    auto *mainLayout = new QHBoxLayout();
+    mainLayout = new QHBoxLayout();
     // 子布局---垂直布局
-    auto *subLayout = new QVBoxLayout();
-
+    subLayout = new QVBoxLayout();
     // 侧边栏
-    auto *sidebar = new Sidebar();
-
+    sidebar = new Sidebar();
     // 顶栏
-    auto *topBar = new TopBar();
-
+    topBar = new TopBar();
     // 内容显示区域
-    auto *mainContent = new MainContent();
-
+    mainContent = new MainContent();
     // 播放控制栏
-    auto *playBar = new PlayBar();
-
+    playBar = new PlayBar();
     // 子布局中加入三个部件
     subLayout->addWidget(topBar);
     subLayout->addWidget(mainContent);
     subLayout->addWidget(playBar);
-
     // 主布局中加入侧边栏和子布局
     mainLayout->addWidget(sidebar);
     mainLayout->addLayout(subLayout);
 
     // 主部件加载主布局
     centralwidget->setLayout(mainLayout);
+
+
+    connect(sidebar->contentLists,  //将显示列表与堆栈窗口关联，点击列表中的按键，显示相应的窗口
+            SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),
+            this, SLOT(changePage(QListWidgetItem*,QListWidgetItem*)));
 }
+
+void MainWindow::changePage(QListWidgetItem *current, QListWidgetItem *previous) const {
+    if (!current)
+        current = previous;
+    mainContent->contentPages->setCurrentIndex(sidebar->contentLists->row(current));
+}
+
 
 MainWindow::~MainWindow() = default;
 
