@@ -55,7 +55,7 @@ MainWindow::MainWindow(QWidget *parent)
     centralwidget->setLayout(mainLayout);
 
 
-    connect(sidebar->contentLists,  //将显示列表与堆栈窗口关联，点击列表中的按键，显示相应的窗口
+    connect(sidebar->getContentLists(),  //将显示列表与堆栈窗口关联，点击列表中的按键，显示相应的窗口
             SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),
             this, SLOT(changePage(QListWidgetItem*,QListWidgetItem*)));
 }
@@ -63,7 +63,7 @@ MainWindow::MainWindow(QWidget *parent)
 void MainWindow::changePage(QListWidgetItem *current, QListWidgetItem *previous) const {
     if (!current)
         current = previous;
-    mainContent->contentPages->setCurrentIndex(sidebar->contentLists->row(current));
+    mainContent->contentPages->setCurrentIndex(sidebar->getContentLists()->row(current));
 }
 
 

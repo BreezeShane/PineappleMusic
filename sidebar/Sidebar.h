@@ -9,20 +9,26 @@
 #include <QWidget>
 #include <QFrame>
 #include <QListWidget>
-
-class Sidebar : public QFrame
-{
-    Q_OBJECT
-
-
-public:
+class QHBoxLayout;
+class Sidebar : public QFrame {
+Q_OBJECT
+private:
+    QHBoxLayout *mainLayout{};
+    QListWidgetItem *page1Button{};
+    QListWidgetItem *page2Button{};
     QListWidget *contentLists{};
 
-    explicit Sidebar(QWidget *parent = nullptr);
-    void setupUI();
-    void setupContentLists();
-    ~Sidebar() override;
+public:
 
+    explicit Sidebar(QWidget *parent = nullptr);
+
+    void setupUI();
+
+    void setupContentLists();
+
+    QListWidget *getContentLists() const;
+
+    ~Sidebar() override;
 
 };
 
