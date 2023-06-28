@@ -63,7 +63,7 @@ MainWindow::MainWindow(QWidget *parent)
 void MainWindow::changePage(QListWidgetItem *current, QListWidgetItem *previous) const {
     if (!current)
         current = previous;
-    mainContent->contentPages->setCurrentIndex(sidebar->getContentLists()->row(current));
+    mainContent->getContentPages()->setCurrentIndex(sidebar->getContentLists()->row(current));
 }
 
 

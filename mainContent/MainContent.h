@@ -14,9 +14,11 @@ class MainContent : public QFrame
 {
     Q_OBJECT
 private:
-    QHBoxLayout * qhBoxLayout;
+    QHBoxLayout * qhBoxLayout{};
+    QStackedWidget *contentPages{};
+
 public:
-    QStackedWidget *contentPages;
+    QStackedWidget *getContentPages() const;
 
     explicit MainContent(QWidget *parent = nullptr);
     void setupUI();

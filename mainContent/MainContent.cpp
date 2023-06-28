@@ -14,8 +14,8 @@ MainContent::MainContent(QWidget *parent)
 }
 
 void MainContent::setupUI() {
-    this->setStyleSheet("border-radius: 10px;background-color: pink;");
     qhBoxLayout = new QHBoxLayout;
+    qhBoxLayout->setContentsMargins(0,0,0,0);    //去除外边距
     this->setLayout(qhBoxLayout);
 }
 
@@ -24,6 +24,10 @@ void MainContent::initContentPages() {
     contentPages->addWidget(new LocalMusic);
     contentPages->addWidget(new RecentList);
     qhBoxLayout->addWidget(contentPages);
+}
+
+QStackedWidget *MainContent::getContentPages() const {
+    return contentPages;
 }
 
 MainContent::~MainContent() = default;
