@@ -5,6 +5,7 @@
 #include "MainContent.h"
 #include "localMusic/LocalMusic.h"
 #include "playList/PlayList.h"
+#include "fromNet/FromNet.h"
 
 MainContent::MainContent(QWidget *parent)
         : QFrame(parent) {
@@ -23,6 +24,7 @@ void MainContent::initContentPages() {
     contentPages = new QStackedWidget;
     contentPages->addWidget(new LocalMusic);
     contentPages->addWidget(new PlayList);
+    contentPages->addWidget(new FromNet);
     qhBoxLayout->addWidget(contentPages);
 }
 

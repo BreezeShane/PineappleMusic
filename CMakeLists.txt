@@ -29,7 +29,9 @@ set(PROJECT_SOURCES
         localMusic/LocalMusic.cpp
         localMusic/LocalMusic.h
         playList/PlayList.cpp
-        playList/PlayList.h)
+        playList/PlayList.h
+        fromNet/FromNet.cpp
+        fromNet/FromNet.h)
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(PineappleMusic

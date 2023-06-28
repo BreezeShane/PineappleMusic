@@ -36,6 +36,10 @@ void Sidebar::setupContentLists() {
     page2Button->setTextAlignment(Qt::AlignHCenter);
     page2Button->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 
+    page3Button = new QListWidgetItem(contentLists);
+    page3Button->setText(tr("网络播放"));
+    page3Button->setTextAlignment(Qt::AlignHCenter);
+    page3Button->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 }
 
 QListWidget *Sidebar::getContentLists() const {

@@ -16,6 +16,7 @@ private:
     QHBoxLayout *mainLayout{};
     QListWidgetItem *page1Button{};
     QListWidgetItem *page2Button{};
+    QListWidgetItem *page3Button{};
     QListWidget *contentLists{};
 
 public:
