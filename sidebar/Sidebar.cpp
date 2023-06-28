@@ -32,7 +32,7 @@ void Sidebar::setupContentLists() {
     page1Button->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 
     page2Button = new QListWidgetItem(contentLists);
-    page2Button->setText(tr("最近播放"));
+    page2Button->setText(tr("播放列表"));
     page2Button->setTextAlignment(Qt::AlignHCenter);
     page2Button->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 

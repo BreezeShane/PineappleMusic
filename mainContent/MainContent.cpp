@@ -4,7 +4,7 @@
 
 #include "MainContent.h"
 #include "localMusic/LocalMusic.h"
-#include "recentList/RecentList.h"
+#include "playList/PlayList.h"
 
 MainContent::MainContent(QWidget *parent)
         : QFrame(parent) {
@@ -22,7 +22,7 @@ void MainContent::setupUI() {
 void MainContent::initContentPages() {
     contentPages = new QStackedWidget;
     contentPages->addWidget(new LocalMusic);
-    contentPages->addWidget(new RecentList);
+    contentPages->addWidget(new PlayList);
     qhBoxLayout->addWidget(contentPages);
 }
 

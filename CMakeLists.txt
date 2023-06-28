@@ -18,7 +18,18 @@ set(PROJECT_SOURCES
         main.cpp
         mainWindow/mainwindow.cpp
         mainWindow/mainwindow.h
-        sidebar/Sidebar.cpp sidebar/Sidebar.h topBar/TopBar.cpp topBar/TopBar.h mainContent/MainContent.cpp mainContent/MainContent.h playBar/PlayBar.cpp playBar/PlayBar.h localMusic/LocalMusic.cpp localMusic/LocalMusic.h recentList/RecentList.cpp recentList/RecentList.h)
+        sidebar/Sidebar.cpp
+        sidebar/Sidebar.h
+        topBar/TopBar.cpp
+        topBar/TopBar.h
+        mainContent/MainContent.cpp
+        mainContent/MainContent.h
+        playBar/PlayBar.cpp
+        playBar/PlayBar.h
+        localMusic/LocalMusic.cpp
+        localMusic/LocalMusic.h
+        playList/PlayList.cpp
+        playList/PlayList.h)
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(PineappleMusic
