@@ -12,8 +12,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     setupUI();
 
     connect(sidebar->getContentLists(),  //将显示列表与堆栈窗口关联，点击列表中的按键，显示相应的窗口
-            SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),
-            this, SLOT(changePage(QListWidgetItem*,QListWidgetItem*)));
+            SIGNAL(currentItemChanged(QListWidgetItem * , QListWidgetItem * )),
+            this, SLOT(changePage(QListWidgetItem * , QListWidgetItem * )));
 }
 
 void MainWindow::changePage(QListWidgetItem *current, QListWidgetItem *previous) const {
@@ -66,19 +66,30 @@ void MainWindow::setupUI() {
     mediaPlayer = new QMediaPlayer;
 
     retranslateUi();
+    //开始 - 暂停
     connect(playBar->getPbtStartOrPause(),
             SIGNAL(clicked()),
             this,
             SLOT(startOrPauseMusic()));
-
-    QObject::connect(mainContent->getLocalMusicPage()->getMusicListView(), &QListView::clicked, [&](const QModelIndex &index) {
+    //前一首
+    connect(playBar->getPbtPrevious(),
+            SIGNAL(clicked()),
+            this,
+            SLOT(previousMusic()));
+    //后一首
+    connect(playBar->getPbtNext(),
+            SIGNAL(clicked()),
+            this,
+            SLOT(nextMusic()));
+    connect(mainContent->getLocalMusicPage()->getMusicListView(), &QListView::clicked, [&](const QModelIndex &index) {
         // 获取所选项的QMediaPlayer对象，并播放音乐
-        if (mediaPlayer != nullptr && mediaPlayer->state()== QMediaPlayer::PlayingState){
+        if (mediaPlayer != nullptr && mediaPlayer->state() == QMediaPlayer::PlayingState) {
             mediaPlayer->stop();
         }
         int row = index.row();
         if (row >= 0 && row < mainContent->getLocalMusicPage()->getPlayList().size()) {
-            currentPlay = mainContent->getLocalMusicPage()->getPlayList()[row];
+            currentPlaylist = mainContent->getLocalMusicPage()->getPlayList();
+            currentPlay = currentPlaylist[row];
             mediaPlayer->setMedia(QUrl::fromLocalFile(currentPlay));
             mediaPlayer->play();
             playBar->getPbtStartOrPause()->setIcon(QIcon("../resource/icon/pause.png"));
@@ -107,7 +118,7 @@ void MainWindow::startOrPauseMusic() {
     if (mediaPlayer != nullptr && mediaPlayer->state() == QMediaPlayer::PlayingState) {
         mediaPlayer->stop();
         playBar->getPbtStartOrPause()->setIcon(QIcon("../resource/icon/start.png"));
-    } else{
+    } else {
         mediaPlayer->setMedia(QUrl::fromLocalFile(currentPlay));
         mediaPlayer->play();
         playBar->getPbtStartOrPause()->setIcon(QIcon("../resource/icon/pause.png"));
@@ -120,6 +131,36 @@ const QString &MainWindow::getCurrentPlay() const {
 
 void MainWindow::setCurrentPlay(const QString &musicPath) {
     MainWindow::currentPlay = musicPath;
+}
+
+void MainWindow::previousMusic() {
+    if (!currentPlaylist.empty() && !currentPlay.isEmpty()) {
+        mediaPlayer->stop();
+        for (QVector<QString>::iterator it = currentPlaylist.begin(); it != currentPlaylist.end(); it++) {
+            if (*it == currentPlay && it != currentPlaylist.begin()) {
+                currentPlay = *(it-1);
+                break;
+            }
+        }
+        mediaPlayer->setMedia(QUrl::fromLocalFile(currentPlay));
+        mediaPlayer->play();
+        playBar->getPbtStartOrPause()->setIcon(QIcon("../resource/icon/pause.png"));
+    }
+}
+
+void MainWindow::nextMusic() {
+    if (!currentPlaylist.empty() && !currentPlay.isEmpty()) {
+        mediaPlayer->stop();
+        for (QVector<QString>::iterator it = currentPlaylist.begin(); it != currentPlaylist.end() - 1; it++) {
+            if (*it == currentPlay) {
+                currentPlay = *(it+1);
+                break;
+            }
+        }
+        mediaPlayer->setMedia(QUrl::fromLocalFile(currentPlay));
+        mediaPlayer->play();
+        playBar->getPbtStartOrPause()->setIcon(QIcon("../resource/icon/pause.png"));
+    }
 }
 
 

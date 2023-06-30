@@ -113,7 +113,7 @@ void LocalMusic::updateMusicList() {
             if (line.startsWith("#")){
                 titleLines << line;
             } else{
-                playList.append(line);
+                playList.push_back(line);
             }
         }
     }
@@ -136,8 +136,9 @@ QListView *LocalMusic::getMusicListView() const {
     return musicListView;
 }
 
-const QList<QString> &LocalMusic::getPlayList() const {
+const QVector<QString> &LocalMusic::getPlayList() const {
     return playList;
 }
+
 
 LocalMusic::~LocalMusic() = default;

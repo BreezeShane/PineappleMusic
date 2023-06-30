@@ -23,7 +23,7 @@ private:
     QSpacerItem *horizontalSpacer{};
     QListView *musicListView{};
     QFile *playlistFile{};
-    QList<QString> playList{};
+    QVector<QString> playList{};
 
 
 public:
@@ -37,7 +37,7 @@ public:
 
     QListView *getMusicListView() const;
 
-    const QList<QString> &getPlayList() const;
+    const QVector<QString> &getPlayList() const;
 
     ~LocalMusic() override;
 

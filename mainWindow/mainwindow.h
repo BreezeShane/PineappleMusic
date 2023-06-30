@@ -50,6 +50,8 @@ public slots:
 
     void changePage(QListWidgetItem *current, QListWidgetItem *previous) const;
     void startOrPauseMusic();
+    void previousMusic();
+    void nextMusic();
 };
 
 #endif // MAINWINDOW_H
