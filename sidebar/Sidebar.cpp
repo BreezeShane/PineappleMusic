@@ -12,6 +12,7 @@ Sidebar::Sidebar(QWidget *parent)
 }
 
 void Sidebar::setupUI() {
+    this->setStyleSheet("border: 2px solid gray;border-radius:10px;padding:10px;");
     this->setFixedWidth(200);
     setupContentLists();
     mainLayout = new QHBoxLayout;
@@ -24,7 +25,7 @@ void Sidebar::setupContentLists() {
     contentLists = new QListWidget;
     contentLists->setCurrentRow(0);
     contentLists->setFont(QFont("宋体", 15));
-    contentLists->setStyleSheet("QListWidget { border: none; }");
+    contentLists->setStyleSheet("border: 2px solid gray;border-radius:10px;padding:5px;");
 
     page1Button = new QListWidgetItem(contentLists);  //设置显示列表
     page1Button->setText(tr("本地音乐"));

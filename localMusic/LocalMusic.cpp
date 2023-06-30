@@ -46,7 +46,10 @@ void LocalMusic::setupUI() {
     verticalLayout->addLayout(horizontalLayout);
 
     musicListView = new QListView(this);
-    musicListView->setStyleSheet("padding:5px;");
+    musicListView->setFont(QFont("宋体", 13));
+    musicListView->setStyleSheet("QListView{padding:5px;}"
+                                 "QListView::item{padding:5px;}"
+    );
     verticalLayout->addWidget(musicListView);
     playlistFile = new QFile("../resource/playlist.m3u");
 
