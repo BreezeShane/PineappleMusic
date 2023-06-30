@@ -20,8 +20,6 @@ set(PROJECT_SOURCES
         mainWindow/mainwindow.h
         sidebar/Sidebar.cpp
         sidebar/Sidebar.h
-        topBar/TopBar.cpp
-        topBar/TopBar.h
         mainContent/MainContent.cpp
         mainContent/MainContent.h
         playBar/PlayBar.cpp

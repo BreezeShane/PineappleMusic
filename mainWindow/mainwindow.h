@@ -4,7 +4,6 @@
 #include <QMainWindow>
 #include <QListWidgetItem>
 #include "sidebar/Sidebar.h"
-#include "topBar/TopBar.h"
 #include "mainContent/MainContent.h"
 #include "playBar/PlayBar.h"
 #include <QHBoxLayout>
@@ -21,8 +20,6 @@ public:
     QVBoxLayout *subLayout ;
     // 侧边栏
     Sidebar *sidebar;
-    // 顶栏
-    TopBar *topBar ;
     // 内容显示区域
     MainContent *mainContent;
     // 播放控制栏

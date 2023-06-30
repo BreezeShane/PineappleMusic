@@ -4,7 +4,6 @@
 #include <iostream>
 #include "mainwindow.h"
 #include "sidebar/Sidebar.h"
-#include "topBar/TopBar.h"
 #include "mainContent/MainContent.h"
 #include "playBar/PlayBar.h"
 
@@ -37,14 +36,11 @@ MainWindow::MainWindow(QWidget *parent)
     subLayout = new QVBoxLayout();
     // 侧边栏
     sidebar = new Sidebar();
-    // 顶栏
-    topBar = new TopBar();
     // 内容显示区域
     mainContent = new MainContent();
     // 播放控制栏
     playBar = new PlayBar();
-    // 子布局中加入三个部件
-    subLayout->addWidget(topBar);
+    // 子布局中加入两个部件
     subLayout->addWidget(mainContent);
     subLayout->addWidget(playBar);
     // 主布局中加入侧边栏和子布局
