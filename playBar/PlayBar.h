@@ -7,13 +7,29 @@
 
 
 #include <QFrame>
+#include <QPushButton>
+#include <QHBoxLayout>
 
 class PlayBar : public QFrame
 {
     Q_OBJECT
+private:
+    QHBoxLayout * qhBoxLayout{};
+    QSpacerItem *horizontalSpacer{};
+    QPushButton *pbtPrevious{};
+    QPushButton *pbtStartOrPause{};
+    QPushButton *pbtNext{};
 public:
     explicit PlayBar(QWidget *parent = nullptr);
     void setupUI();
+    void retranslateUi();
+
+    QPushButton *getPbtPrevious() const;
+
+    QPushButton *getPbtStartOrPause() const;
+
+    QPushButton *getPbtNext() const;
+
 
     ~PlayBar() override;
 };
