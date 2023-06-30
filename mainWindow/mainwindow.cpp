@@ -70,6 +70,20 @@ void MainWindow::setupUI() {
             SIGNAL(clicked()),
             this,
             SLOT(startOrPauseMusic()));
+
+    QObject::connect(mainContent->getLocalMusicPage()->getMusicListView(), &QListView::clicked, [&](const QModelIndex &index) {
+        // 获取所选项的QMediaPlayer对象，并播放音乐
+        if (mediaPlayer != nullptr && mediaPlayer->state()== QMediaPlayer::PlayingState){
+            mediaPlayer->stop();
+        }
+        int row = index.row();
+        if (row >= 0 && row < mainContent->getLocalMusicPage()->getPlayList().size()) {
+            currentPlay = mainContent->getLocalMusicPage()->getPlayList()[row];
+            mediaPlayer->setMedia(QUrl::fromLocalFile(currentPlay));
+            mediaPlayer->play();
+            playBar->getPbtStartOrPause()->setIcon(QIcon("../resource/icon/pause.png"));
+        }
+    });
 }
 
 void MainWindow::retranslateUi() {
@@ -92,9 +106,12 @@ void MainWindow::setCurrentPlaylist(const QVector<QString> &playlist) {
 void MainWindow::startOrPauseMusic() {
     if (mediaPlayer != nullptr && mediaPlayer->state() == QMediaPlayer::PlayingState) {
         mediaPlayer->stop();
+        playBar->getPbtStartOrPause()->setIcon(QIcon("../resource/icon/start.png"));
+    } else{
+        mediaPlayer->setMedia(QUrl::fromLocalFile(currentPlay));
+        mediaPlayer->play();
+        playBar->getPbtStartOrPause()->setIcon(QIcon("../resource/icon/pause.png"));
     }
-    mediaPlayer->setMedia(QUrl::fromLocalFile(currentPlay));
-    mediaPlayer->play();
 }
 
 const QString &MainWindow::getCurrentPlay() const {

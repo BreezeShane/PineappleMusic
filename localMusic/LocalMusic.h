@@ -23,8 +23,8 @@ private:
     QSpacerItem *horizontalSpacer{};
     QListView *musicListView{};
     QFile *playlistFile{};
-    QList<QMediaPlayer*> players;
-    QMediaPlayer *player;
+    QList<QString> playList{};
+
 
 public:
     explicit LocalMusic(QWidget *parent = nullptr);
@@ -34,6 +34,10 @@ public:
     void retranslateUi();
 
     void updateMusicList();
+
+    QListView *getMusicListView() const;
+
+    const QList<QString> &getPlayList() const;
 
     ~LocalMusic() override;
 

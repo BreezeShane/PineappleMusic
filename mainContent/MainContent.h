@@ -9,6 +9,9 @@
 #include <QFrame>
 #include <QStackedWidget>
 #include <QHBoxLayout>
+#include "localMusic/LocalMusic.h"
+#include "playList/PlayList.h"
+#include "fromNet/FromNet.h"
 
 class MainContent : public QFrame
 {
@@ -16,13 +19,28 @@ class MainContent : public QFrame
 private:
     QHBoxLayout * qhBoxLayout{};
     QStackedWidget *contentPages{};
-
+    LocalMusic* localMusicPage;
+    PlayList* playListPage;
+    FromNet* fromNetPage;
 public:
     QStackedWidget *getContentPages() const;
 
     explicit MainContent(QWidget *parent = nullptr);
     void setupUI();
     void initContentPages();
+
+    LocalMusic *getLocalMusicPage() const;
+
+    void setLocalMusicPage(LocalMusic *localMusicPage);
+
+    PlayList *getPlayListPage() const;
+
+    void setPlayListPage(PlayList *playListPage);
+
+    FromNet *getFromNetPage() const;
+
+    void setFromNetPage(FromNet *fromNetPage);
+
     ~MainContent() override;
 };
 

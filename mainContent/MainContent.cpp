@@ -3,9 +3,6 @@
 //
 
 #include "MainContent.h"
-#include "localMusic/LocalMusic.h"
-#include "playList/PlayList.h"
-#include "fromNet/FromNet.h"
 
 MainContent::MainContent(QWidget *parent)
         : QFrame(parent) {
@@ -21,15 +18,42 @@ void MainContent::setupUI() {
 }
 
 void MainContent::initContentPages() {
+    localMusicPage = new LocalMusic;
+    playListPage = new PlayList;
+    fromNetPage = new FromNet;
     contentPages = new QStackedWidget;
-    contentPages->addWidget(new LocalMusic);
-    contentPages->addWidget(new PlayList);
-    contentPages->addWidget(new FromNet);
+    contentPages->addWidget(localMusicPage);
+    contentPages->addWidget(playListPage);
+    contentPages->addWidget(fromNetPage);
     qhBoxLayout->addWidget(contentPages);
 }
 
 QStackedWidget *MainContent::getContentPages() const {
     return contentPages;
+}
+
+LocalMusic *MainContent::getLocalMusicPage() const {
+    return localMusicPage;
+}
+
+void MainContent::setLocalMusicPage(LocalMusic *localMusicPage) {
+    MainContent::localMusicPage = localMusicPage;
+}
+
+PlayList *MainContent::getPlayListPage() const {
+    return playListPage;
+}
+
+void MainContent::setPlayListPage(PlayList *playListPage) {
+    MainContent::playListPage = playListPage;
+}
+
+FromNet *MainContent::getFromNetPage() const {
+    return fromNetPage;
+}
+
+void MainContent::setFromNetPage(FromNet *fromNetPage) {
+    MainContent::fromNetPage = fromNetPage;
 }
 
 MainContent::~MainContent() = default;

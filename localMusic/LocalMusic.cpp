@@ -51,17 +51,6 @@ void LocalMusic::setupUI() {
     playlistFile = new QFile("../resource/playlist.m3u");
 
     connect(reloadMusicPbt, SIGNAL(clicked()), this, SLOT(scanLocalMusic()));
-    QObject::connect(musicListView, &QListView::clicked, [&](const QModelIndex &index) {
-        // 获取所选项的QMediaPlayer对象，并播放音乐
-        if (player != nullptr && player->state()== QMediaPlayer::PlayingState){
-            player->stop();
-        }
-        int row = index.row();
-        if (row >= 0 && row < players.size()) {
-            player = players[row];
-            player->play();
-        }
-    });
     updateMusicList();
     retranslateUi();
 }
@@ -121,9 +110,7 @@ void LocalMusic::updateMusicList() {
             if (line.startsWith("#")){
                 titleLines << line;
             } else{
-                auto *player = new QMediaPlayer;
-                player->setMedia(QUrl::fromLocalFile(line));
-                players.append(player);
+                playList.append(line);
             }
         }
     }
@@ -139,6 +126,15 @@ void LocalMusic::updateMusicList() {
             model->appendRow(item);
         }
     }
+    playlistFile->close();
+}
+
+QListView *LocalMusic::getMusicListView() const {
+    return musicListView;
+}
+
+const QList<QString> &LocalMusic::getPlayList() const {
+    return playList;
 }
 
 LocalMusic::~LocalMusic() = default;
