@@ -26,6 +26,8 @@ public:
     void setupUI();
     void retranslateUi();
     ~LocalMusic() override;
+public slots:
+    static void scanLocalMusic();
 };
 
 
