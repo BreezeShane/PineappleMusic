@@ -11,9 +11,10 @@
 #include <QSpacerItem>
 #include <QListView>
 #include <QVBoxLayout>
-
-class LocalMusic : public QFrame
-{
+#include <QFile>
+#include <QMediaPlayer>
+#include <QMediaMetaData>
+class LocalMusic : public QFrame {
 Q_OBJECT
 private:
     QVBoxLayout *verticalLayout{};
@@ -21,15 +22,25 @@ private:
     QPushButton *reloadMusicPbt{};
     QSpacerItem *horizontalSpacer{};
     QListView *musicListView{};
+    QFile *playlistFile{};
+    QList<QMediaPlayer*> players;
+    QMediaPlayer *player;
+
 public:
     explicit LocalMusic(QWidget *parent = nullptr);
-    void setupUI();
-    void retranslateUi();
-    ~LocalMusic() override;
-public slots:
-    static void scanLocalMusic();
-};
 
+    void setupUI();
+
+    void retranslateUi();
+
+    void updateMusicList();
+
+    ~LocalMusic() override;
+
+public slots:
+
+    void scanLocalMusic();
+};
 
 
 #endif //PINEAPPLEMUSIC_LOCALMUSIC_H

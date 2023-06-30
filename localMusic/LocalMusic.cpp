@@ -11,6 +11,7 @@
 #include <QMediaPlayer>
 #include <QMediaMetaData>
 #include <QJsonDocument>
+#include <QStandardItemModel>
 #include "LocalMusic.h"
 
 LocalMusic::LocalMusic(QWidget *parent)
@@ -45,16 +46,28 @@ void LocalMusic::setupUI() {
     verticalLayout->addLayout(horizontalLayout);
 
     musicListView = new QListView(this);
-//    musicListView->setStyleSheet("margin:5px;padding:5px;");
+    musicListView->setStyleSheet("padding:5px;");
     verticalLayout->addWidget(musicListView);
+    playlistFile = new QFile("../resource/playlist.m3u");
 
     connect(reloadMusicPbt, SIGNAL(clicked()), this, SLOT(scanLocalMusic()));
-
+    QObject::connect(musicListView, &QListView::clicked, [&](const QModelIndex &index) {
+        // 获取所选项的QMediaPlayer对象，并播放音乐
+        if (player != nullptr && player->state()== QMediaPlayer::PlayingState){
+            player->stop();
+        }
+        int row = index.row();
+        if (row >= 0 && row < players.size()) {
+            player = players[row];
+            player->play();
+        }
+    });
+    updateMusicList();
     retranslateUi();
 }
 
 void LocalMusic::retranslateUi() {
-    reloadMusicPbt->setText("重新加载");
+    reloadMusicPbt->setText("重新扫描");
     reloadMusicPbt->setIcon(QIcon("../resource/icon/search.svg"));
 } // retranslateUi
 
@@ -62,10 +75,8 @@ void LocalMusic::scanLocalMusic() {
     // 创建一个QMediaPlayer对象
     // 创建一个文件对话框，让用户选择要扫描的目录
     QString scanPath = QFileDialog::getExistingDirectory(nullptr, "Select Directory", QDir::homePath());
-    // 创建m3u文件
-    QFile playlistFile("../resource/playlist.m3u");
 
-    if (!playlistFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
+    if (!playlistFile->open(QIODevice::WriteOnly | QIODevice::Text)) {
         qWarning() << "Failed to open playlist file for writing.";
         return;
     }
@@ -85,13 +96,49 @@ void LocalMusic::scanLocalMusic() {
 //        auto title = player.metaData("Title").toString();
 
         // 将元数据写入m3u文件中
-        QTextStream out(&playlistFile);
+        QTextStream out(playlistFile);
 //        out << "#EXTINF:-1," << artist << " - " << title << "\n";
         out << "#EXTINF:" << fileInfo.fileName() << endl;
         out << fileInfo.filePath() << endl;
     }
 
-    playlistFile.close();
+    playlistFile->close();
+    updateMusicList();
+}
+
+void LocalMusic::updateMusicList() {
+    auto* model = new QStandardItemModel;
+    musicListView->setModel(model);
+    if (!playlistFile->open(QIODevice::ReadOnly | QIODevice::Text)) {
+        qWarning() << "Failed to open playlist file for reading.";
+        return ;
+    }
+    QTextStream in(playlistFile);
+    QStringList titleLines;
+    while (!in.atEnd()) {
+        QString line = in.readLine();
+        if (!line.isEmpty()) {
+            if (line.startsWith("#")){
+                titleLines << line;
+            } else{
+                auto *player = new QMediaPlayer;
+                player->setMedia(QUrl::fromLocalFile(line));
+                players.append(player);
+            }
+        }
+    }
+
+    // 添加歌曲信息到模型中
+    for (const QString &line : titleLines) {
+        QStringList parts = line.split(QRegExp(":"));
+        if (parts.size() == 2) {
+//            QString artist = parts[0];
+//            QString title = parts[1];
+            QString title = parts[1];
+            auto *item = new QStandardItem(title);
+            model->appendRow(item);
+        }
+    }
 }
 
 LocalMusic::~LocalMusic() = default;
