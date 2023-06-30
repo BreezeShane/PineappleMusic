@@ -7,13 +7,25 @@
 #include "mainContent/MainContent.h"
 #include "playBar/PlayBar.h"
 
-MainWindow::MainWindow(QWidget *parent)
-        : QMainWindow(parent) {
+MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 
-    //标题
-    this->setWindowTitle("Pineapple Music");
+    setupUI();
+
+    connect(sidebar->getContentLists(),  //将显示列表与堆栈窗口关联，点击列表中的按键，显示相应的窗口
+            SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),
+            this, SLOT(changePage(QListWidgetItem*,QListWidgetItem*)));
+}
+
+void MainWindow::changePage(QListWidgetItem *current, QListWidgetItem *previous) const {
+    if (!current)
+        current = previous;
+    mainContent->getContentPages()->setCurrentIndex(sidebar->getContentLists()->row(current));
+}
+
+void MainWindow::setupUI() {
     //主窗口最小大小
     this->setMinimumSize(1200, 800);
+
     // 获取屏幕的宽度和高度
     QDesktopWidget *desktop = QApplication::desktop();
     int screenWidth = desktop->width();
@@ -50,16 +62,47 @@ MainWindow::MainWindow(QWidget *parent)
     // 主部件加载主布局
     centralwidget->setLayout(mainLayout);
 
+    //实例化播放器
+    mediaPlayer = new QMediaPlayer;
 
-    connect(sidebar->getContentLists(),  //将显示列表与堆栈窗口关联，点击列表中的按键，显示相应的窗口
-            SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),
-            this, SLOT(changePage(QListWidgetItem*,QListWidgetItem*)));
+    retranslateUi();
+    connect(playBar->getPbtStartOrPause(),
+            SIGNAL(clicked()),
+            this,
+            SLOT(startOrPauseMusic()));
 }
 
-void MainWindow::changePage(QListWidgetItem *current, QListWidgetItem *previous) const {
-    if (!current)
-        current = previous;
-    mainContent->getContentPages()->setCurrentIndex(sidebar->getContentLists()->row(current));
+void MainWindow::retranslateUi() {
+    //标题
+    this->setWindowTitle("Pineapple Music");
+}
+
+QMediaPlayer *MainWindow::getMediaPlayer() const {
+    return mediaPlayer;
+}
+
+const QVector<QString> &MainWindow::getCurrentPlaylist() const {
+    return currentPlaylist;
+}
+
+void MainWindow::setCurrentPlaylist(const QVector<QString> &playlist) {
+    MainWindow::currentPlaylist = playlist;
+}
+
+void MainWindow::startOrPauseMusic() {
+    if (mediaPlayer != nullptr && mediaPlayer->state() == QMediaPlayer::PlayingState) {
+        mediaPlayer->stop();
+    }
+    mediaPlayer->setMedia(QUrl::fromLocalFile(currentPlay));
+    mediaPlayer->play();
+}
+
+const QString &MainWindow::getCurrentPlay() const {
+    return currentPlay;
+}
+
+void MainWindow::setCurrentPlay(const QString &musicPath) {
+    MainWindow::currentPlay = musicPath;
 }
 
 

@@ -8,27 +8,48 @@
 #include "playBar/PlayBar.h"
 #include <QHBoxLayout>
 #include <QVBoxLayout>
+#include <QMediaPlayer>
 
-class MainWindow : public QMainWindow
-{
+class MainWindow : public QMainWindow {
     Q_OBJECT
-
-public:
+private:
     // 主布局---水平布局
-    QHBoxLayout *mainLayout;
+    QHBoxLayout *mainLayout{};
     // 子布局---垂直布局
-    QVBoxLayout *subLayout ;
+    QVBoxLayout *subLayout{};
     // 侧边栏
-    Sidebar *sidebar;
+    Sidebar *sidebar{};
     // 内容显示区域
-    MainContent *mainContent;
+    MainContent *mainContent{};
     // 播放控制栏
-    PlayBar *playBar;
-
+    PlayBar *playBar{};
+    //媒体播放器
+    QMediaPlayer *mediaPlayer{};
+    QVector<QString> currentPlaylist{};
+    QString currentPlay{};
+public:
     explicit MainWindow(QWidget *parent = nullptr);
-    ~MainWindow() override;
-public slots:
-    void changePage(QListWidgetItem *current, QListWidgetItem *previous) const;
 
+    void setupUI();
+
+    void retranslateUi();
+
+    QMediaPlayer *getMediaPlayer() const;
+
+    const QVector<QString> &getCurrentPlaylist() const;
+
+    void setCurrentPlaylist(const QVector<QString> &playlist);
+
+    const QString &getCurrentPlay() const;
+
+    void setCurrentPlay(const QString &musicPath);
+
+    ~MainWindow() override;
+
+public slots:
+
+    void changePage(QListWidgetItem *current, QListWidgetItem *previous) const;
+    void startOrPauseMusic();
 };
+
 #endif // MAINWINDOW_H
