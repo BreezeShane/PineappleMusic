@@ -14,9 +14,10 @@ class Sidebar : public QFrame {
 Q_OBJECT
 private:
     QHBoxLayout *mainLayout{};
-    QListWidgetItem *page1Button{};
-    QListWidgetItem *page2Button{};
-    QListWidgetItem *page3Button{};
+    QListWidgetItem *localMusic_item{};
+    QListWidgetItem *playList_item{};
+    QListWidgetItem *fromNet_item{};
+    QListWidgetItem *chatroom_item{};
     QListWidget *contentLists{};
 
 public:

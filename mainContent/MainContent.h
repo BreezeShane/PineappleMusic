@@ -12,7 +12,7 @@
 #include "localMusic/LocalMusic.h"
 #include "playList/PlayList.h"
 #include "fromNet/FromNet.h"
-
+#include "chatroom/Chatroom.h"
 class MainContent : public QFrame
 {
     Q_OBJECT
@@ -22,6 +22,7 @@ private:
     LocalMusic* localMusicPage;
     PlayList* playListPage;
     FromNet* fromNetPage;
+    Chatroom* chatroomPage;
 public:
     QStackedWidget *getContentPages() const;
 

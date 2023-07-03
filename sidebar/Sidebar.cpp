@@ -27,20 +27,25 @@ void Sidebar::setupContentLists() {
     contentLists->setFont(QFont("宋体", 15));
     contentLists->setStyleSheet("border: 2px solid gray;border-radius:10px;padding:5px;");
 
-    page1Button = new QListWidgetItem(contentLists);  //设置显示列表
-    page1Button->setText(tr("本地音乐"));
-    page1Button->setTextAlignment(Qt::AlignHCenter);
-    page1Button->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+    localMusic_item = new QListWidgetItem(contentLists);  //设置显示列表
+    localMusic_item->setText(tr("本地音乐"));
+    localMusic_item->setTextAlignment(Qt::AlignHCenter);
+    localMusic_item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 
-    page2Button = new QListWidgetItem(contentLists);
-    page2Button->setText(tr("播放列表"));
-    page2Button->setTextAlignment(Qt::AlignHCenter);
-    page2Button->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+    playList_item = new QListWidgetItem(contentLists);
+    playList_item->setText(tr("播放列表"));
+    playList_item->setTextAlignment(Qt::AlignHCenter);
+    playList_item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 
-    page3Button = new QListWidgetItem(contentLists);
-    page3Button->setText(tr("网络播放"));
-    page3Button->setTextAlignment(Qt::AlignHCenter);
-    page3Button->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+    fromNet_item = new QListWidgetItem(contentLists);
+    fromNet_item->setText(tr("网络播放"));
+    fromNet_item->setTextAlignment(Qt::AlignHCenter);
+    fromNet_item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+
+    chatroom_item = new QListWidgetItem(contentLists);
+    chatroom_item->setText(tr("聊天室"));
+    chatroom_item->setTextAlignment(Qt::AlignHCenter);
+    chatroom_item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 }
 
 QListWidget *Sidebar::getContentLists() const {
