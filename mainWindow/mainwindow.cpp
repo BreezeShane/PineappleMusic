@@ -5,6 +5,7 @@
 #include <QTime>
 #include <QTimer>
 #include <QPropertyAnimation>
+#include <QMessageBox>
 #include "mainwindow.h"
 #include "sidebar/Sidebar.h"
 #include "mainContent/MainContent.h"
@@ -104,6 +105,20 @@ void MainWindow::setupUI() {
     connect(mediaPlayer,SIGNAL(durationChanged(qint64)),this,SLOT(onDurationChanged(qint64)));
     connect(playBar->getSlider(),SIGNAL(valueChanged(int)),this,SLOT(slot_valueChanged_progress(int)));
     connect(playBar->getSlider(), SIGNAL(sliderPressed()), this, SLOT(onSliderPressed(qint64,int)));
+
+    connect(mainContent->getFromNetPage()->getFindButton(),&QPushButton::clicked,[=](){
+        qDebug()<<"播放"<<endl;
+        QString url_text = mainContent->getFromNetPage()->geturl_in()->text();
+        if(url_text == NULL){
+            QMessageBox::information(this,"提示","请输入url");
+            return ;
+        }
+        QUrl url(url_text);
+        mediaPlayer->setMedia(url);
+        mediaPlayer->play();
+        currentPlay = url_text;
+
+    });
 }
 
 void MainWindow::retranslateUi() {
