@@ -99,9 +99,11 @@ void MainWindow::setupUI() {
             playBar->getSlider()->setSliderPosition(0);
         }
     });
+    isSliderPressed = false;
     connect(mediaPlayer,SIGNAL(positionChanged(qint64)),this,SLOT(onPositionChanged(qint64)));
     connect(mediaPlayer,SIGNAL(durationChanged(qint64)),this,SLOT(onDurationChanged(qint64)));
     connect(playBar->getSlider(),SIGNAL(valueChanged(int)),this,SLOT(slot_valueChanged_progress(int)));
+    connect(playBar->getSlider(), SIGNAL(sliderPressed()), this, SLOT(onSliderPressed(qint64,int)));
 }
 
 void MainWindow::retranslateUi() {
@@ -184,7 +186,7 @@ void MainWindow::onDurationChanged(qint64 duration)
     int secs = duration/1000; //全部秒数
     int mins = secs/60;//分
     secs = secs % 60;//秒
-    durationTime = QString::asprintf("%d:%d",mins,secs);
+    durationTime = QString::asprintf("%02d:%02d",mins,secs);
     playBar->getCurrentProcess()->setText(positionTime);
     playBar->getFinalProcess()->setText(durationTime);
 }
@@ -198,8 +200,15 @@ void MainWindow::onPositionChanged(qint64 position)
     int secs = position/1000;
     int mins = secs/60;
     secs = secs % 60;
-    positionTime = QString::asprintf("%d:%d",mins,secs);
-    //ui->label->setText(positionTime+"/"+durationTime);
+    positionTime = QString::asprintf("%02d:%02d",mins,secs);//改格式为00:00
+    playBar->getCurrentProcess()->setText(positionTime);
+}
+
+void MainWindow::onSliderPressed(qint64 position,int value) {
+    playBar->getSlider()->setSliderPosition(position);
+    mediaPlayer->pause();
+    playBar->getCurrentProcess()->setText(positionTime);
+    mediaPlayer->setPosition(playBar->getSlider()->value()*mediaPlayer->duration()/playBar->getSlider()->maximum()); // 设置播放器的当前进度
 }
 
 MainWindow::~MainWindow() = default;

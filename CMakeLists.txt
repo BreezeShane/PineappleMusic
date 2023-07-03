@@ -29,7 +29,7 @@ set(PROJECT_SOURCES
         playList/PlayList.cpp
         playList/PlayList.h
         fromNet/FromNet.cpp
-        fromNet/FromNet.h chatroom/Chatroom.cpp chatroom/Chatroom.h)
+        fromNet/FromNet.h chatroom/Chatroom.cpp chatroom/Chatroom.h qSlider/MySlider.cpp qSlider/MySlider.h)
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(PineappleMusic

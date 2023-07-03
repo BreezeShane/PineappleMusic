@@ -29,6 +29,7 @@ private:
     QString currentPlay{};
     QString durationTime;
     QString positionTime;
+    bool isSliderPressed;
 public:
     explicit MainWindow(QWidget *parent = nullptr);
 
@@ -57,6 +58,7 @@ public slots:
     void slot_valueChanged_progress(int value);
     void onDurationChanged(qint64 duration);
     void onPositionChanged(qint64 position);
+    void onSliderPressed(qint64,int);
 };
 
 #endif // MAINWINDOW_H
