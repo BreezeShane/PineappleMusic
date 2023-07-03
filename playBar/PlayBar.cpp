@@ -18,10 +18,42 @@ void PlayBar::setupUI() {
     pbtPrevious = new QPushButton();
     pbtStartOrPause = new QPushButton();
     pbtNext = new QPushButton();
+    currentProcess = new QLabel();
+    finalProcess = new QLabel();
+    slider = new QSlider(Qt::Horizontal, this);
+    slider->setStyleSheet("QSlider::groove:horizontal {"    //修改进度条样式
+                          "border: none;"
+                          "height: 8px;"
+                          "border-radius: 0px;"
+                          "background: lightgray;"
+                          "}"
+                          "QSlider::handle:horizontal {"
+                          "background: rgb(255, 120, 0);"
+                          "border: none;"
+                          "width: 16px;"
+                          "height: 16px;"
+                          "margin: -5px 0;"
+                          "border-radius: 8px;"
+                          "}"
+                          "QSlider::sub-page:horizontal {"
+                          "height: 4px;"
+                          "border-radius: 3px;"
+                          "background: rgb(255, 170, 0);"
+                          "}"
+                          "QSlider::add-page:horizontal {"
+                          "height: 4px;"
+                          "border-radius: 3px;"
+                          "background: lightgray;"
+                          "}");
+
     qhBoxLayout->addItem(horizontalSpacer);
+    qhBoxLayout->addWidget(currentProcess);
+    qhBoxLayout->addWidget(slider);
+    qhBoxLayout->addWidget(finalProcess);
     qhBoxLayout->addWidget(pbtPrevious);
     qhBoxLayout->addWidget(pbtStartOrPause);
     qhBoxLayout->addWidget(pbtNext);
+
     this->setLayout(qhBoxLayout);
     retranslateUi();
 }
@@ -48,5 +80,15 @@ QPushButton *PlayBar::getPbtNext() const {
     return pbtNext;
 }
 
+QSlider *PlayBar::getSlider() const {
+    return slider;
+}
 
+QLabel * PlayBar::getCurrentProcess() const {
+    return currentProcess;
+}
+
+QLabel * PlayBar::getFinalProcess() const {
+    return finalProcess;
+}
 PlayBar::~PlayBar() = default;

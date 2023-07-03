@@ -9,7 +9,9 @@
 #include <QFrame>
 #include <QPushButton>
 #include <QHBoxLayout>
-
+#include <QProgressBar>
+#include <QSlider>
+#include <QLabel>
 class PlayBar : public QFrame
 {
     Q_OBJECT
@@ -19,6 +21,9 @@ private:
     QPushButton *pbtPrevious{};
     QPushButton *pbtStartOrPause{};
     QPushButton *pbtNext{};
+    QSlider *slider{};
+    QLabel *currentProcess{};
+    QLabel *finalProcess{};
 public:
     explicit PlayBar(QWidget *parent = nullptr);
     void setupUI();
@@ -30,8 +35,15 @@ public:
 
     QPushButton *getPbtNext() const;
 
+    QSlider *getSlider() const;
+
+    QLabel * getCurrentProcess() const;
+
+    QLabel * getFinalProcess() const;
 
     ~PlayBar() override;
+
+    static const QMetaObject &getStaticMetaObject();
 };
 
 

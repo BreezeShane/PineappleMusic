@@ -2,11 +2,13 @@
 #include <QDesktopWidget>
 #include <QVBoxLayout>
 #include <iostream>
+#include <QTime>
+#include <QTimer>
+#include <QPropertyAnimation>
 #include "mainwindow.h"
 #include "sidebar/Sidebar.h"
 #include "mainContent/MainContent.h"
 #include "playBar/PlayBar.h"
-
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 
     setupUI();
@@ -52,6 +54,7 @@ void MainWindow::setupUI() {
     mainContent = new MainContent();
     // 播放控制栏
     playBar = new PlayBar();
+
     // 子布局中加入两个部件
     subLayout->addWidget(mainContent);
     subLayout->addWidget(playBar);
@@ -93,8 +96,12 @@ void MainWindow::setupUI() {
             mediaPlayer->setMedia(QUrl::fromLocalFile(currentPlay));
             mediaPlayer->play();
             playBar->getPbtStartOrPause()->setIcon(QIcon("../resource/icon/pause.png"));
+            playBar->getSlider()->setSliderPosition(0);
         }
     });
+    connect(mediaPlayer,SIGNAL(positionChanged(qint64)),this,SLOT(onPositionChanged(qint64)));
+    connect(mediaPlayer,SIGNAL(durationChanged(qint64)),this,SLOT(onDurationChanged(qint64)));
+    connect(playBar->getSlider(),SIGNAL(valueChanged(int)),this,SLOT(slot_valueChanged_progress(int)));
 }
 
 void MainWindow::retranslateUi() {
@@ -163,6 +170,37 @@ void MainWindow::nextMusic() {
     }
 }
 
+//进度条滑块数值改变槽函数
+void MainWindow::slot_valueChanged_progress(int value)
+{
+    if(qAbs (mediaPlayer->position() - value ) > 99)//不加会出现卡顿
+        mediaPlayer->setPosition(value);    //设置播放器的当前进度
+}
+
+//当前媒体总时长改变槽函数
+void MainWindow::onDurationChanged(qint64 duration)
+{
+    playBar->getSlider()->setMaximum(duration); //设置进度条最大值 也就是歌曲时长 ms
+    int secs = duration/1000; //全部秒数
+    int mins = secs/60;//分
+    secs = secs % 60;//秒
+    durationTime = QString::asprintf("%d:%d",mins,secs);
+    playBar->getCurrentProcess()->setText(positionTime);
+    playBar->getFinalProcess()->setText(durationTime);
+}
+
+//当前进度改变槽函数
+void MainWindow::onPositionChanged(qint64 position)
+{
+    if(playBar->getSlider()->isSliderDown())
+        return;//如果手动调整进度条，则不处理
+    playBar->getSlider()->setSliderPosition(position);
+    int secs = position/1000;
+    int mins = secs/60;
+    secs = secs % 60;
+    positionTime = QString::asprintf("%d:%d",mins,secs);
+    //ui->label->setText(positionTime+"/"+durationTime);
+}
 
 MainWindow::~MainWindow() = default;
 

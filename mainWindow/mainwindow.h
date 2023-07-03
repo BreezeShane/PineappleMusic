@@ -27,6 +27,8 @@ private:
     QMediaPlayer *mediaPlayer{};
     QVector<QString> currentPlaylist{};
     QString currentPlay{};
+    QString durationTime;
+    QString positionTime;
 public:
     explicit MainWindow(QWidget *parent = nullptr);
 
@@ -52,6 +54,9 @@ public slots:
     void startOrPauseMusic();
     void previousMusic();
     void nextMusic();
+    void slot_valueChanged_progress(int value);
+    void onDurationChanged(qint64 duration);
+    void onPositionChanged(qint64 position);
 };
 
 #endif // MAINWINDOW_H
