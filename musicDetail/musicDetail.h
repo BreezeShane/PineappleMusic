@@ -1,0 +1,14 @@
+//
+// Created by 86188 on 2023/7/4.
+//
+
+#ifndef PINEAPPLEMUSIC_MUSICDETAIL_H
+#define PINEAPPLEMUSIC_MUSICDETAIL_H
+
+
+class musicDetail {
+
+};
+
+
+#endif //PINEAPPLEMUSIC_MUSICDETAIL_H
