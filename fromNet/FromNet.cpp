@@ -18,6 +18,9 @@
 #include <QListView>
 #include <QStringListModel>
 #include <QUrl>
+#include <QDesktopServices>
+#include <QFileDialog>
+#include <QNetworkAccessManager>
 
 
 FromNet::FromNet(QWidget *parent)
@@ -41,12 +44,12 @@ void FromNet::setupUI() {
     url_in->setFixedSize(500,30);
     find = new QPushButton("Find");
     find->setFixedSize(120,30);
-    download = new QPushButton("download");
-    download->setFixedSize(120,30);
+    downloads = new QPushButton("download");
+    downloads->setFixedSize(120,30);
 
     url_layout->addWidget(url_in);
     url_layout->addWidget(find);
-    url_layout->addWidget(download);
+    url_layout->addWidget(downloads);
 
     //搜索结果显示
     QWidget *result = new QWidget(this);
@@ -85,23 +88,25 @@ void FromNet::setupUI() {
 }
 
 void FromNet::on_find_cliked() {
-//    qDebug()<<"播放"<<endl;
-//    QString url_text = url_in->text();
-//    if(url_text == NULL){
-//        QMessageBox::information(this,"提示","请输入url");
-//        return ;
-//    }
-//    QMediaPlayer *player = new QMediaPlayer;
-//    QUrl url(url_text);
-//    player->setMedia(url);
-//    player->play();
+    qDebug()<<"播放"<<endl;
+    QString url_text = url_in->text();
+    if(url_text == NULL){
+        QMessageBox::information(this,"提示","请输入url");
+        return ;
+    }
+    player = new QMediaPlayer;
+    QUrl url(url_text);
+    player->setMedia(url);
+    player->play();
 
 }
 
 void FromNet::on_download_cliked() {
 
 
+
 }
+
 
 QPushButton *FromNet::getFindButton() const {
     return find;

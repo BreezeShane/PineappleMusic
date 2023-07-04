@@ -145,9 +145,12 @@ void MainWindow::setupUI() {
             return ;
         }
         QUrl url(url_text);
+
         mediaPlayer->setMedia(url);
         mediaPlayer->play();
         currentPlay = url_text;
+        
+
 
     });
 }

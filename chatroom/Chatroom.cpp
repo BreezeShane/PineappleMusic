@@ -4,10 +4,14 @@
 
 #include "Chatroom.h"
 #include <QDebug>
+#include <QMessageBox>
+
 Chatroom::Chatroom(QWidget *parent)
         : QFrame(parent) {
 
     setupUI();
+
+    connect(pbtSend,&QPushButton::clicked,this,&Chatroom::info_Send);
 }
 
 void Chatroom::setupUI() {
@@ -49,7 +53,48 @@ void Chatroom::retranslateUi() {
     nickNameLabel->setIcon(QIcon("../resource/icon/nickname.svg"));
 //    pbtSend->setText("发送");
     pbtSend->setIcon(QIcon("../resource/icon/send.svg"));
-}// retranslateUi
+}
+
+void Chatroom::server_start() {
+    socket = new QTcpSocket;
+    //连接服务器
+    QString ip = "43.139.97.111";
+    QString port = "9090";
+    socket->connectToHost(QHostAddress(ip),port.toUShort());
+
+    connect(socket,&QTcpSocket::connected,[=](){
+        QMessageBox::information(this,"连接提示","连接成功");
+    });
+
+    connect(socket,&QTcpSocket::disconnected,[=](){
+        QMessageBox::information(this,"连接提示","连接断开");
+    });
+
+    connect(socket,&QTcpSocket::readyRead,this,&Chatroom::ClientDate);
+
+    QByteArray data = QString(messageInput->text()).toUtf8();
+    socket->write(data);
+
+}
+
+void Chatroom::newClent() {
+
+}
+
+//接收信息
+void Chatroom::ClientDate() {
+//    client = (QTcpSocket *)sender();
+//    //ui->textEdit->append(QString(client->readAll()).toUtf8());
+//    qDebug()<<QString(client->readAll())<<endl;
+
+    qDebug()<<QString(socket->readAll())<<endl;
+}
+
+void Chatroom::info_Send() {
+    server_start();
+}
+// retranslateUi
+
 
 
 Chatroom::~Chatroom() = default;
