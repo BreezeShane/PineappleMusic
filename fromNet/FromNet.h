@@ -9,6 +9,7 @@
 #include <QMediaPlayer>
 #include <QPushButton>
 #include <QLineEdit>
+#include <QSettings>
 
 class FromNet : public QFrame
 {
@@ -27,11 +28,13 @@ private slots:
     void on_download_cliked();
 
 
-
 private:
     QPushButton *find;
-    QPushButton *download;
+    QPushButton *downloads;
     QLineEdit *url_in;
+    QMediaPlayer *player;
+
+
 
     ~FromNet() override;
 };

@@ -23,7 +23,7 @@ private:
     QPushButton *pbtPrevious{};
     QPushButton *pbtStartOrPause{};
     QPushButton *pbtNext{};
-    MySlider *slider{};
+    MySlider *sliderProcess{};
     QLabel *currentProcess{};
     QLabel *finalProcess{};
 public:

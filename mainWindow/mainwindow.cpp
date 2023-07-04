@@ -13,7 +13,7 @@
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 
     setupUI();
-
+    playBar->getSlider()->installEventFilter(this);
     connect(sidebar->getContentLists(),  //将显示列表与堆栈窗口关联，点击列表中的按键，显示相应的窗口
             SIGNAL(currentItemChanged(QListWidgetItem * , QListWidgetItem * )),
             this, SLOT(changePage(QListWidgetItem * , QListWidgetItem * )));
@@ -131,11 +131,10 @@ void MainWindow::setupUI() {
             playBar->getSlider()->setSliderPosition(0);
         }
     });
-    isSliderPressed = false;
     connect(mediaPlayer,SIGNAL(positionChanged(qint64)),this,SLOT(onPositionChanged(qint64)));
     connect(mediaPlayer,SIGNAL(durationChanged(qint64)),this,SLOT(onDurationChanged(qint64)));
     connect(playBar->getSlider(),SIGNAL(valueChanged(int)),this,SLOT(slot_valueChanged_progress(int)));
-    connect(playBar->getSlider(), SIGNAL(sliderPressed()), this, SLOT(onSliderPressed(qint64,int)));
+    connect(playBar->getSlider(), SIGNAL(sliderPressed()), this, SLOT(onSliderPressed()));
 
     connect(mainContent->getFromNetPage()->getFindButton(),&QPushButton::clicked,[=](){
         qDebug()<<"播放"<<endl;
@@ -145,11 +144,15 @@ void MainWindow::setupUI() {
             return ;
         }
         QUrl url(url_text);
+
         mediaPlayer->setMedia(url);
         mediaPlayer->play();
         currentPlay = url_text;
+        
+
 
     });
+    connect(playBar->getSlider(), SIGNAL(sliderPressed()), this, SLOT(onSliderPressed()));
 }
 
 void MainWindow::retranslateUi() {
@@ -322,18 +325,30 @@ void MainWindow::onPositionChanged(qint64 position)
     if(playBar->getSlider()->isSliderDown())
         return;//如果手动调整进度条，则不处理
     playBar->getSlider()->setSliderPosition(position);
-    int secs = position/1000;
-    int mins = secs/60;
-    secs = secs % 60;
-    positionTime = QString::asprintf("%02d:%02d",mins,secs);//改格式为00:00
-    playBar->getCurrentProcess()->setText(positionTime);
+    updateCurrentProcessText();
 }
 
-void MainWindow::onSliderPressed(qint64 position,int value) {
-    playBar->getSlider()->setSliderPosition(position);
-    mediaPlayer->pause();
-    playBar->getCurrentProcess()->setText(positionTime);
+void MainWindow::onSliderPressed() {
+    updateCurrentProcessText();
     mediaPlayer->setPosition(playBar->getSlider()->value()*mediaPlayer->duration()/playBar->getSlider()->maximum()); // 设置播放器的当前进度
+}
+void MainWindow::updateCurrentProcessText()
+{
+    if (mediaPlayer != nullptr) {
+        qint64 position = mediaPlayer->position();
+        int secs = position / 1000;
+        int mins = secs / 60;
+        secs = secs % 60;
+        positionTime = QString::asprintf("%02d:%02d", mins, secs);
+        playBar->getCurrentProcess()->setText(positionTime);
+    }
+}
+bool MainWindow::eventFilter(QObject *obj, QEvent *event)
+{
+    if (obj == playBar->getSlider() && event->type() == QEvent::MouseMove) {
+        updateCurrentProcessText();
+    }
+    return QMainWindow::eventFilter(obj, event);
 }
 
 MainWindow::~MainWindow() = default;
