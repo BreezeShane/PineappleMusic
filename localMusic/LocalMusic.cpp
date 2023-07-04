@@ -50,10 +50,14 @@ void LocalMusic::setupUI() {
     musicListView->setStyleSheet("QListView{padding:5px;}"
                                  "QListView::item{padding:5px;}"
     );
+    addMusicPlayPbt=new QPushButton("添加播放");
     verticalLayout->addWidget(musicListView);
+    verticalLayout->addWidget(addMusicPlayPbt);
     localPlayListFile = new QFile("../resource/local_playlist.m3u");
+    musicPlaylist=new QFile("../resource/musicPlaylist.m3u");
 
     connect(reloadMusicPbt, SIGNAL(clicked()), this, SLOT(scanLocalMusic()));
+    connect(addMusicPlayPbt, &QPushButton::clicked, this, &LocalMusic::addMusicToPlaylist);
     updateMusicList();
     retranslateUi();
 }
@@ -159,7 +163,28 @@ void LocalMusic::updateMusicList() {
     }
     localPlayListFile->close();
 }
-
+void LocalMusic::addMusicToPlaylist() {
+    QModelIndex index = musicListView->currentIndex();
+    int row=index.row();
+    currentPlay = playList[row];
+    QStandardItemModel *playlistModel=new QStandardItemModel;
+    QString musicName;
+    if (index.isValid())
+    {
+        musicName = index.data(Qt::DisplayRole).toString();
+        qDebug()<<"jjj"<<index.data(Qt::DisplayRole).toString()<<endl;
+        playlistModel->appendRow(new QStandardItem(musicName));
+    }
+    //把播放文件写入musicPlayList.m3u文件
+    if (!musicPlaylist->open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text)) {
+        qWarning() << "Failed to open playlist file for writing.";
+        return;
+    }
+    QTextStream out(musicPlaylist);
+    out << "#EXTINF:" <<musicName<< endl;
+    out <<currentPlay<< endl;
+    musicPlaylist->close();
+}
 QListView *LocalMusic::getMusicListView() const {
     return musicListView;
 }

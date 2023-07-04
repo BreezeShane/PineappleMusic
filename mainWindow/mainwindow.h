@@ -23,7 +23,7 @@ private:
     MainContent *mainContent{};
     // 播放控制栏
     PlayBar *playBar{};
-    QFile *musicPlaylist{};
+
     //媒体播放器
     QMediaPlayer *mediaPlayer{};    //播放器
     QVector<QString> currentPlaylist{};     //当前播放列表
