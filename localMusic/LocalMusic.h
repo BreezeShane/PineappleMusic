@@ -22,7 +22,7 @@ private:
     QPushButton *reloadMusicPbt{};
     QSpacerItem *horizontalSpacer{};
     QListView *musicListView{};
-    QFile *playlistFile{};
+    QFile *localPlayListFile{};
     QVector<QString> playList{};
 
 
