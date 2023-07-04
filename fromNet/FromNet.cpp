@@ -2,119 +2,61 @@
 // Created by juncheng on 2023/6/28.
 //
 
-#include "FromNet.h"
-#include <QDesktopWidget>
-#include <QApplication>
-#include <QLabel>
-#include <QPushButton>
-#include <QVBoxLayout>
-#include <QHBoxLayout>
-#include <QMessageBox>
-#include <QDesktopWidget>
-#include <QLineEdit>
-#include <QDockWidget>
-#include <QFontDialog>
-#include <QTextEdit>
-#include <QListView>
-#include <QStringListModel>
-#include <QUrl>
-#include <QDesktopServices>
-#include <QFileDialog>
 #include <QNetworkAccessManager>
-
-
+#include "FromNet.h"
+#include <QNetworkReply>
 FromNet::FromNet(QWidget *parent)
         : QFrame(parent) {
 
     setupUI();
-
-    connect(find,&QPushButton::clicked,this, &FromNet::on_find_cliked);
 }
 
 void FromNet::setupUI() {
-    this->setStyleSheet("border-radius: 10px;border: 1px solid gray");
-    QVBoxLayout *mainLayout = new QVBoxLayout(this);
+    this->setStyleSheet("border-radius: 10px;");
+    mainLayout = new QVBoxLayout;
 
-    //搜索框
-    QWidget *url_area = new QWidget(this);
-    url_area->setFixedHeight(80);
-    QHBoxLayout *url_layout = new QHBoxLayout(url_area);
+    topLayout = new QHBoxLayout;
+    keyword_input = new QLineEdit;
+    keyword_input->setFixedHeight(50);
+    search = new QPushButton();
+    search->setIcon(QIcon("../resource/icon/search.svg"));
+    search->setFixedWidth(80);
 
-    url_in = new QLineEdit;
-    url_in->setFixedSize(500,30);
-    find = new QPushButton("Find");
-    find->setFixedSize(120,30);
-    downloads = new QPushButton("download");
-    downloads->setFixedSize(120,30);
+    topLayout->addWidget(keyword_input);
+    topLayout->addWidget(search);
 
-    url_layout->addWidget(url_in);
-    url_layout->addWidget(find);
-    url_layout->addWidget(downloads);
 
-    //搜索结果显示
-    QWidget *result = new QWidget(this);
-    QLabel *result_label = new QLabel("搜索结果：");
-    result_label->setFixedSize(80,30);
-    //result->setFixedHeight(200);
-    QVBoxLayout *result_layout = new QVBoxLayout(result);
-    QListView *result_view = new QListView;
-    //result_view->setFixedSize(this->width(),300);
-    result_layout->addWidget(result_label);
-    result_layout->addWidget(result_view);
+    history = new QListView;
 
-    //历史搜索结果
-    QWidget *history = new QWidget(this);
-    QLabel *history_label = new QLabel("历史搜索：");
-    history_label->setFixedSize(80,30);
-
-    QVBoxLayout *history_layout = new QVBoxLayout(history);
-    QListView *history_view = new QListView;
-
-    history_layout->addWidget(history_label);
-    history_layout->addWidget(history_view);
-
-    mainLayout->addWidget(url_area);
-    mainLayout->addWidget(result);
+    mainLayout->addLayout(topLayout);
     mainLayout->addWidget(history);
+    this->setLayout(mainLayout);
 
-
-    QStringList items;
-    items << "Item 1" << "Item 2" << "Item 3";
-
-    QStringListModel *model = new QStringListModel(items);
-
-    result_view->setModel(model);
+    connect(search, SIGNAL(clicked()),
+            this, SLOT(search_music()));
 
 }
 
-void FromNet::on_find_cliked() {
-    qDebug()<<"播放"<<endl;
-    QString url_text = url_in->text();
-    if(url_text == NULL){
-        QMessageBox::information(this,"提示","请输入url");
-        return ;
-    }
-    player = new QMediaPlayer;
-    QUrl url(url_text);
-    player->setMedia(url);
-    player->play();
+void FromNet::search_music() {
+    keyword = keyword_input->text();
+    auto *manager = new QNetworkAccessManager(this);
+    QString base_url = "https://service-qbrcywo4-1314545420.gz.apigw.tencentcs.com/release/search/suggest?keywords=";
+    QUrl url(base_url + keyword + "&type=mobile");
+    QNetworkRequest request(url);
 
+    QNetworkReply *reply = manager->get(request);
+
+    connect(reply, &QNetworkReply::finished, this, [=]() {
+        if (reply->error() == QNetworkReply::NoError) {
+            QString response = reply->readAll();
+            qDebug()<<response;
+            // 处理响应数据
+        } else {
+            qDebug()<<"error";
+            // 处理错误
+        }
+        reply->deleteLater();
+    });
 }
-
-void FromNet::on_download_cliked() {
-
-
-
-}
-
-
-QPushButton *FromNet::getFindButton() const {
-    return find;
-}
-
-QLineEdit *FromNet::geturl_in() const {
-    return url_in;
-}
-
 
 FromNet::~FromNet() = default;

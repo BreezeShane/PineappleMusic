@@ -20,6 +20,9 @@ void PlayBar::setupUI() {
     pbtPrevious = new QPushButton();
     pbtStartOrPause = new QPushButton();
     pbtNext = new QPushButton();
+    speedMenuBar = new QMenuBar();
+    QSizePolicy sizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
+    speedMenuBar->setSizePolicy(sizePolicy);
     currentProcess = new QLabel();
     finalProcess = new QLabel();
     sliderProcess = new MySlider(Qt::Horizontal, this);
@@ -38,8 +41,8 @@ void PlayBar::setupUI() {
 
     finalProcess->setStyleSheet("QLabel {"
                                 "background-color: transparent;"
-                                //"border: 1px solid gray;"
-                                "border: none;"
+                                "border: 1px solid gray;"
+                                //"border: none;"
                                 "border-radius: 4px;"
                                 "padding: 2px;"
                                 "}");
@@ -69,10 +72,34 @@ void PlayBar::setupUI() {
                           "background: lightgray;"
                           "}");
 
+
+    speedMenu = new QMenu(speedMenuBar);
+    speedMenuBar->addAction(speedMenu->menuAction());
+    speedMenu->setTitle(tr("1.0x"));
+    //QMenu *playMenu = speedMenu->addMenu("1.0x");
+
+    action1 = new QAction(this);
+    action2 = new QAction(this);
+    action3 = new QAction(this);
+    action4 = new QAction(this);
+
+    speedMenu->addAction(action1);
+    speedMenu->addSeparator();//给菜单加分隔条
+    speedMenu->addAction(action2);
+    speedMenu->addSeparator();
+    speedMenu->addAction(action3);
+    speedMenu->addSeparator();
+    speedMenu->addAction(action4);
+    action1->setText("0.5x");
+    action2->setText("1.0x");
+    action3->setText("1.5x");
+    action4->setText("2.0x");
+
     qhBoxLayout->addWidget(album);
     qhBoxLayout->addWidget(currentProcess);
     qhBoxLayout->addWidget(sliderProcess);
     qhBoxLayout->addWidget(finalProcess);
+    qhBoxLayout->addWidget(speedMenuBar);
     qhBoxLayout->addWidget(pbtModel);
     qhBoxLayout->addWidget(pbtPrevious);
     qhBoxLayout->addWidget(pbtStartOrPause);
@@ -126,4 +153,23 @@ QPushButton *PlayBar::getPbtModel() const {
     return pbtModel;
 }
 
+QMenu * PlayBar::getSpeedMenu() const {
+    return speedMenu;
+}
+
+QAction  *PlayBar::getAction1() const {
+    return action1;
+}
+
+QAction  *PlayBar::getAction2() const {
+    return action2;
+}
+
+QAction  *PlayBar::getAction3() const {
+    return action3;
+}
+
+QAction  *PlayBar::getAction4() const {
+    return action4;
+}
 PlayBar::~PlayBar() = default;

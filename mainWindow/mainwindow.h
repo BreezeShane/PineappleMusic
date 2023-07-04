@@ -10,6 +10,7 @@
 #include <QVBoxLayout>
 #include <QMediaPlayer>
 #include <QEvent>
+#include <QtGlobal>
 class MainWindow : public QMainWindow {
     Q_OBJECT
 private:
@@ -32,6 +33,8 @@ private:
     QString currentPlayLrc{};   //当前播放音乐的lrc歌词文件路径
     QString durationTime;
     QString positionTime;
+    qreal currentSpeed;
+    qreal newSpeed;
 public:
     explicit MainWindow(QWidget *parent = nullptr);
 
@@ -61,6 +64,7 @@ public slots:
     void onSliderPressed();
     void updateCurrentProcessText();
     bool eventFilter(QObject* , QEvent*);
+    void setPlaySpeed();
 };
 
 #endif // MAINWINDOW_H
