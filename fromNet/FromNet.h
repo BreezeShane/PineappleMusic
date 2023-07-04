@@ -23,9 +23,11 @@ public:
     QLineEdit *geturl_in() const;
 
 private slots:
-    void on_find_cliked();
+    void on_find_clicked();
 
-    void on_download_cliked();
+    void on_download_clicked();
+
+
 
 
 private:

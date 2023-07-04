@@ -28,7 +28,7 @@ FromNet::FromNet(QWidget *parent)
 
     setupUI();
 
-    connect(find,&QPushButton::clicked,this, &FromNet::on_find_cliked);
+    connect(find,&QPushButton::clicked,this, &FromNet::on_find_clicked);
 }
 
 void FromNet::setupUI() {
@@ -83,11 +83,16 @@ void FromNet::setupUI() {
 
     QStringListModel *model = new QStringListModel(items);
 
+    result_view->setSpacing(10);
+
+    result_view->setResizeMode(QListView::Fixed);
+    result_view->setGridSize(QSize(100,40));
+
     result_view->setModel(model);
 
 }
 
-void FromNet::on_find_cliked() {
+void FromNet::on_find_clicked() {
     qDebug()<<"播放"<<endl;
     QString url_text = url_in->text();
     if(url_text == NULL){
@@ -101,7 +106,7 @@ void FromNet::on_find_cliked() {
 
 }
 
-void FromNet::on_download_cliked() {
+void FromNet::on_download_clicked() {
 
 
 
@@ -115,6 +120,7 @@ QPushButton *FromNet::getFindButton() const {
 QLineEdit *FromNet::geturl_in() const {
     return url_in;
 }
+
 
 
 FromNet::~FromNet() = default;
