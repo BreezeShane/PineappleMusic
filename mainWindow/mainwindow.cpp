@@ -135,22 +135,6 @@ void MainWindow::setupUI() {
     connect(playBar->getSlider(),SIGNAL(valueChanged(int)),this,SLOT(slot_valueChanged_progress(int)));
     connect(playBar->getSlider(), SIGNAL(sliderPressed()), this, SLOT(onSliderPressed()));
 
-    connect(mainContent->getFromNetPage()->getFindButton(),&QPushButton::clicked,[=](){
-        qDebug()<<"播放"<<endl;
-        QString url_text = mainContent->getFromNetPage()->geturl_in()->text();
-        if(url_text == NULL){
-            QMessageBox::information(this,"提示","请输入url");
-            return ;
-        }
-        QUrl url(url_text);
-
-        mediaPlayer->setMedia(url);
-        mediaPlayer->play();
-        currentPlay = url_text;
-        
-
-
-    });
     connect(playBar->getSlider(), SIGNAL(sliderPressed()), this, SLOT(onSliderPressed()));
 }
 
