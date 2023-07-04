@@ -16,6 +16,7 @@ void PlayBar::setupUI() {
     qhBoxLayout = new QHBoxLayout(this);
     album = new QLabel();
     album->setMouseTracking(true);
+    pbtLyrics = new QPushButton();
     pbtModel = new QPushButton();
     pbtPrevious = new QPushButton();
     pbtStartOrPause = new QPushButton();
@@ -99,6 +100,7 @@ void PlayBar::setupUI() {
     qhBoxLayout->addWidget(currentProcess);
     qhBoxLayout->addWidget(sliderProcess);
     qhBoxLayout->addWidget(finalProcess);
+    qhBoxLayout->addWidget(pbtLyrics);
     qhBoxLayout->addWidget(speedMenuBar);
     qhBoxLayout->addWidget(pbtModel);
     qhBoxLayout->addWidget(pbtPrevious);
@@ -114,8 +116,8 @@ void PlayBar::retranslateUi() {
     QSize size(60, 60);
     QPixmap scaledPixmap = pixmap.scaled(size, Qt::KeepAspectRatio, Qt::FastTransformation);
     album->setPixmap(scaledPixmap);
-
-    pbtModel->setText("顺序播放");
+    pbtLyrics->setIcon(QIcon("../resource/icon/lyricsOff.svg"));
+    pbtModel->setIcon(QIcon("../resource/icon/sequential.svg"));
     pbtPrevious->setIcon(QIcon("../resource/icon/previous.png"));
     pbtPrevious->setIconSize(QSize(50, 50));
     pbtStartOrPause->setIcon(QIcon("../resource/icon/start.png"));
@@ -151,6 +153,10 @@ QLabel * PlayBar::getFinalProcess() const {
 
 QPushButton *PlayBar::getPbtModel() const {
     return pbtModel;
+}
+
+QPushButton *PlayBar::getPbtLyrics() const {
+    return pbtLyrics;
 }
 
 QMenu * PlayBar::getSpeedMenu() const {

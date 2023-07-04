@@ -12,6 +12,8 @@
 #include "playBar/PlayBar.h"
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 
+    lyricsUi();
+
     setupUI();
     playBar->getSlider()->installEventFilter(this);
     connect(sidebar->getContentLists(),  //将显示列表与堆栈窗口关联，点击列表中的按键，显示相应的窗口
@@ -27,25 +29,80 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     // 播放模式切换按键
     QObject::connect(playBar->getPbtModel(), SIGNAL(clicked()),this,SLOT(togglePlayMode()));
 
+    QObject::connect(playBar->getPbtLyrics(), SIGNAL(clicked()),
+                     this,
+                     SLOT(lyricsModel()));
+
+    QObject::connect(playBar->getPbtLyrics(), SIGNAL(clicked()),
+                     this,
+                     SLOT(creatLyricsWindow()));
+}
+
+void MainWindow::lyricsUi(){
+
+    widget = new QWidget;
+    QVBoxLayout *layoutV = new QVBoxLayout(); // 创建垂直布局
+    QHBoxLayout *layoutB_1 = new QHBoxLayout(); // 创建水平布局
+    QHBoxLayout *layoutB_2 = new QHBoxLayout(); // 创建水平布局
+    QLabel *labelLeft = new QLabel("llll");
+    QLabel *labelRight = new QLabel("rrrr");
+
+    widget->setGeometry(500, 700, 1000, 150);
+    widget->setWindowFlags(Qt::FramelessWindowHint);
+    widget->setWindowOpacity(1);
+
+    layoutB_1->addWidget(labelLeft);
+    layoutB_1->addSpacerItem(new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum));
+
+    layoutB_2->addSpacerItem(new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum));
+    layoutB_2->addWidget(labelRight);
+
+    layoutV->addLayout(layoutB_1);
+    layoutV->addLayout(layoutB_2);
+
+    widget->setLayout(layoutV);
+}
+
+void MainWindow::creatLyricsWindow(){
+
+    if(currenLyricsModel == yes){
+        widget->show();
+    }else{
+        widget->hide();
+    }
+}
+
+void MainWindow::lyricsModel() {
+    switch (currenLyricsModel) {
+        case yes:
+            playBar->getPbtLyrics()->setIcon(QIcon("../resource/icon/lyricsOff.svg"));
+            currenLyricsModel = no;
+            break;
+        case no:
+            playBar->getPbtLyrics()->setIcon(QIcon("../resource/icon/lyricsOn.svg"));
+            currenLyricsModel = yes;
+            break;
+    }
 }
 
 // 槽函数，用于切换播放模式
 void MainWindow::togglePlayMode() {
+    qDebug()<<"hhhh";
     switch (currentPlayMode) {
         case SingleLoop:
             currentPlayMode = Sequential;
-            playBar->getPbtModel()->setText("顺序播放");
-            //ui->playModeButton->setIcon(QIcon(":/icons/sequential.png"));
+            //playBar->getPbtModel()->setText("顺序播放");
+            playBar->getPbtModel()->setIcon(QIcon("../resource/icon/sequential.svg"));
             break;
         case Sequential:
             currentPlayMode = Random;
-            playBar->getPbtModel()->setText("随机播放");
-            //ui->playModeButton->setIcon(QIcon(":/icons/random.png"));
+            //playBar->getPbtModel()->setText("随机播放");
+            playBar->getPbtModel()->setIcon(QIcon("../resource/icon/random.svg"));
             break;
         case Random:
             currentPlayMode = SingleLoop;
-            playBar->getPbtModel()->setText("单曲循环");
-            //ui->playModeButton->setIcon(QIcon(":/icons/loop_single.png"));
+            //playBar->getPbtModel()->setText("单曲循环");
+            playBar->getPbtModel()->setIcon(QIcon("../resource/icon/singleloop.svg"));
             break;
     }
 }
@@ -99,7 +156,7 @@ void MainWindow::setupUI() {
 
     //实例化播放器
     mediaPlayer = new QMediaPlayer;
-    musicPlaylist=new QFile("../resource/musicPlaylist.m3u");
+
     retranslateUi();
     //开始 - 暂停
     connect(playBar->getPbtStartOrPause(),
@@ -129,15 +186,6 @@ void MainWindow::setupUI() {
             playBar->getPbtStartOrPause()->setIcon(QIcon("../resource/icon/pause.png"));
             playBar->getSlider()->setSliderPosition(0);
         }
-        if (!musicPlaylist->open(QIODevice::WriteOnly | QIODevice::Text)) {
-            qWarning() << "Failed to open playlist file for writing.";
-            return;
-        }
-        QTextStream out(musicPlaylist);
-        out << "#EXTINF:" <<"jkkk"<< endl;
-        out <<currentPlay << endl;
-        musicPlaylist->close();
-
     });
     connect(mediaPlayer,SIGNAL(positionChanged(qint64)),this,SLOT(onPositionChanged(qint64)));
     connect(mediaPlayer,SIGNAL(durationChanged(qint64)),this,SLOT(onDurationChanged(qint64)));
