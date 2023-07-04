@@ -99,7 +99,7 @@ void MainWindow::setupUI() {
 
     //实例化播放器
     mediaPlayer = new QMediaPlayer;
-
+    musicPlaylist=new QFile("../resource/musicPlaylist.m3u");
     retranslateUi();
     //开始 - 暂停
     connect(playBar->getPbtStartOrPause(),
@@ -129,6 +129,15 @@ void MainWindow::setupUI() {
             playBar->getPbtStartOrPause()->setIcon(QIcon("../resource/icon/pause.png"));
             playBar->getSlider()->setSliderPosition(0);
         }
+        if (!musicPlaylist->open(QIODevice::WriteOnly | QIODevice::Text)) {
+            qWarning() << "Failed to open playlist file for writing.";
+            return;
+        }
+        QTextStream out(musicPlaylist);
+        out << "#EXTINF:" <<"jkkk"<< endl;
+        out <<currentPlay << endl;
+        musicPlaylist->close();
+
     });
     connect(mediaPlayer,SIGNAL(positionChanged(qint64)),this,SLOT(onPositionChanged(qint64)));
     connect(mediaPlayer,SIGNAL(durationChanged(qint64)),this,SLOT(onDurationChanged(qint64)));
