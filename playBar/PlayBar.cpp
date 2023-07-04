@@ -21,6 +21,8 @@ void PlayBar::setupUI() {
     pbtStartOrPause = new QPushButton();
     pbtNext = new QPushButton();
     speedMenuBar = new QMenuBar();
+    QSizePolicy sizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
+    speedMenuBar->setSizePolicy(sizePolicy);
     currentProcess = new QLabel();
     finalProcess = new QLabel();
     sliderProcess = new MySlider(Qt::Horizontal, this);
@@ -70,21 +72,6 @@ void PlayBar::setupUI() {
                           "background: lightgray;"
                           "}");
 
-    speedMenuBar->setStyleSheet("QMenuBar {"
-                                "background-color: transparent;"
-                                "border: none;"
-                                "height: 50px;"
-                                "width: 50px;"
-                                "padding: 2px;"
-                                "}"
-                                "QMenuBar::item {"
-                                "background-color: transparent;"
-                                "padding: 2px;"
-                                "}"
-                                "QMenuBar::item:selected {"
-                                "background-color: gray;"
-                                "color: white;"
-                                "}");
 
     speedMenu = new QMenu(speedMenuBar);
     speedMenuBar->addAction(speedMenu->menuAction());
