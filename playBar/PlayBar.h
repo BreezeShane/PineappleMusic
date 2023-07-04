@@ -18,7 +18,8 @@ class PlayBar : public QFrame
     Q_OBJECT
 private:
     QHBoxLayout * qhBoxLayout{};
-    QSpacerItem *horizontalSpacer{};
+    QLabel *album{};    //专辑图片
+    QPushButton *pbtModel;  //播放模式按钮
     QPushButton *pbtPrevious{};
     QPushButton *pbtStartOrPause{};
     QPushButton *pbtNext{};
@@ -35,6 +36,8 @@ public:
     QPushButton *getPbtStartOrPause() const;
 
     QPushButton *getPbtNext() const;
+
+    QPushButton *getPbtModel() const;
 
     MySlider *getSlider() const;
 
