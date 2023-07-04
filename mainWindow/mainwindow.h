@@ -29,6 +29,7 @@ private:
     QString currentPlay{};
     QString durationTime;
     QString positionTime;
+    bool isSliderPressed;
 public:
     explicit MainWindow(QWidget *parent = nullptr);
 
@@ -46,6 +47,12 @@ public:
 
     void setCurrentPlay(const QString &musicPath);
 
+    // 声明一个枚举类型来表示播放模式
+    enum PlayMode { SingleLoop, Sequential, Random };
+
+    // 声明一个变量来跟踪当前的播放模式
+    PlayMode currentPlayMode = Sequential;
+
     ~MainWindow() override;
 
 public slots:
@@ -57,6 +64,8 @@ public slots:
     void slot_valueChanged_progress(int value);
     void onDurationChanged(qint64 duration);
     void onPositionChanged(qint64 position);
+    void onSliderPressed(qint64,int);
+    void togglePlayMode();
 };
 
 #endif // MAINWINDOW_H

@@ -12,16 +12,18 @@
 #include <QProgressBar>
 #include <QSlider>
 #include <QLabel>
+#include "qSlider/MySlider.h"
 class PlayBar : public QFrame
 {
     Q_OBJECT
 private:
     QHBoxLayout * qhBoxLayout{};
     QSpacerItem *horizontalSpacer{};
+    QPushButton *pbtModel;  //播放模式按钮
     QPushButton *pbtPrevious{};
     QPushButton *pbtStartOrPause{};
     QPushButton *pbtNext{};
-    QSlider *slider{};
+    MySlider *slider{};
     QLabel *currentProcess{};
     QLabel *finalProcess{};
 public:
@@ -35,7 +37,9 @@ public:
 
     QPushButton *getPbtNext() const;
 
-    QSlider *getSlider() const;
+    QPushButton *getPbtModel() const;
+
+    MySlider *getSlider() const;
 
     QLabel * getCurrentProcess() const;
 
@@ -45,6 +49,5 @@ public:
 
     static const QMetaObject &getStaticMetaObject();
 };
-
 
 #endif //PINEAPPLEMUSIC_PLAYBAR_H

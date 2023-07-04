@@ -15,12 +15,34 @@ void PlayBar::setupUI() {
     this->setFixedHeight(100);
     qhBoxLayout = new QHBoxLayout(this);
     horizontalSpacer = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum);
+    pbtModel = new QPushButton();
     pbtPrevious = new QPushButton();
     pbtStartOrPause = new QPushButton();
     pbtNext = new QPushButton();
     currentProcess = new QLabel();
     finalProcess = new QLabel();
-    slider = new QSlider(Qt::Horizontal, this);
+    slider = new MySlider(Qt::Horizontal, this);
+
+    currentProcess->setText("00:00");
+    finalProcess->setText("00:00");
+    currentProcess->setFixedSize(50,50);//设置大小
+    finalProcess->setFixedSize(50,50);
+    currentProcess->setStyleSheet("QLabel {"
+                                  "background-color: transparent;"
+                                  //"border: 1px solid gray;"
+                                  "border: none;" //隐藏边框
+                                  "border-radius: 4px;"
+                                  "padding: 2px;"
+                                  "}");
+
+    finalProcess->setStyleSheet("QLabel {"
+                                "background-color: transparent;"
+                                //"border: 1px solid gray;"
+                                "border: none;"
+                                "border-radius: 4px;"
+                                "padding: 2px;"
+                                "}");
+
     slider->setStyleSheet("QSlider::groove:horizontal {"    //修改进度条样式
                           "border: none;"
                           "height: 8px;"
@@ -50,6 +72,7 @@ void PlayBar::setupUI() {
     qhBoxLayout->addWidget(currentProcess);
     qhBoxLayout->addWidget(slider);
     qhBoxLayout->addWidget(finalProcess);
+    qhBoxLayout->addWidget(pbtModel);
     qhBoxLayout->addWidget(pbtPrevious);
     qhBoxLayout->addWidget(pbtStartOrPause);
     qhBoxLayout->addWidget(pbtNext);
@@ -59,6 +82,7 @@ void PlayBar::setupUI() {
 }
 
 void PlayBar::retranslateUi() {
+    pbtModel->setText("顺序播放");
     pbtPrevious->setIcon(QIcon("../resource/icon/previous.png"));
     pbtPrevious->setIconSize(QSize(50, 50));
     pbtStartOrPause->setIcon(QIcon("../resource/icon/start.png"));
@@ -80,7 +104,7 @@ QPushButton *PlayBar::getPbtNext() const {
     return pbtNext;
 }
 
-QSlider *PlayBar::getSlider() const {
+MySlider *PlayBar::getSlider() const {
     return slider;
 }
 
@@ -91,4 +115,9 @@ QLabel * PlayBar::getCurrentProcess() const {
 QLabel * PlayBar::getFinalProcess() const {
     return finalProcess;
 }
+
+QPushButton *PlayBar::getPbtModel() const {
+    return pbtModel;
+}
+
 PlayBar::~PlayBar() = default;
