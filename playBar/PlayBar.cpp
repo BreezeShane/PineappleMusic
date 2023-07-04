@@ -15,6 +15,7 @@ void PlayBar::setupUI() {
     this->setFixedHeight(100);
     qhBoxLayout = new QHBoxLayout(this);
     horizontalSpacer = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum);
+    pbtModel = new QPushButton();
     pbtPrevious = new QPushButton();
     pbtStartOrPause = new QPushButton();
     pbtNext = new QPushButton();
@@ -71,6 +72,7 @@ void PlayBar::setupUI() {
     qhBoxLayout->addWidget(currentProcess);
     qhBoxLayout->addWidget(slider);
     qhBoxLayout->addWidget(finalProcess);
+    qhBoxLayout->addWidget(pbtModel);
     qhBoxLayout->addWidget(pbtPrevious);
     qhBoxLayout->addWidget(pbtStartOrPause);
     qhBoxLayout->addWidget(pbtNext);
@@ -80,6 +82,7 @@ void PlayBar::setupUI() {
 }
 
 void PlayBar::retranslateUi() {
+    pbtModel->setText("顺序播放");
     pbtPrevious->setIcon(QIcon("../resource/icon/previous.png"));
     pbtPrevious->setIconSize(QSize(50, 50));
     pbtStartOrPause->setIcon(QIcon("../resource/icon/start.png"));
@@ -112,4 +115,9 @@ QLabel * PlayBar::getCurrentProcess() const {
 QLabel * PlayBar::getFinalProcess() const {
     return finalProcess;
 }
+
+QPushButton *PlayBar::getPbtModel() const {
+    return pbtModel;
+}
+
 PlayBar::~PlayBar() = default;

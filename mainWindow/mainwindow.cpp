@@ -17,6 +17,40 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     connect(sidebar->getContentLists(),  //将显示列表与堆栈窗口关联，点击列表中的按键，显示相应的窗口
             SIGNAL(currentItemChanged(QListWidgetItem * , QListWidgetItem * )),
             this, SLOT(changePage(QListWidgetItem * , QListWidgetItem * )));
+
+    QObject::connect(mediaPlayer, &QMediaPlayer::mediaStatusChanged, [=](QMediaPlayer::MediaStatus status) {
+        if (status == QMediaPlayer::EndOfMedia) {
+            qDebug() << "Media playback has ended.";
+            nextMusic();
+        }
+    });
+
+    QObject::connect(playBar->getPbtModel(), SIGNAL(clicked()),
+                     this,
+                     SLOT(togglePlayMode()));
+
+}
+
+// 槽函数，用于切换播放模式
+void MainWindow::togglePlayMode() {
+    qDebug()<<"hhhh";
+    switch (currentPlayMode) {
+        case SingleLoop:
+            currentPlayMode = Sequential;
+            playBar->getPbtModel()->setText("顺序播放");
+            //ui->playModeButton->setIcon(QIcon(":/icons/sequential.png"));
+            break;
+        case Sequential:
+            currentPlayMode = Random;
+            playBar->getPbtModel()->setText("随机播放");
+            //ui->playModeButton->setIcon(QIcon(":/icons/random.png"));
+            break;
+        case Random:
+            currentPlayMode = SingleLoop;
+            playBar->getPbtModel()->setText("单曲循环");
+            //ui->playModeButton->setIcon(QIcon(":/icons/loop_single.png"));
+            break;
+    }
 }
 
 void MainWindow::changePage(QListWidgetItem *current, QListWidgetItem *previous) const {
@@ -87,9 +121,6 @@ void MainWindow::setupUI() {
             SLOT(nextMusic()));
     connect(mainContent->getLocalMusicPage()->getMusicListView(), &QListView::clicked, [&](const QModelIndex &index) {
         // 获取所选项的QMediaPlayer对象，并播放音乐
-        if (mediaPlayer != nullptr && mediaPlayer->state() == QMediaPlayer::PlayingState) {
-            mediaPlayer->stop();
-        }
         int row = index.row();
         if (row >= 0 && row < mainContent->getLocalMusicPage()->getPlayList().size()) {
             currentPlaylist = mainContent->getLocalMusicPage()->getPlayList();
@@ -140,10 +171,9 @@ void MainWindow::setCurrentPlaylist(const QVector<QString> &playlist) {
 
 void MainWindow::startOrPauseMusic() {
     if (mediaPlayer != nullptr && mediaPlayer->state() == QMediaPlayer::PlayingState) {
-        mediaPlayer->stop();
+        mediaPlayer->pause();
         playBar->getPbtStartOrPause()->setIcon(QIcon("../resource/icon/start.png"));
     } else {
-        mediaPlayer->setMedia(QUrl::fromLocalFile(currentPlay));
         mediaPlayer->play();
         playBar->getPbtStartOrPause()->setIcon(QIcon("../resource/icon/pause.png"));
     }
@@ -158,33 +188,113 @@ void MainWindow::setCurrentPlay(const QString &musicPath) {
 }
 
 void MainWindow::previousMusic() {
-    if (!currentPlaylist.empty() && !currentPlay.isEmpty()) {
-        mediaPlayer->stop();
-        for (QVector<QString>::iterator it = currentPlaylist.begin(); it != currentPlaylist.end(); it++) {
-            if (*it == currentPlay && it != currentPlaylist.begin()) {
-                currentPlay = *(it-1);
-                break;
+    switch (currentPlayMode) {
+        case SingleLoop:
+            // 如果启用了单曲循环，则上一首歌曲是当前歌曲
+            if (!currentPlaylist.empty() && !currentPlay.isEmpty()) {
+                mediaPlayer->stop();
+                for (QVector<QString>::iterator it = currentPlaylist.begin(); it != currentPlaylist.end() - 1; it++) {
+                    if (*it == currentPlay) {
+                        currentPlay = *(it);
+                        break;
+                    }
+                }
             }
-        }
-        mediaPlayer->setMedia(QUrl::fromLocalFile(currentPlay));
-        mediaPlayer->play();
-        playBar->getPbtStartOrPause()->setIcon(QIcon("../resource/icon/pause.png"));
+            break;
+        case Sequential:
+            // 否则，获取上一首歌曲的索引
+            if (!currentPlaylist.empty() && !currentPlay.isEmpty()) {
+                mediaPlayer->stop();
+                for (QVector<QString>::iterator it = currentPlaylist.begin(); it != currentPlaylist.end() - 1; it++) {
+                    if(currentPlay == *currentPlaylist.begin()) {
+                        currentPlay = *(currentPlaylist.end()-1);
+                        break;
+                    } else if(currentPlay == *(currentPlaylist.end()-1)){
+                        currentPlay = *(currentPlaylist.end()-2);
+                        break;
+                    }else if (*it == currentPlay) {
+                        currentPlay = *(it - 1);
+                        break;
+                    }
+                }
+            }
+            break;
+        case Random:
+            // 创建一个随机数生成器
+            std::srand(std::time(nullptr));
+            auto random_number = std::rand();
+            qDebug()<< random_number;
+            // 如果是随机播放，则获取一个随机索引
+            if (!currentPlaylist.empty() && !currentPlay.isEmpty()) {
+                mediaPlayer->stop();
+                for (QVector<QString>::iterator it = currentPlaylist.begin(); it != currentPlaylist.end() - 1; ++it) {
+                    for (QVector<QString>::iterator it = currentPlaylist.begin(); it != currentPlaylist.end() - 1; it++) {
+                        if (*it == currentPlay) {
+                            currentPlay = currentPlaylist[random_number%currentPlaylist.size()];
+                            break;
+                        }
+                    }
+                }
+            }
+            break;
     }
+    mediaPlayer->setMedia(QUrl::fromLocalFile(currentPlay));
+    mediaPlayer->play();
+    playBar->getPbtStartOrPause()->setIcon(QIcon("../resource/icon/pause.png"));
 }
 
 void MainWindow::nextMusic() {
-    if (!currentPlaylist.empty() && !currentPlay.isEmpty()) {
-        mediaPlayer->stop();
-        for (QVector<QString>::iterator it = currentPlaylist.begin(); it != currentPlaylist.end() - 1; it++) {
-            if (*it == currentPlay) {
-                currentPlay = *(it+1);
-                break;
+    switch (currentPlayMode) {
+        case SingleLoop:
+            // 如果启用了单曲循环，则下一首歌曲是当前歌曲
+            if (!currentPlaylist.empty() && !currentPlay.isEmpty()) {
+                mediaPlayer->stop();
+                for (QVector<QString>::iterator it = currentPlaylist.begin(); it != currentPlaylist.end() - 1; it++) {
+                    if (*it == currentPlay) {
+                        currentPlay = *(it);
+                        break;
+                    }
+                }
             }
-        }
-        mediaPlayer->setMedia(QUrl::fromLocalFile(currentPlay));
-        mediaPlayer->play();
-        playBar->getPbtStartOrPause()->setIcon(QIcon("../resource/icon/pause.png"));
+            break;
+        case Sequential:
+            // 否则，获取下一首歌曲的索引
+            if (!currentPlaylist.empty() && !currentPlay.isEmpty()) {
+                mediaPlayer->stop();
+                for (QVector<QString>::iterator it = currentPlaylist.begin(); it != currentPlaylist.end() - 1; it++) {
+                    if(currentPlay == *(currentPlaylist.end()-1)) {
+                        currentPlay = *currentPlaylist.begin();
+                        break;
+                    } else if (*it == currentPlay) {
+                        currentPlay = *(it + 1);
+                        break;
+                    }
+                }
+            }
+            break;
+        case Random:
+            // 创建一个随机数生成器
+            std::srand(std::time(nullptr));
+            auto random_number = std::rand();
+            qDebug()<< random_number;
+            // 如果是随机播放，则获取一个随机索引
+            if (!currentPlaylist.empty() && !currentPlay.isEmpty()) {
+                mediaPlayer->stop();
+                for (QVector<QString>::iterator it = currentPlaylist.begin(); it != currentPlaylist.end() - 1; ++it) {
+                    for (QVector<QString>::iterator it = currentPlaylist.begin(); it != currentPlaylist.end() - 1; it++) {
+                        if (*it == currentPlay) {
+                            currentPlay = currentPlaylist[random_number%currentPlaylist.size()];
+                            break;
+                        }
+                    }
+                }
+
+            }
+            break;
     }
+    mediaPlayer->setMedia(QUrl::fromLocalFile(currentPlay));
+    mediaPlayer->play();
+    playBar->getPbtStartOrPause()->setIcon(QIcon("../resource/icon/pause.png"));
 }
 
 //进度条滑块数值改变槽函数
