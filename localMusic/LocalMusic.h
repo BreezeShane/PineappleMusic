@@ -22,8 +22,9 @@ private:
     QPushButton *reloadMusicPbt{};
     QSpacerItem *horizontalSpacer{};
     QListView *musicListView{};
-    QFile *playlistFile{};
+    QFile *localPlayListFile{};
     QVector<QString> playList{};
+    QVector<QString> playListLrc{};
 
 
 public:
@@ -38,6 +39,8 @@ public:
     QListView *getMusicListView() const;
 
     const QVector<QString> &getPlayList() const;
+
+    const QVector<QString> &getPlayListLrc() const; //歌词文件列表
 
     ~LocalMusic() override;
 

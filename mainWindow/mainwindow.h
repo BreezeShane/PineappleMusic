@@ -10,6 +10,7 @@
 #include <QVBoxLayout>
 #include <QMediaPlayer>
 #include <QEvent>
+#include <QtGlobal>
 class MainWindow : public QMainWindow {
     Q_OBJECT
 private:
@@ -23,12 +24,17 @@ private:
     MainContent *mainContent{};
     // 播放控制栏
     PlayBar *playBar{};
+    QFile *musicPlaylist{};
     //媒体播放器
-    QMediaPlayer *mediaPlayer{};
-    QVector<QString> currentPlaylist{};
-    QString currentPlay{};
+    QMediaPlayer *mediaPlayer{};    //播放器
+    QVector<QString> currentPlaylist{};     //当前播放列表
+    QVector<QString> currentPlaylistLrc{};  //当前播放列表对应的歌词文件列表，没有歌词文件，存储内容为 NoLrc
+    QString currentPlay{};  //当前正在播放的音乐路径
+    QString currentPlayLrc{};   //当前播放音乐的lrc歌词文件路径
     QString durationTime;
     QString positionTime;
+    qreal currentSpeed;
+    qreal newSpeed;
 public:
     explicit MainWindow(QWidget *parent = nullptr);
 
@@ -36,15 +42,6 @@ public:
 
     void retranslateUi();
 
-    QMediaPlayer *getMediaPlayer() const;
-
-    const QVector<QString> &getCurrentPlaylist() const;
-
-    void setCurrentPlaylist(const QVector<QString> &playlist);
-
-    const QString &getCurrentPlay() const;
-
-    void setCurrentPlay(const QString &musicPath);
 
     // 声明一个枚举类型来表示播放模式
     enum PlayMode { SingleLoop, Sequential, Random };
@@ -67,6 +64,7 @@ public slots:
     void onSliderPressed();
     void updateCurrentProcessText();
     bool eventFilter(QObject* , QEvent*);
+    void setPlaySpeed();
 };
 
 #endif // MAINWINDOW_H
