@@ -23,6 +23,9 @@ private:
     MainContent *mainContent{};
     // 播放控制栏
     PlayBar *playBar{};
+    //歌词窗口
+    QWidget *widget;
+
     //媒体播放器
     QMediaPlayer *mediaPlayer{};
     QVector<QString> currentPlaylist{};
@@ -34,6 +37,8 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
 
     void setupUI();
+
+    void lyricsUi();
 
     void retranslateUi();
 
@@ -53,6 +58,12 @@ public:
     // 声明一个变量来跟踪当前的播放模式
     PlayMode currentPlayMode = Sequential;
 
+    // 声明一个枚举类型来表示歌词状态
+    enum LyricsModel{ yes , no};
+
+    // 声明一个变量来跟踪当前的歌词状态
+    LyricsModel currenLyricsModel = no;
+
     ~MainWindow() override;
 
 public slots:
@@ -66,6 +77,8 @@ public slots:
     void onPositionChanged(qint64 position);
     void onSliderPressed(qint64,int);
     void togglePlayMode();
+    void lyricsModel();
+    void creatLyricsWindow();
 };
 
 #endif // MAINWINDOW_H

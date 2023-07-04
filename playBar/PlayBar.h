@@ -20,6 +20,11 @@ private:
     QHBoxLayout * qhBoxLayout{};
     QLabel *album{};    //专辑图片
     QPushButton *pbtModel;  //播放模式按钮
+    QPushButton *pbtLyrics;
+public:
+    QPushButton *getPbtLyrics() const;
+
+private:
     QPushButton *pbtPrevious{};
     QPushButton *pbtStartOrPause{};
     QPushButton *pbtNext{};
