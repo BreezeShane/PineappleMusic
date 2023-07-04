@@ -102,12 +102,12 @@ void LocalMusic::scanLocalMusic() {
             // 写入m3u文件中
             QTextStream out(localPlayListFile);
 //        out << "#EXTINF:" << lengthString << "," << title << "\n";
-            out << "#EXTINF:" <<title << "\n";
+            out << "#EXTINF:" << title << "\n";
             out << fileInfo.filePath() << "\n";
             if (lrcFileInfo.exists() && lrcFileInfo.isFile()) {
-                out << lrcFileInfo.filePath() << "\n";
-            } else{
-                out << "NoLrc" << "\n";
+                out << "lrc#" << lrcFileInfo.filePath() << "\n";
+            } else {
+                out << "lrc#NoLrc" << "\n";
             }
         } else if (suffix == "lrc") {
             // handle lrc file
@@ -137,6 +137,9 @@ void LocalMusic::updateMusicList() {
         if (!line.isEmpty()) {
             if (line.startsWith("#")) {
                 titleLines << line;
+            } else if (line.startsWith("lrc#")) {
+                QStringList parts = line.split(QRegExp("#"));
+                playListLrc << parts[1];
             } else {
                 playList.push_back(line);
             }
@@ -163,6 +166,10 @@ QListView *LocalMusic::getMusicListView() const {
 
 const QVector<QString> &LocalMusic::getPlayList() const {
     return playList;
+}
+
+const QVector<QString> &LocalMusic::getPlayListLrc() const {
+    return playListLrc;
 }
 
 

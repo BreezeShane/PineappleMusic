@@ -24,16 +24,13 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
             nextMusic();
         }
     });
-
-    QObject::connect(playBar->getPbtModel(), SIGNAL(clicked()),
-                     this,
-                     SLOT(togglePlayMode()));
+    // 播放模式切换按键
+    QObject::connect(playBar->getPbtModel(), SIGNAL(clicked()),this,SLOT(togglePlayMode()));
 
 }
 
 // 槽函数，用于切换播放模式
 void MainWindow::togglePlayMode() {
-    qDebug()<<"hhhh";
     switch (currentPlayMode) {
         case SingleLoop:
             currentPlayMode = Sequential;
@@ -124,7 +121,9 @@ void MainWindow::setupUI() {
         int row = index.row();
         if (row >= 0 && row < mainContent->getLocalMusicPage()->getPlayList().size()) {
             currentPlaylist = mainContent->getLocalMusicPage()->getPlayList();
+            currentPlaylistLrc = mainContent->getLocalMusicPage()->getPlayListLrc();
             currentPlay = currentPlaylist[row];
+            currentPlayLrc = currentPlaylistLrc[row];
             mediaPlayer->setMedia(QUrl::fromLocalFile(currentPlay));
             mediaPlayer->play();
             playBar->getPbtStartOrPause()->setIcon(QIcon("../resource/icon/pause.png"));
@@ -160,17 +159,6 @@ void MainWindow::retranslateUi() {
     this->setWindowTitle("Pineapple Music");
 }
 
-QMediaPlayer *MainWindow::getMediaPlayer() const {
-    return mediaPlayer;
-}
-
-const QVector<QString> &MainWindow::getCurrentPlaylist() const {
-    return currentPlaylist;
-}
-
-void MainWindow::setCurrentPlaylist(const QVector<QString> &playlist) {
-    MainWindow::currentPlaylist = playlist;
-}
 
 void MainWindow::startOrPauseMusic() {
     if (mediaPlayer != nullptr && mediaPlayer->state() == QMediaPlayer::PlayingState) {
@@ -182,13 +170,6 @@ void MainWindow::startOrPauseMusic() {
     }
 }
 
-const QString &MainWindow::getCurrentPlay() const {
-    return currentPlay;
-}
-
-void MainWindow::setCurrentPlay(const QString &musicPath) {
-    MainWindow::currentPlay = musicPath;
-}
 
 void MainWindow::previousMusic() {
     switch (currentPlayMode) {
@@ -350,6 +331,7 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
     }
     return QMainWindow::eventFilter(obj, event);
 }
+
 
 MainWindow::~MainWindow() = default;
 
