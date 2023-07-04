@@ -12,6 +12,9 @@
 #include <QProgressBar>
 #include <QSlider>
 #include <QLabel>
+#include <QMenu>
+#include <QMenuBar>
+#include <QAction>
 #include "qSlider/MySlider.h"
 class PlayBar : public QFrame
 {
@@ -26,6 +29,12 @@ private:
     MySlider *sliderProcess{};
     QLabel *currentProcess{};
     QLabel *finalProcess{};
+    QMenuBar  *speedMenuBar{};
+    QMenu *speedMenu;
+    QAction *action1{};//倍速
+    QAction *action2{};
+    QAction *action3{};
+    QAction *action4{};
 public:
     explicit PlayBar(QWidget *parent = nullptr);
     void setupUI();
@@ -45,6 +54,15 @@ public:
 
     QLabel * getFinalProcess() const;
 
+    QMenu * getSpeedMenu() const;
+
+    QAction  *getAction1() const;
+
+    QAction  *getAction2() const;
+
+    QAction  *getAction3() const;
+
+    QAction  *getAction4() const;
     ~PlayBar() override;
 
     static const QMetaObject &getStaticMetaObject();

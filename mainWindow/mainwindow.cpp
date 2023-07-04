@@ -99,7 +99,7 @@ void MainWindow::setupUI() {
 
     //实例化播放器
     mediaPlayer = new QMediaPlayer;
-
+    musicPlaylist=new QFile("../resource/musicPlaylist.m3u");
     retranslateUi();
     //开始 - 暂停
     connect(playBar->getPbtStartOrPause(),
@@ -129,6 +129,15 @@ void MainWindow::setupUI() {
             playBar->getPbtStartOrPause()->setIcon(QIcon("../resource/icon/pause.png"));
             playBar->getSlider()->setSliderPosition(0);
         }
+        if (!musicPlaylist->open(QIODevice::WriteOnly | QIODevice::Text)) {
+            qWarning() << "Failed to open playlist file for writing.";
+            return;
+        }
+        QTextStream out(musicPlaylist);
+        out << "#EXTINF:" <<"jkkk"<< endl;
+        out <<currentPlay << endl;
+        musicPlaylist->close();
+
     });
     connect(mediaPlayer,SIGNAL(positionChanged(qint64)),this,SLOT(onPositionChanged(qint64)));
     connect(mediaPlayer,SIGNAL(durationChanged(qint64)),this,SLOT(onDurationChanged(qint64)));
@@ -136,13 +145,16 @@ void MainWindow::setupUI() {
     connect(playBar->getSlider(), SIGNAL(sliderPressed()), this, SLOT(onSliderPressed()));
 
     connect(playBar->getSlider(), SIGNAL(sliderPressed()), this, SLOT(onSliderPressed()));
+    connect(playBar->getAction1(), SIGNAL(triggered()), this, SLOT(setPlaySpeed()));
+    connect(playBar->getAction2(), SIGNAL(triggered()), this, SLOT(setPlaySpeed()));
+    connect(playBar->getAction3(), SIGNAL(triggered()), this, SLOT(setPlaySpeed()));
+    connect(playBar->getAction4(), SIGNAL(triggered()), this, SLOT(setPlaySpeed()));
 }
 
 void MainWindow::retranslateUi() {
     //标题
     this->setWindowTitle("Pineapple Music");
 }
-
 
 void MainWindow::startOrPauseMusic() {
     if (mediaPlayer != nullptr && mediaPlayer->state() == QMediaPlayer::PlayingState) {
@@ -316,6 +328,36 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
     return QMainWindow::eventFilter(obj, event);
 }
 
+//void MainWindow::setPlaySpeed(){
+//    if (playBar->getSpeedMenu()->title() == "0.5x") {
+//        currentSpeed = 0.5;
+//    } else if (playBar->getSpeedMenu()->title() == "1.0x") {
+//        currentSpeed = 1.0;
+//    } else if (playBar->getSpeedMenu()->title() == "1.5x") {
+//        currentSpeed = 1.5;
+//    } else if (playBar->getSpeedMenu()->title() == "2.0x") {
+//        currentSpeed = 2.0;
+//    }
+//    mediaPlayer->setPlaybackRate(currentSpeed);
+//}
+void MainWindow::setPlaySpeed() {
+    QObject *senderObj = sender(); // 获取信号发送者对象指针
+
+    if (senderObj == playBar->getAction1()) {
+        currentSpeed = 0.5;
+        playBar->getSpeedMenu()->setTitle("0.5x");
+    } else if (senderObj == playBar->getAction2()) {
+        currentSpeed = 1.0;
+        playBar->getSpeedMenu()->setTitle("1.0x");
+    } else if (senderObj == playBar->getAction3()) {
+        currentSpeed = 1.5;
+        playBar->getSpeedMenu()->setTitle("1.5x");
+    } else if (senderObj == playBar->getAction4()) {
+        currentSpeed = 2.0;
+        playBar->getSpeedMenu()->setTitle("2.0x");
+    }
+    mediaPlayer->setPlaybackRate(currentSpeed);
+}
 
 MainWindow::~MainWindow() = default;
 
