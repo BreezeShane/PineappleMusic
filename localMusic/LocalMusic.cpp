@@ -50,16 +50,20 @@ void LocalMusic::setupUI() {
     musicListView->setStyleSheet("QListView{padding:5px;}"
                                  "QListView::item{padding:5px;}"
     );
+    addMusicPlayPbt=new QPushButton("添加播放");
     verticalLayout->addWidget(musicListView);
-    playlistFile = new QFile("../resource/playlist.m3u");
+    verticalLayout->addWidget(addMusicPlayPbt);
+    localPlayListFile = new QFile("../resource/local_playlist.m3u");
+    musicPlaylist=new QFile("../resource/musicPlaylist.m3u");
 
     connect(reloadMusicPbt, SIGNAL(clicked()), this, SLOT(scanLocalMusic()));
+    connect(addMusicPlayPbt, &QPushButton::clicked, this, &LocalMusic::addMusicToPlaylist);
     updateMusicList();
     retranslateUi();
 }
 
 void LocalMusic::retranslateUi() {
-    reloadMusicPbt->setText("重新扫描");
+//    reloadMusicPbt->setText("重新扫描");
     reloadMusicPbt->setIcon(QIcon("../resource/icon/search.svg"));
 } // retranslateUi
 
@@ -68,7 +72,7 @@ void LocalMusic::scanLocalMusic() {
     // 创建一个文件对话框，让用户选择要扫描的目录
     QString scanPath = QFileDialog::getExistingDirectory(nullptr, "Select Directory", QDir::homePath());
 
-    if (!playlistFile->open(QIODevice::WriteOnly | QIODevice::Text)) {
+    if (!localPlayListFile->open(QIODevice::WriteOnly | QIODevice::Text)) {
         qWarning() << "Failed to open playlist file for writing.";
         return;
     }
@@ -76,50 +80,78 @@ void LocalMusic::scanLocalMusic() {
     // 遍历目录中的所有文件
     QDir dir(scanPath);
     QStringList filters;
-    filters << "*.mp3" << "*.m4a" << "*.ogg" << "*.flac";
+    filters << "*.mp3" << "*.lrc";
     dir.setNameFilters(filters);
     QFileInfoList fileList = dir.entryInfoList();
     for (const QFileInfo &fileInfo: fileList) {
-        // 获取文件元数据
-        QMediaPlayer player;
-        player.setMedia(QUrl::fromLocalFile(fileInfo.filePath()));
-//        auto duration = player.metaData("Duration").toInt();
-//        auto artist = player.metaData("Author").toString();
-//        auto title = player.metaData("Title").toString();
+        QString suffix = fileInfo.suffix();
+        if (suffix == "mp3") {
+            // handle mp3 file
+            // 获取文件元数据
+            QMediaPlayer player;
+            player.setMedia(QUrl::fromLocalFile(fileInfo.filePath()));
 
-        // 将元数据写入m3u文件中
-        QTextStream out(playlistFile);
-//        out << "#EXTINF:-1," << artist << " - " << title << "\n";
-        out << "#EXTINF:" << fileInfo.fileName() << endl;
-        out << fileInfo.filePath() << endl;
+            // 获取LRC文件名和路径
+            QString lrcFileName = fileInfo.completeBaseName() + ".lrc";
+            QString lrcFilePath = fileInfo.absolutePath() + "/" + lrcFileName;
+            QFileInfo lrcFileInfo(lrcFilePath);
+
+            // 获取MP3文件的长度和标题
+//        QString lengthString = QString::number(player.duration() / 1000);
+            QString title = player.metaData("Title").toString();
+            if (title.isEmpty()) {
+                title = fileInfo.fileName();
+            }
+
+            // 写入m3u文件中
+            QTextStream out(localPlayListFile);
+//        out << "#EXTINF:" << lengthString << "," << title << "\n";
+            out << "#EXTINF:" << title << "\n";
+            out << fileInfo.filePath() << "\n";
+            if (lrcFileInfo.exists() && lrcFileInfo.isFile()) {
+                out << "lrc#" << lrcFileInfo.filePath() << "\n";
+            } else {
+                out << "lrc#NoLrc" << "\n";
+            }
+        } else if (suffix == "lrc") {
+            // handle lrc file
+            continue;
+        } else {
+            // handle other file types
+            continue;
+        }
+
     }
 
-    playlistFile->close();
+    localPlayListFile->close();
     updateMusicList();
 }
 
 void LocalMusic::updateMusicList() {
-    auto* model = new QStandardItemModel;
+    auto *model = new QStandardItemModel;
     musicListView->setModel(model);
-    if (!playlistFile->open(QIODevice::ReadOnly | QIODevice::Text)) {
+    if (!localPlayListFile->open(QIODevice::ReadOnly | QIODevice::Text)) {
         qWarning() << "Failed to open playlist file for reading.";
-        return ;
+        return;
     }
-    QTextStream in(playlistFile);
+    QTextStream in(localPlayListFile);
     QStringList titleLines;
     while (!in.atEnd()) {
         QString line = in.readLine();
         if (!line.isEmpty()) {
-            if (line.startsWith("#")){
+            if (line.startsWith("#")) {
                 titleLines << line;
-            } else{
+            } else if (line.startsWith("lrc#")) {
+                QStringList parts = line.split(QRegExp("#"));
+                playListLrc << parts[1];
+            } else {
                 playList.push_back(line);
             }
         }
     }
 
     // 添加歌曲信息到模型中
-    for (const QString &line : titleLines) {
+    for (const QString &line: titleLines) {
         QStringList parts = line.split(QRegExp(":"));
         if (parts.size() == 2) {
 //            QString artist = parts[0];
@@ -129,15 +161,40 @@ void LocalMusic::updateMusicList() {
             model->appendRow(item);
         }
     }
-    playlistFile->close();
+    localPlayListFile->close();
 }
-
+void LocalMusic::addMusicToPlaylist() {
+    QModelIndex index = musicListView->currentIndex();
+    int row=index.row();
+    currentPlay = playList[row];
+    QStandardItemModel *playlistModel=new QStandardItemModel;
+    QString musicName;
+    if (index.isValid())
+    {
+        musicName = index.data(Qt::DisplayRole).toString();
+        qDebug()<<"jjj"<<index.data(Qt::DisplayRole).toString()<<endl;
+        playlistModel->appendRow(new QStandardItem(musicName));
+    }
+    //把播放文件写入musicPlayList.m3u文件
+    if (!musicPlaylist->open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text)) {
+        qWarning() << "Failed to open playlist file for writing.";
+        return;
+    }
+    QTextStream out(musicPlaylist);
+    out << "#EXTINF:" <<musicName<< endl;
+    out <<currentPlay<< endl;
+    musicPlaylist->close();
+}
 QListView *LocalMusic::getMusicListView() const {
     return musicListView;
 }
 
 const QVector<QString> &LocalMusic::getPlayList() const {
     return playList;
+}
+
+const QVector<QString> &LocalMusic::getPlayListLrc() const {
+    return playListLrc;
 }
 
 

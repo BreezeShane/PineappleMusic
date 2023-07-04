@@ -15,7 +15,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     lyricsUi();
 
     setupUI();
-
+    playBar->getSlider()->installEventFilter(this);
     connect(sidebar->getContentLists(),  //将显示列表与堆栈窗口关联，点击列表中的按键，显示相应的窗口
             SIGNAL(currentItemChanged(QListWidgetItem * , QListWidgetItem * )),
             this, SLOT(changePage(QListWidgetItem * , QListWidgetItem * )));
@@ -26,10 +26,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
             nextMusic();
         }
     });
-
-    QObject::connect(playBar->getPbtModel(), SIGNAL(clicked()),
-                     this,
-                     SLOT(togglePlayMode()));
+    // 播放模式切换按键
+    QObject::connect(playBar->getPbtModel(), SIGNAL(clicked()),this,SLOT(togglePlayMode()));
 
     QObject::connect(playBar->getPbtLyrics(), SIGNAL(clicked()),
                      this,
@@ -89,7 +87,7 @@ void MainWindow::lyricsModel() {
 
 // 槽函数，用于切换播放模式
 void MainWindow::togglePlayMode() {
-
+    qDebug()<<"hhhh";
     switch (currentPlayMode) {
         case SingleLoop:
             currentPlayMode = Sequential;
@@ -159,8 +157,6 @@ void MainWindow::setupUI() {
     //实例化播放器
     mediaPlayer = new QMediaPlayer;
 
-
-
     retranslateUi();
     //开始 - 暂停
     connect(playBar->getPbtStartOrPause(),
@@ -182,49 +178,30 @@ void MainWindow::setupUI() {
         int row = index.row();
         if (row >= 0 && row < mainContent->getLocalMusicPage()->getPlayList().size()) {
             currentPlaylist = mainContent->getLocalMusicPage()->getPlayList();
+            currentPlaylistLrc = mainContent->getLocalMusicPage()->getPlayListLrc();
             currentPlay = currentPlaylist[row];
+            currentPlayLrc = currentPlaylistLrc[row];
             mediaPlayer->setMedia(QUrl::fromLocalFile(currentPlay));
             mediaPlayer->play();
             playBar->getPbtStartOrPause()->setIcon(QIcon("../resource/icon/pause.png"));
             playBar->getSlider()->setSliderPosition(0);
         }
     });
-    isSliderPressed = false;
     connect(mediaPlayer,SIGNAL(positionChanged(qint64)),this,SLOT(onPositionChanged(qint64)));
     connect(mediaPlayer,SIGNAL(durationChanged(qint64)),this,SLOT(onDurationChanged(qint64)));
     connect(playBar->getSlider(),SIGNAL(valueChanged(int)),this,SLOT(slot_valueChanged_progress(int)));
-    connect(playBar->getSlider(), SIGNAL(sliderPressed()), this, SLOT(onSliderPressed(qint64,int)));
+    connect(playBar->getSlider(), SIGNAL(sliderPressed()), this, SLOT(onSliderPressed()));
 
-    connect(mainContent->getFromNetPage()->getFindButton(),&QPushButton::clicked,[=](){
-        qDebug()<<"播放"<<endl;
-        QString url_text = mainContent->getFromNetPage()->geturl_in()->text();
-        if(url_text == NULL){
-            QMessageBox::information(this,"提示","请输入url");
-            return ;
-        }
-        QUrl url(url_text);
-        mediaPlayer->setMedia(url);
-        mediaPlayer->play();
-        currentPlay = url_text;
-
-    });
+    connect(playBar->getSlider(), SIGNAL(sliderPressed()), this, SLOT(onSliderPressed()));
+    connect(playBar->getAction1(), SIGNAL(triggered()), this, SLOT(setPlaySpeed()));
+    connect(playBar->getAction2(), SIGNAL(triggered()), this, SLOT(setPlaySpeed()));
+    connect(playBar->getAction3(), SIGNAL(triggered()), this, SLOT(setPlaySpeed()));
+    connect(playBar->getAction4(), SIGNAL(triggered()), this, SLOT(setPlaySpeed()));
 }
 
 void MainWindow::retranslateUi() {
     //标题
     this->setWindowTitle("Pineapple Music");
-}
-
-QMediaPlayer *MainWindow::getMediaPlayer() const {
-    return mediaPlayer;
-}
-
-const QVector<QString> &MainWindow::getCurrentPlaylist() const {
-    return currentPlaylist;
-}
-
-void MainWindow::setCurrentPlaylist(const QVector<QString> &playlist) {
-    MainWindow::currentPlaylist = playlist;
 }
 
 void MainWindow::startOrPauseMusic() {
@@ -237,13 +214,6 @@ void MainWindow::startOrPauseMusic() {
     }
 }
 
-const QString &MainWindow::getCurrentPlay() const {
-    return currentPlay;
-}
-
-void MainWindow::setCurrentPlay(const QString &musicPath) {
-    MainWindow::currentPlay = musicPath;
-}
 
 void MainWindow::previousMusic() {
     switch (currentPlayMode) {
@@ -380,18 +350,61 @@ void MainWindow::onPositionChanged(qint64 position)
     if(playBar->getSlider()->isSliderDown())
         return;//如果手动调整进度条，则不处理
     playBar->getSlider()->setSliderPosition(position);
-    int secs = position/1000;
-    int mins = secs/60;
-    secs = secs % 60;
-    positionTime = QString::asprintf("%02d:%02d",mins,secs);//改格式为00:00
-    playBar->getCurrentProcess()->setText(positionTime);
+    updateCurrentProcessText();
 }
 
-void MainWindow::onSliderPressed(qint64 position,int value) {
-    playBar->getSlider()->setSliderPosition(position);
-    mediaPlayer->pause();
-    playBar->getCurrentProcess()->setText(positionTime);
+void MainWindow::onSliderPressed() {
+    updateCurrentProcessText();
     mediaPlayer->setPosition(playBar->getSlider()->value()*mediaPlayer->duration()/playBar->getSlider()->maximum()); // 设置播放器的当前进度
+}
+void MainWindow::updateCurrentProcessText()
+{
+    if (mediaPlayer != nullptr) {
+        qint64 position = mediaPlayer->position();
+        int secs = position / 1000;
+        int mins = secs / 60;
+        secs = secs % 60;
+        positionTime = QString::asprintf("%02d:%02d", mins, secs);
+        playBar->getCurrentProcess()->setText(positionTime);
+    }
+}
+bool MainWindow::eventFilter(QObject *obj, QEvent *event)
+{
+    if (obj == playBar->getSlider() && event->type() == QEvent::MouseMove) {
+        updateCurrentProcessText();
+    }
+    return QMainWindow::eventFilter(obj, event);
+}
+
+//void MainWindow::setPlaySpeed(){
+//    if (playBar->getSpeedMenu()->title() == "0.5x") {
+//        currentSpeed = 0.5;
+//    } else if (playBar->getSpeedMenu()->title() == "1.0x") {
+//        currentSpeed = 1.0;
+//    } else if (playBar->getSpeedMenu()->title() == "1.5x") {
+//        currentSpeed = 1.5;
+//    } else if (playBar->getSpeedMenu()->title() == "2.0x") {
+//        currentSpeed = 2.0;
+//    }
+//    mediaPlayer->setPlaybackRate(currentSpeed);
+//}
+void MainWindow::setPlaySpeed() {
+    QObject *senderObj = sender(); // 获取信号发送者对象指针
+
+    if (senderObj == playBar->getAction1()) {
+        currentSpeed = 0.5;
+        playBar->getSpeedMenu()->setTitle("0.5x");
+    } else if (senderObj == playBar->getAction2()) {
+        currentSpeed = 1.0;
+        playBar->getSpeedMenu()->setTitle("1.0x");
+    } else if (senderObj == playBar->getAction3()) {
+        currentSpeed = 1.5;
+        playBar->getSpeedMenu()->setTitle("1.5x");
+    } else if (senderObj == playBar->getAction4()) {
+        currentSpeed = 2.0;
+        playBar->getSpeedMenu()->setTitle("2.0x");
+    }
+    mediaPlayer->setPlaybackRate(currentSpeed);
 }
 
 MainWindow::~MainWindow() = default;

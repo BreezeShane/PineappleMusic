@@ -6,34 +6,31 @@
 #define PINEAPPLEMUSIC_FROMNET_H
 
 #include <QFrame>
-#include <QMediaPlayer>
-#include <QPushButton>
+#include <QHBoxLayout>
+#include <QVBoxLayout>
 #include <QLineEdit>
+#include <QPushButton>
+#include <QListView>
+#include <QLabel>
 
 class FromNet : public QFrame
 {
 Q_OBJECT
+private:
+
 public:
     explicit FromNet(QWidget *parent = nullptr);
     void setupUI();
+    QVBoxLayout* mainLayout{};
 
-    QPushButton *getFindButton() const;
-
-    QLineEdit *geturl_in() const;
-
-private slots:
-    void on_find_cliked();
-
-    void on_download_cliked();
-
-
-
-private:
-    QPushButton *find;
-    QPushButton *download;
-    QLineEdit *url_in;
-
+    QHBoxLayout* topLayout{};
+    QLineEdit* keyword_input{};
+    QPushButton* search{};
+    QListView *history{};
+    QString keyword{};
     ~FromNet() override;
+public slots:
+    void search_music();
 };
 
 #endif //PINEAPPLEMUSIC_FROMNET_H

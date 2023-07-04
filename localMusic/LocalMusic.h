@@ -20,10 +20,14 @@ private:
     QVBoxLayout *verticalLayout{};
     QHBoxLayout *horizontalLayout{};
     QPushButton *reloadMusicPbt{};
+    QPushButton *addMusicPlayPbt{};
     QSpacerItem *horizontalSpacer{};
     QListView *musicListView{};
-    QFile *playlistFile{};
+    QFile *localPlayListFile{};
+    QFile *musicPlaylist{};
     QVector<QString> playList{};
+    QVector<QString> playListLrc{};
+    QString currentPlay{};  //当前正在播放的音乐路径
 
 
 public:
@@ -34,10 +38,13 @@ public:
     void retranslateUi();
 
     void updateMusicList();
+    void addMusicToPlaylist();
 
     QListView *getMusicListView() const;
 
     const QVector<QString> &getPlayList() const;
+
+    const QVector<QString> &getPlayListLrc() const; //歌词文件列表
 
     ~LocalMusic() override;
 
