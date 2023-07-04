@@ -12,12 +12,13 @@
 #include <QPushButton>
 #include <QListView>
 #include <QLabel>
+#include "model/CloudMusic.h"
 
 class FromNet : public QFrame
 {
 Q_OBJECT
 private:
-
+    QList<Song> songs;
 public:
     explicit FromNet(QWidget *parent = nullptr);
     void setupUI();
@@ -26,8 +27,10 @@ public:
     QHBoxLayout* topLayout{};
     QLineEdit* keyword_input{};
     QPushButton* search{};
-    QListView *history{};
+    QListView *resultListView{};
     QString keyword{};
+
+    void updateResultView();
     ~FromNet() override;
 public slots:
     void search_music();
