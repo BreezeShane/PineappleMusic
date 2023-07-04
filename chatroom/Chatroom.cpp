@@ -6,12 +6,19 @@
 #include <QDebug>
 #include <QMessageBox>
 #include <QStandardItemModel>
+#include <QDateTime>
+#include <QStyledItemDelegate>
+#include <QPainter>
+#include <QScrollBar>
+
 
 Chatroom::Chatroom(QWidget *parent)
         : QFrame(parent) {
 
     setupUI();
     model = new QStandardItemModel(infoListView);
+    scrollBar = new QScrollBar;
+    scrollBar = infoListView->verticalScrollBar();
     //发送按钮监听
     connect(pbtSend,&QPushButton::clicked,this,&Chatroom::info_Send);
     //连接按钮监听
@@ -34,7 +41,10 @@ void Chatroom::setupUI() {
     verticalLayout->addLayout(top_layout);
     //消息显示框
     infoListView = new QListView();
+    infoListView->setFont(QFont("Arial", 14));
+
     verticalLayout->addWidget(infoListView);
+
     //消息发送布局
     horizontalLayout = new QHBoxLayout();
     nickNameLabel = new QPushButton();
@@ -53,7 +63,6 @@ void Chatroom::setupUI() {
 
     pbtSend = new QPushButton();
     pbtSend->setFixedWidth(50);
-    qDebug()<<pbtSend->styleSheet();
     horizontalLayout->addWidget(pbtSend);
 
     verticalLayout->addLayout(horizontalLayout);
@@ -77,13 +86,27 @@ void Chatroom::server_start() {
 
     QString name = nickNameInput->text();
     QString message = messageInput->text();
-    QString information = name + ":" + message;
+    QString information = name + " : " + message;
     QByteArray data = QString(information).toUtf8();
+
+    QDateTime *datatime=new QDateTime(QDateTime::currentDateTime());
+    QString str = datatime->toString("yyyy-MM-dd hh:mm:ss ddd");    //设置时间格式
+    QString strSend = str + "  " + name + ":" + "\n" + data;
+
+    qDebug() << "Received response:" << strSend;
     socket->write(data);
 
+//    QStringList parts = information.split(":");
+//    QString myname = parts[0];
+//    QString myinfo = parts[1];
+//    QString send_message = name +"      "+ ":\n \n " + myinfo+"     \n";
+
     QStandardItem *item1 = new QStandardItem(information);
+    item1->setTextAlignment(Qt::AlignRight);
     model->appendRow(item1);
+
     infoListView->setModel(model);
+    scrollBar->setValue(scrollBar->maximum());
 }
 
 void Chatroom::newClent() {
@@ -93,19 +116,27 @@ void Chatroom::newClent() {
 //接收信息
 void Chatroom::ClientDate() {
 
-
     QByteArray data = socket->readAll();
     QString response = QString::fromUtf8(data);
     qDebug() << "Received response:" << response;
 
-    QStandardItem *item2 = new QStandardItem(response);
+    QStringList parts = response.split(":");
+    QString name = parts[0];
+    QString info = parts[1];
+    QString message = name + "  :\n     " + info+"\n";
+
+
+    QStandardItem *item2 = new QStandardItem(message);
+    item2->setTextAlignment(Qt::AlignLeft);
     model->appendRow(item2);
 
     infoListView->setModel(model);
+    scrollBar->setValue(scrollBar->maximum());
 
 }
 
 void Chatroom::info_Send() {
+    if(!connet) return ;
     server_start();
 }
 //连接服务器槽函数
