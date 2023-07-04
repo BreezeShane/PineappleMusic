@@ -63,7 +63,6 @@ public slots:
     void slot_valueChanged_progress(int value);
     void onDurationChanged(qint64 duration);
     void onPositionChanged(qint64 position);
-    void onSliderPressed(qint64,int);
     void togglePlayMode();
     void onSliderPressed();
     void updateCurrentProcessText();
