@@ -20,7 +20,7 @@ void PlayBar::setupUI() {
     pbtNext = new QPushButton();
     currentProcess = new QLabel();
     finalProcess = new QLabel();
-    slider = new MySlider(Qt::Horizontal, this);
+    sliderProcess = new MySlider(Qt::Horizontal, this);
 
     currentProcess->setText("00:00");
     finalProcess->setText("00:00");
@@ -42,7 +42,7 @@ void PlayBar::setupUI() {
                                 "padding: 2px;"
                                 "}");
 
-    slider->setStyleSheet("QSlider::groove:horizontal {"    //修改进度条样式
+    sliderProcess->setStyleSheet("QSlider::groove:horizontal {"    //修改进度条样式
                           "border: none;"
                           "height: 8px;"
                           "border-radius: 0px;"
@@ -69,7 +69,7 @@ void PlayBar::setupUI() {
 
     qhBoxLayout->addItem(horizontalSpacer);
     qhBoxLayout->addWidget(currentProcess);
-    qhBoxLayout->addWidget(slider);
+    qhBoxLayout->addWidget(sliderProcess);
     qhBoxLayout->addWidget(finalProcess);
     qhBoxLayout->addWidget(pbtPrevious);
     qhBoxLayout->addWidget(pbtStartOrPause);
@@ -102,7 +102,7 @@ QPushButton *PlayBar::getPbtNext() const {
 }
 
 MySlider *PlayBar::getSlider() const {
-    return slider;
+    return sliderProcess;
 }
 
 QLabel * PlayBar::getCurrentProcess() const {

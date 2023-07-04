@@ -9,7 +9,7 @@
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QMediaPlayer>
-
+#include <QEvent>
 class MainWindow : public QMainWindow {
     Q_OBJECT
 private:
@@ -29,7 +29,6 @@ private:
     QString currentPlay{};
     QString durationTime;
     QString positionTime;
-    bool isSliderPressed;
 public:
     explicit MainWindow(QWidget *parent = nullptr);
 
@@ -58,7 +57,9 @@ public slots:
     void slot_valueChanged_progress(int value);
     void onDurationChanged(qint64 duration);
     void onPositionChanged(qint64 position);
-    void onSliderPressed(qint64,int);
+    void onSliderPressed();
+    void updateCurrentProcessText();
+    bool eventFilter(QObject* , QEvent*);
 };
 
 #endif // MAINWINDOW_H
