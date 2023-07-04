@@ -147,18 +147,18 @@ void MainWindow::setupUI() {
         mediaPlayer->setMedia(url);
         mediaPlayer->play();
         currentPlay = url_text;
-        
-
-
     });
     connect(playBar->getSlider(), SIGNAL(sliderPressed()), this, SLOT(onSliderPressed()));
+    connect(playBar->getAction1(), SIGNAL(triggered()), this, SLOT(setPlaySpeed()));
+    connect(playBar->getAction2(), SIGNAL(triggered()), this, SLOT(setPlaySpeed()));
+    connect(playBar->getAction3(), SIGNAL(triggered()), this, SLOT(setPlaySpeed()));
+    connect(playBar->getAction4(), SIGNAL(triggered()), this, SLOT(setPlaySpeed()));
 }
 
 void MainWindow::retranslateUi() {
     //标题
     this->setWindowTitle("Pineapple Music");
 }
-
 
 void MainWindow::startOrPauseMusic() {
     if (mediaPlayer != nullptr && mediaPlayer->state() == QMediaPlayer::PlayingState) {
@@ -332,6 +332,36 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
     return QMainWindow::eventFilter(obj, event);
 }
 
+//void MainWindow::setPlaySpeed(){
+//    if (playBar->getSpeedMenu()->title() == "0.5x") {
+//        currentSpeed = 0.5;
+//    } else if (playBar->getSpeedMenu()->title() == "1.0x") {
+//        currentSpeed = 1.0;
+//    } else if (playBar->getSpeedMenu()->title() == "1.5x") {
+//        currentSpeed = 1.5;
+//    } else if (playBar->getSpeedMenu()->title() == "2.0x") {
+//        currentSpeed = 2.0;
+//    }
+//    mediaPlayer->setPlaybackRate(currentSpeed);
+//}
+void MainWindow::setPlaySpeed() {
+    QObject *senderObj = sender(); // 获取信号发送者对象指针
+
+    if (senderObj == playBar->getAction1()) {
+        currentSpeed = 0.5;
+        playBar->getSpeedMenu()->setTitle("0.5x");
+    } else if (senderObj == playBar->getAction2()) {
+        currentSpeed = 1.0;
+        playBar->getSpeedMenu()->setTitle("1.0x");
+    } else if (senderObj == playBar->getAction3()) {
+        currentSpeed = 1.5;
+        playBar->getSpeedMenu()->setTitle("1.5x");
+    } else if (senderObj == playBar->getAction4()) {
+        currentSpeed = 2.0;
+        playBar->getSpeedMenu()->setTitle("2.0x");
+    }
+    mediaPlayer->setPlaybackRate(currentSpeed);
+}
 
 MainWindow::~MainWindow() = default;
 
