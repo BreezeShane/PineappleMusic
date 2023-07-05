@@ -47,7 +47,6 @@ void FromNet::setupUI() {
     topLayout->addWidget(keyword_input);
     topLayout->addWidget(search);
 
-
     resultListView = new QListView;
     resultListView->setIconSize(QSize(80, 80));
     resultListView->setStyleSheet("QListView {"
@@ -103,6 +102,9 @@ void FromNet::search_music() {
         }
         reply->deleteLater();
         updateResultView();//搜索事件结束，更新列表，显示结果
+        qDebug()<<"QSslSocket="<<QSslSocket::sslLibraryBuildVersionString();
+        qDebug() << "OpenSSL支持情况:" << QSslSocket::supportsSsl();
+
     });
 }
 
