@@ -19,6 +19,7 @@ class FromNet : public QFrame
 Q_OBJECT
 private:
     QList<Song> songs;
+    QString current_music_url;
 public:
     explicit FromNet(QWidget *parent = nullptr);
     void setupUI();
@@ -29,6 +30,7 @@ public:
     QPushButton* search{};
     QListView *resultListView{};
     QString keyword{};
+    void downloadFile(const QUrl &url, const QString &filePath);
 
     void updateResultView();
     ~FromNet() override;

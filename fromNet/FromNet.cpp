@@ -11,6 +11,8 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QStandardItemModel>
+#include <QEventLoop>
+#include <QFile>
 
 FromNet::FromNet(QWidget *parent)
         : QFrame(parent) {
@@ -54,6 +56,53 @@ void FromNet::setupUI() {
     connect(search, SIGNAL(clicked()),
             this, SLOT(search_music()));
 
+    // 连接QListView的双击信号到一个槽函数
+    QObject::connect(resultListView, &QListView::doubleClicked, [&](const QModelIndex &index) {
+        // 获取被双击的项目的索引
+        int item_index = index.row();
+        // 使用索引获取项目的数据
+        int  songId = index.data(Qt::UserRole).toInt();
+
+        QString url = "https://service-qbrcywo4-1314545420.gz.apigw.tencentcs.com/release/song/url";
+        QUrlQuery query;
+        query.addQueryItem("id", QString::number(songId));
+        url.append("?" + query.toString());
+        QNetworkRequest request(url);
+
+
+        auto *manager = new QNetworkAccessManager(this);
+        QNetworkReply *reply = manager->get(request);
+        connect(reply, &QNetworkReply::finished, this, [=]() {
+            QString url{};
+            if (reply->error() == QNetworkReply::NoError) {
+                QString response = reply->readAll();
+                const QString &jsonStr = response;  // 从服务器获取的 JSON 数据
+                QJsonDocument doc = QJsonDocument::fromJson(jsonStr.toUtf8());
+                if (!doc.isNull()) {
+                    QJsonObject obj = doc.object();
+                    if (obj.contains("data")) {
+                        QJsonArray data = obj["data"].toArray();
+                        if (!data.isEmpty()) {
+                            QJsonObject item = data[0].toObject();
+                            if (item.contains("url")) {
+                                url = item["url"].toString();
+                                current_music_url = url;
+                                qDebug() << "download file";
+                                downloadFile(current_music_url,"D:/music/music.mp3");
+                            }
+                        }
+                    }
+                }
+                // 处理响应数据
+            } else {
+                qDebug() << "error";
+                // 处理错误
+            }
+            reply->deleteLater();
+
+        });
+        qDebug() << "Double clicked on item " << item_index << ": " << songId;
+    });
 }
 
 void FromNet::search_music() {
@@ -141,6 +190,28 @@ void FromNet::updateResultView() {
 
     // 将数据模型设置为 QListView 的模型
     resultListView->setModel(model);
+}
+
+void FromNet::downloadFile(const QUrl &url, const QString &filePath) {
+    auto *manager = new QNetworkAccessManager();
+    QNetworkReply *reply = manager->get(QNetworkRequest(url));
+
+    QEventLoop loop;
+    QObject::connect(reply, &QNetworkReply::finished, &loop, &QEventLoop::quit);
+    loop.exec();
+
+    if(reply->error()) {
+        // 处理错误
+    } else {
+        QFile file(filePath);
+        if (file.open(QIODevice::WriteOnly)) {
+            file.write(reply->readAll());
+            file.close();
+        }
+    }
+
+    reply->deleteLater();
+    manager->deleteLater();
 }
 
 FromNet::~FromNet() = default;
