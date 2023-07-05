@@ -30,11 +30,11 @@ private:
     PlayBar *playBar{};
     //歌词窗口
     QWidget *widget;
-    //
-   // QWidget *tool{};
+
    QToolBar *toolbar{};
-   //
+   //工具栏按钮
    QPushButton *personalizebt{};
+    QPushButton *helpbt{};
     //媒体播放器
     QMediaPlayer *mediaPlayer{};    //播放器
     QVector<QString> currentPlaylist{};     //当前播放列表
@@ -88,7 +88,7 @@ public slots:
     void lyricsModel();
     void creatLyricsWindow();
     void changeBackground();
-
+    void helpShow();
     //打开播放详情页
     void openDetailWindow();
 };
