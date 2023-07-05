@@ -312,6 +312,8 @@ void MainWindow::setupUI() {
     connect(playBar->getAction2(), SIGNAL(triggered()), this, SLOT(setPlaySpeed()));
     connect(playBar->getAction3(), SIGNAL(triggered()), this, SLOT(setPlaySpeed()));
     connect(playBar->getAction4(), SIGNAL(triggered()), this, SLOT(setPlaySpeed()));
+    // 换肤连接
+    connect(personalizebt, &QPushButton::clicked, this, &MainWindow::changeBackground);
 }
 
 void MainWindow::retranslateUi() {
