@@ -51,7 +51,7 @@ void FavoriteList::updatePlayList() {
         return;
     }
     QTextStream in(&musicPlaylistFile);
-    in.setCodec("UTF-8");
+//    in.setCodec("UTF-8");
     QStringList titleLines;
     while (!in.atEnd()) {
         QString line = in.readLine();
@@ -60,7 +60,7 @@ void FavoriteList::updatePlayList() {
                 titleLines << line;
             } else if (line.startsWith("lrc#")) {
                 QStringList parts = line.split(QRegExp("#"));
-                favoriteListLrc << parts[1];
+                favoriteListLrc.push_back(parts[1]);
             } else {
                 favoriteList.push_back(line);
             }
