@@ -30,7 +30,19 @@ void Chatroom::setupUI() {
     verticalLayout = new QVBoxLayout();
     //顶层布局
     top_layout = new QHBoxLayout;
+    //昵称设置
+    nickNameLabel = new QPushButton();
+    nickNameLabel->setFixedSize(32,32);
+    nickNameLabel->setEnabled(false);
+    top_layout->addWidget(nickNameLabel);
+
+    nickNameInput = new QLineEdit();
+    nickNameInput->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Maximum);
+    nickNameInput->setFixedHeight(32);
+    top_layout->addWidget(nickNameInput);
+
     top_layout->addSpacerItem(new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum));
+    //发送按钮
     join = new QPushButton("");
     join->setFixedSize(82,32);
     join->setStyleSheet("border-radius: 10px;border: 1px solid gray");
@@ -40,20 +52,15 @@ void Chatroom::setupUI() {
 
     //消息显示框
     infoListView = new QListView();
-    infoListView->setFont(QFont("Arial", 14));
+    //infoListView->setFont(QFont("Arial", 14));
+    infoListView->setStyleSheet("QListView {"
+                            "padding: 5px;"
+                            "spacing: 5px;"
+                            "}");
     verticalLayout->addWidget(infoListView);
 
     //消息发送布局
     horizontalLayout = new QHBoxLayout();
-    nickNameLabel = new QPushButton();
-    nickNameLabel->setFixedSize(32,32);
-    nickNameLabel->setEnabled(false);
-    horizontalLayout->addWidget(nickNameLabel);
-
-    nickNameInput = new QLineEdit();
-    nickNameInput->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Maximum);
-    nickNameInput->setFixedHeight(32);
-    horizontalLayout->addWidget(nickNameInput);
 
     messageInput = new QLineEdit();
     messageInput->setFixedHeight(32);
@@ -85,19 +92,33 @@ void Chatroom::ClientDate() {
     QByteArray data = socket->readAll();
     QString response = QString::fromUtf8(data);
     qDebug() << "Received response:" << response;
+
+    //获取当前时间
+    QDateTime *datatime=new QDateTime(QDateTime::currentDateTime());
+    //QString str = datatime->toString("yyyy-MM-dd hh:mm:ss ddd");    //设置时间格式
+    QString str = datatime->toString("yyyy-MM-dd hh:mm:ss");    //设置时间格式
+
+    qDebug() << "Received response:" << str;
+
     //对接收的消息拆分
     QStringList parts = response.split(":");
     QString name = parts[0];
     QString info = parts[1];
-    QString message = name + "  :\n     " + info+"\n";
+    QString message = name + "       " + str +"\n     " + info + "\n";
 
     //在listview中显示
-    QStandardItem *item2 = new QStandardItem(message);
+    QStandardItem *item2 = new QStandardItem();
+
+    QFont font1("Arial", 11, QFont::Normal);
+    QFont font2("Times", 15, QFont::Normal);
+    item2->setData(message, Qt::DisplayRole);
+    item2->setData(font1, Qt::FontRole);
+    item2->setData(font2, Qt::FontRole + 1);
+
     item2->setTextAlignment(Qt::AlignLeft);
     model->appendRow(item2);
     infoListView->setModel(model);
     scrollBar->setValue(scrollBar->maximum());
-
 }
 //发送按钮槽函数
 void Chatroom::info_Send() {
@@ -113,24 +134,28 @@ void Chatroom::server_start() {
     if (name.isEmpty() || message.isEmpty()) {
         return ;
     }
-    QString information = name + " : " + message;
-    QByteArray data = QString(information).toUtf8();
     //获取当前时间
     QDateTime *datatime=new QDateTime(QDateTime::currentDateTime());
-    QString str = datatime->toString("yyyy-MM-dd hh:mm:ss ddd");    //设置时间格式
-    QString strSend = str + "  " + name + ":" + "\n" + data;
+    QString str = datatime->toString("yyyy-MM-dd hh:mm:ss");    //设置时间格式
+
+    QString information = name + " : " + message;
+
+    QString local_info = "[我] "+ name + "       " + str + "\n     " + message + "\n";
+    QByteArray data = QString(information).toUtf8();
+
     //发送
-    qDebug() << "Received response:" << strSend;
+    qDebug() << "Received response:" << str;
     socket->write(data);
 
-//    QStringList parts = information.split(":");
-//    QString myname = parts[0];
-//    QString myinfo = parts[1];
-//    QString send_message = name +"      "+ ":\n \n " + myinfo+"     \n";
-
     //在listview中显示
-    QStandardItem *item1 = new QStandardItem(information);
-    item1->setTextAlignment(Qt::AlignRight);
+    QStandardItem *item1 = new QStandardItem(local_info);
+
+    QFont font1("Arial", 11, QFont::Normal);
+    QFont font2("Times", 15, QFont::Normal);
+    item1->setData(local_info, Qt::DisplayRole);
+    item1->setData(font1, Qt::FontRole);
+    item1->setData(font2, Qt::FontRole + 1);
+    item1->setTextAlignment(Qt::AlignLeft);
     model->appendRow(item1);
     infoListView->setModel(model);
     scrollBar->setValue(scrollBar->maximum());
