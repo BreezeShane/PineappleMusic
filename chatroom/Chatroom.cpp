@@ -33,6 +33,17 @@ void Chatroom::setupUI() {
     nickNameLabel = new QPushButton();
     nickNameLabel->setFixedSize(32,32);
     nickNameLabel->setEnabled(false);
+    nickNameLabel->setStyleSheet("QPushButton {"
+                        "border: 2px;"
+                        "border-radius:10px;"
+                        "padding: 6px;"
+                        "}"
+                        "QPushButton:hover {"
+                        "    background-color: #ADD8E6;"
+                        "}"
+                        "QPushButton:pressed {"
+                        "    background-color:#ADD8E6 ;"
+                        "}");
     top_layout->addWidget(nickNameLabel);
 
     nickNameInput = new QLineEdit();
@@ -49,7 +60,18 @@ void Chatroom::setupUI() {
     //发送按钮
     join = new QPushButton("");
     join->setFixedSize(82,32);
-    join->setStyleSheet("border-radius: 10px;border: 1px solid gray");
+//    join->setStyleSheet("border-radius: 10px;border: 1px solid gray");
+    join->setStyleSheet("QPushButton {"
+                                 "border: 2px;"
+                                 "border-radius:10px;"
+                                 "padding: 6px;"
+                                 "}"
+                                 "QPushButton:hover {"
+                                 "    background-color: #ADD8E6;"
+                                 "}"
+                                 "QPushButton:pressed {"
+                                 "    background-color:#ADD8E6 ;"
+                                 "}");
     top_layout->addWidget(join);
     //加入主布局
     verticalLayout->addLayout(top_layout);
@@ -86,6 +108,17 @@ void Chatroom::setupUI() {
 
     pbtSend = new QPushButton();
     pbtSend->setFixedWidth(50);
+    pbtSend->setStyleSheet("QPushButton {"
+                        "border: 2px;"
+                        "border-radius:10px;"
+                        "padding: 6px;"
+                        "}"
+                        "QPushButton:hover {"
+                        "    background-color: #ADD8E6;"
+                        "}"
+                        "QPushButton:pressed {"
+                        "    background-color:#ADD8E6 ;"
+                        "}");
     horizontalLayout->addWidget(pbtSend);
 
     verticalLayout->addLayout(horizontalLayout);

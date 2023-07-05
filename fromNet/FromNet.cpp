@@ -33,7 +33,17 @@ void FromNet::setupUI() {
     search = new QPushButton();
     search->setIcon(QIcon("../resource/icon/search.svg"));
     search->setFixedWidth(80);
-
+    search->setStyleSheet("QPushButton {"
+                        "border: 2px;"
+                        "border-radius:10px;"
+                        "padding: 6px;"
+                        "}"
+                        "QPushButton:hover {"
+                        "    background-color: #ADD8E6;"
+                        "}"
+                        "QPushButton:pressed {"
+                        "    background-color:#ADD8E6 ;"
+                        "}");
     topLayout->addWidget(keyword_input);
     topLayout->addWidget(search);
 

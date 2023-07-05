@@ -33,7 +33,17 @@ void LocalMusic::setupUI() {
     horizontalLayout->addItem(horizontalSpacer);
 
     reloadMusicPbt = new QPushButton(this);
-    reloadMusicPbt->setStyleSheet("padding:5px;");
+    reloadMusicPbt->setStyleSheet("QPushButton {"
+                        "border: 2px;"
+                        "border-radius:10px;"
+                        "padding: 6px;"
+                        "}"
+                        "QPushButton:hover {"
+                        "    background-color: #ADD8E6;"
+                        "}"
+                        "QPushButton:pressed {"
+                        "    background-color:#ADD8E6 ;"
+                        "}");
     reloadMusicPbt->setEnabled(true);
     QSizePolicy sizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     sizePolicy.setHorizontalStretch(0);
