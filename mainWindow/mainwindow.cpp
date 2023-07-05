@@ -6,6 +6,11 @@
 #include <QTimer>
 #include <QPropertyAnimation>
 #include <QMessageBox>
+#include <QNetworkAccessManager>
+#include <QUrlQuery>
+#include <QNetworkReply>
+#include <QJsonDocument>
+#include <QJsonArray>
 #include "mainwindow.h"
 #include "sidebar/Sidebar.h"
 #include "mainContent/MainContent.h"
@@ -186,6 +191,62 @@ void MainWindow::setupUI() {
             playBar->getPbtStartOrPause()->setIcon(QIcon("../resource/icon/pause.png"));
             playBar->getSlider()->setSliderPosition(0);
         }
+    });
+    connect(mainContent->getFromNetPage()->resultListView, &QListView::clicked, this, [=](const QModelIndex& index) {
+        // 获取用户点击的项的数据
+        int songId = index.data(Qt::UserRole).toInt();
+        music.setArtist(index.data(Qt::UserRole+1).toString());
+        music.setAlbumUrl(index.data(Qt::UserRole+2).toString());
+        music.setDuration(index.data(Qt::UserRole+3).toInt());
+        music.setName(index.data(Qt::UserRole+4).toString());
+        auto *manager = new QNetworkAccessManager(this);
+        QString url = "https://service-qbrcywo4-1314545420.gz.apigw.tencentcs.com/release/song/url";
+        QUrlQuery query;
+        query.addQueryItem("id", QString::number(songId));
+        url.append("?" + query.toString());
+        QNetworkRequest request(url);
+
+        QNetworkReply *reply = manager->get(request);
+
+        connect(reply, &QNetworkReply::finished, this, [=]() {
+            QString url{};
+            if (reply->error() == QNetworkReply::NoError) {
+                QString response = reply->readAll();
+                const QString &jsonStr = response;  // 从服务器获取的 JSON 数据
+                QJsonDocument doc = QJsonDocument::fromJson(jsonStr.toUtf8());
+                if (!doc.isNull()) {
+                    QJsonObject obj = doc.object();
+                    if (obj.contains("data")) {
+                        QJsonArray data = obj["data"].toArray();
+                        if (!data.isEmpty()) {
+                            QJsonObject item = data[0].toObject();
+                            if (item.contains("url")) {
+                                url = item["url"].toString();
+                                music.setMusicUrl(url);
+                            }
+                        }
+                    }
+                }
+                // 处理响应数据
+            } else {
+                qDebug() << "error";
+                // 处理错误
+            }
+            reply->deleteLater();
+
+        });
+        // 在这里处理用户点击事件，例如显示该歌曲的详细信息
+        currentPlaylist.clear();
+        currentPlaylist.append(music.getName());
+        currentPlaylistLrc.clear();
+        currentPlaylistLrc.append("NoLrc");
+        currentPlay = music.getMusicUrl();
+        currentPlayLrc ="NoLrc";
+        QUrl url1(currentPlay);
+        mediaPlayer->setMedia(url1);
+        mediaPlayer->play();
+        playBar->getPbtStartOrPause()->setIcon(QIcon("../resource/icon/pause.png"));
+        playBar->getSlider()->setSliderPosition(0);
     });
     connect(mediaPlayer,SIGNAL(positionChanged(qint64)),this,SLOT(onPositionChanged(qint64)));
     connect(mediaPlayer,SIGNAL(durationChanged(qint64)),this,SLOT(onDurationChanged(qint64)));

@@ -35,11 +35,36 @@ public:
     bool isPaid;  // 是否付费
 
     // 解析 JSON 数据为 Song 类实例
-    static Song fromJson(const QJsonObject& songObject);
+    static Song fromJson(const QJsonObject &songObject);
 };
 
 class CloudMusic {
+private:
+    QString name;  // 歌曲名称
+    QString album_url;  // 专辑封面 URL
+    QString artist;  // 专辑所属艺术家
+    QString music_url;//音乐网络地址
+    int duration;  // 歌曲时长（毫秒）
+public:
+    const QString &getName() const;
 
+    void setName(const QString &name);
+
+    const QString &getAlbumUrl() const;
+
+    void setAlbumUrl(const QString &albumUrl);
+
+    const QString &getArtist() const;
+
+    void setArtist(const QString &artist);
+
+    const QString &getMusicUrl() const;
+
+    void setMusicUrl(const QString &musicUrl);
+
+    int getDuration() const;
+
+    void setDuration(int duration);
 };
 
 

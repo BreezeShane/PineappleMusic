@@ -121,22 +121,20 @@ void FromNet::updateResultView() {
         item->setData(song.id, Qt::UserRole);
 
         // 将艺术家信息转换为字符串，并设置为 QStandardItem 对象的子项
-        QString artistText;
-        for (int j = 0; j < song.artists.size(); j++) {
-            Artist artist = song.artists.at(j);
-            if (!artistText.isEmpty()) {
-                artistText += " / ";
-            }
-            artistText += artist.name;
-        }
+        QString artistText = song.artists.first().name;
         // 使用 setData() 函数来设置不同角色的数据
         item->setData(artistText, Qt::UserRole + 1);
 
         // 将专辑信息转换为字符串，并设置为 QStandardItem 对象的子项
-        QString albumText = song.album.name;
+        QString albumText = song.album.img1v1Url;
         // 使用 setData() 函数来设置不同角色的数据
         item->setData(albumText, Qt::UserRole + 2);
 
+        // 将专辑信息转换为字符串，并设置为 QStandardItem 对象的子项
+        int duration = song.duration;
+        // 使用 setData() 函数来设置不同角色的数据
+        item->setData(duration, Qt::UserRole + 3);
+        item->setData(song.name, Qt::UserRole+4);
         // 将 QStandardItem 对象添加到数据模型中
         model->appendRow(item);
     }
