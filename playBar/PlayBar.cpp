@@ -4,8 +4,7 @@
 
 #include "PlayBar.h"
 
-PlayBar::PlayBar(QWidget *parent)
-        : QFrame(parent) {
+PlayBar::PlayBar(QWidget *parent) : QFrame(parent) {
 
     setupUI();
 }
@@ -14,8 +13,9 @@ void PlayBar::setupUI() {
     this->setStyleSheet("border: 2px solid gray;border-radius:10px;");
     this->setFixedHeight(100);
     qhBoxLayout = new QHBoxLayout(this);
-    album = new QLabel();
-    album->setMouseTracking(true);
+    album = new QPushButton();
+    album->setFixedSize(80, 80);
+    album->setIconSize(QSize(80, 80));
     pbtLyrics = new QPushButton();
     pbtModel = new QPushButton();
     pbtPrevious = new QPushButton();
@@ -30,8 +30,8 @@ void PlayBar::setupUI() {
 
     currentProcess->setText("00:00");
     finalProcess->setText("00:00");
-    currentProcess->setFixedSize(50,50);//设置大小
-    finalProcess->setFixedSize(50,50);
+    currentProcess->setFixedSize(50, 50);//设置大小
+    finalProcess->setFixedSize(50, 50);
     currentProcess->setStyleSheet("QLabel {"
                                   "background-color: transparent;"
                                   //"border: 1px solid gray;"
@@ -49,29 +49,29 @@ void PlayBar::setupUI() {
                                 "}");
 
     sliderProcess->setStyleSheet("QSlider::groove:horizontal {"    //修改进度条样式
-                          "border: none;"
-                          "height: 8px;"
-                          "border-radius: 0px;"
-                          "background: lightgray;"
-                          "}"
-                          "QSlider::handle:horizontal {"
-                          "background: rgb(255, 120, 0);"
-                          "border: none;"
-                          "width: 16px;"
-                          "height: 16px;"
-                          "margin: -5px 0;"
-                          "border-radius: 8px;"
-                          "}"
-                          "QSlider::sub-page:horizontal {"
-                          "height: 4px;"
-                          "border-radius: 3px;"
-                          "background: rgb(255, 170, 0);"
-                          "}"
-                          "QSlider::add-page:horizontal {"
-                          "height: 4px;"
-                          "border-radius: 3px;"
-                          "background: lightgray;"
-                          "}");
+                                 "border: none;"
+                                 "height: 8px;"
+                                 "border-radius: 0px;"
+                                 "background: lightgray;"
+                                 "}"
+                                 "QSlider::handle:horizontal {"
+                                 "background: rgb(255, 120, 0);"
+                                 "border: none;"
+                                 "width: 16px;"
+                                 "height: 16px;"
+                                 "margin: -5px 0;"
+                                 "border-radius: 8px;"
+                                 "}"
+                                 "QSlider::sub-page:horizontal {"
+                                 "height: 4px;"
+                                 "border-radius: 3px;"
+                                 "background: rgb(255, 170, 0);"
+                                 "}"
+                                 "QSlider::add-page:horizontal {"
+                                 "height: 4px;"
+                                 "border-radius: 3px;"
+                                 "background: lightgray;"
+                                 "}");
 
 
     speedMenu = new QMenu(speedMenuBar);
@@ -115,7 +115,7 @@ void PlayBar::retranslateUi() {
     QPixmap pixmap("../resource/icon/default_album.svg");
     QSize size(60, 60);
     QPixmap scaledPixmap = pixmap.scaled(size, Qt::KeepAspectRatio, Qt::FastTransformation);
-    album->setPixmap(scaledPixmap);
+    album->setIcon(scaledPixmap);
     pbtLyrics->setIcon(QIcon("../resource/icon/lyricsOff.svg"));
     pbtModel->setIcon(QIcon("../resource/icon/sequential.svg"));
     pbtPrevious->setIcon(QIcon("../resource/icon/previous.png"));
@@ -143,11 +143,11 @@ MySlider *PlayBar::getSlider() const {
     return sliderProcess;
 }
 
-QLabel * PlayBar::getCurrentProcess() const {
+QLabel *PlayBar::getCurrentProcess() const {
     return currentProcess;
 }
 
-QLabel * PlayBar::getFinalProcess() const {
+QLabel *PlayBar::getFinalProcess() const {
     return finalProcess;
 }
 
@@ -159,33 +159,32 @@ QPushButton *PlayBar::getPbtLyrics() const {
     return pbtLyrics;
 }
 
-QMenu * PlayBar::getSpeedMenu() const {
+QMenu *PlayBar::getSpeedMenu() const {
     return speedMenu;
 }
 
-QAction  *PlayBar::getAction1() const {
+QAction *PlayBar::getAction1() const {
     return action1;
 }
 
-QAction  *PlayBar::getAction2() const {
+QAction *PlayBar::getAction2() const {
     return action2;
 }
 
-QAction  *PlayBar::getAction3() const {
+QAction *PlayBar::getAction3() const {
     return action3;
 }
 
-QAction  *PlayBar::getAction4() const {
+QAction *PlayBar::getAction4() const {
     return action4;
 }
 
-QLabel *PlayBar::getAlbum() const {
+QPushButton *PlayBar::getAlbum() const {
     return album;
 }
 
-void PlayBar::setAlbum(const QPixmap& music_album) {
-    PlayBar::album->setScaledContents(true);
-    PlayBar::album->setPixmap(music_album.scaled(PlayBar::album->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+void PlayBar::setAlbum(const QPixmap &music_album) {
+    PlayBar::album->setIcon(music_album);
 }
 
 PlayBar::~PlayBar() = default;
