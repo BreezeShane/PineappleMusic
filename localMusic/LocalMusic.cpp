@@ -68,7 +68,6 @@ void LocalMusic::setupUI() {
                                    "background-color:gray;"
                                    "}");
 
-
     verticalLayout->addWidget(musicListView);
     verticalLayout->addWidget(addMusicPlayPbt);
     localPlayListFile = new QFile("../resource/local_playlist.m3u");

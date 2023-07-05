@@ -15,8 +15,19 @@ void PlayList::setupUI() {
     this->setStyleSheet("border: 2px solid gray;border-radius:10px;background-color: transparent");
     this->setContentsMargins(3, 3, 3, 3);
     playMusicPbt =new QPushButton("播放");
-    playMusicPbt->setStyleSheet("padding:5px;");
     playMusicPbt->setFont(QFont("宋体", 13));
+    playMusicPbt->setStyleSheet("QPushButton {"
+                                "background-color: #555555;"
+                                "border: none;"
+                                "color: white;"
+                                "    padding: 4px;"
+                                "}"
+                                "QPushButton:hover {"
+                                "    background-color: gray;"
+                                "}"
+                                "QPushButton:pressed {"
+                                "    background-color:gray ;"
+                                "}");
     playListView=new QListView();
     playListView->setFont(QFont("宋体", 13));
 
@@ -24,6 +35,11 @@ void PlayList::setupUI() {
     playLayout->addWidget(playListView);
     playLayout->addWidget(text);
     this->setLayout(playLayout);
+    updatePlayList();
+    //点击刷新播放列表
+    connect(playMusicPbt, &QPushButton::clicked, this, &PlayList::playListUp);
+}
+void PlayList::playListUp() {
     updatePlayList();
 }
 void PlayList::updatePlayList() {

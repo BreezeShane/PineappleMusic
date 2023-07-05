@@ -26,6 +26,7 @@ public:
     explicit PlayList(QWidget *parent = nullptr);
     void setupUI();
     void updatePlayList();
+    void playListUp();
 
     ~PlayList() override;
 };

@@ -49,9 +49,9 @@ void PlayBar::setupUI() {
                                 "}");
 
     sliderProcess->setStyleSheet("QSlider::groove:horizontal {"    //修改进度条样式
-                                 "border: none;"
+//                                 "border: none;"
                                  "height: 8px;"
-                                 "border-radius: 0px;"
+//                                 "border-radius: 0px;"
                                  "background: lightgray;"
                                  "}"
                                  "QSlider::handle:horizontal {"
@@ -112,7 +112,7 @@ void PlayBar::setupUI() {
 }
 
 void PlayBar::retranslateUi() {
-    QPixmap pixmap("../resource/icon/default_album.svg");
+    QPixmap pixmap("../resource/icon/app.png");
     QSize size(60, 60);
     QPixmap scaledPixmap = pixmap.scaled(size, Qt::KeepAspectRatio, Qt::FastTransformation);
     album->setIcon(scaledPixmap);
