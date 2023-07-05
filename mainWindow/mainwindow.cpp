@@ -174,6 +174,7 @@ void MainWindow::setupUI() {
     personalizebt=new QPushButton();
     helpbt=new QPushButton();
     personalizebt->setIcon(QIcon("../resource/icon/skin.svg"));
+    helpbt->setToolTip("帮助文档");
     helpbt->setIcon(QIcon("../resource/icon/help.svg"));
     // 设置个性化按钮的样式
     personalizebt->setFont(QFont("宋体", 8));
@@ -188,6 +189,7 @@ void MainWindow::setupUI() {
                                      "QPushButton:pressed {"
                                      "    background-color:#FFFFF0;"
                                      "}");
+    personalizebt->setToolTip("个性化");
     helpbt->setStyleSheet("QPushButton {"
                                  "    border: 2px;"
                                  "border-radius:10px;"
@@ -377,6 +379,7 @@ void MainWindow::helpShow() {
                                      " 顺序播放/随机播放/循环播放 点击播放栏的相应图标即可\n"
                                      " 播放速度 可设置0.5/1/1.5/2倍数播放音乐\n"
                                      "【添加本地音乐】点击本地音乐界面的扫描添加按钮\n"
+                                     "【查看歌曲歌词】点击播放栏界面的专辑图片\n"
                                      "【音乐文件类型】添加过程中会自动过滤得到可播放的文件类型（.mp3/.flac/.mpga文件），所以添加时无需考虑文件类型，使用\"Ctrl+A\"选择文件夹内全部文件添加即可\n"
                                      "\n注：鼠标移动到不认识的按钮上，会有说明哦~\n");
 }
