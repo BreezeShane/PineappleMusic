@@ -104,7 +104,7 @@ void MainWindow::togglePlayMode() {
         case SingleLoop:
             currentPlayMode = Sequential;
             //playBar->getPbtModel()->setText("顺序播放");
-            playBar->getPbtModel()->setIcon(QIcon("../resource/icon/sequential.svg"));
+            playBar->getPbtModel()->setIcon(QIcon("../resource/icon/sequence.svg"));
             break;
         case Sequential:
             currentPlayMode = Random;
@@ -114,7 +114,7 @@ void MainWindow::togglePlayMode() {
         case Random:
             currentPlayMode = SingleLoop;
             //playBar->getPbtModel()->setText("单曲循环");
-            playBar->getPbtModel()->setIcon(QIcon("../resource/icon/singleloop.svg"));
+            playBar->getPbtModel()->setIcon(QIcon("../resource/icon/onlyone.svg"));
             break;
     }
 }
@@ -270,26 +270,7 @@ void MainWindow::setupUI() {
             playBar->getSlider()->setSliderPosition(0);
         }
     });
-//    //点击播放列表项播放音乐
-//    connect(mainContent->getPlayListPage()->getPlayMusicListView(), &QListView::clicked, this, [&](const QModelIndex &index) {
-//        // 获取选中项的索引
-//        QModelIndex selectedIndex = mainContent->getPlayListPage()->getPlayMusicListView()->model()->index(index.row(), 0);
-//
-//        // 根据选中项的索引获取数据或执行其他操作
-//        if (selectedIndex.isValid()) {
-//            currentPlaylist = mainContent->getLocalMusicPage()->getPlayList();
-//            currentPlaylistLrc = mainContent->getLocalMusicPage()->getPlayListLrc();
-//            currentPlay = currentPlaylist[senderSignalIndex()];
-//            currentPlayLrc = currentPlaylistLrc[senderSignalIndex()];
-//            qDebug()<<currentPlay<<endl;
-//            mediaPlayer->setMedia(QUrl::fromLocalFile(currentPlay));
-//            mediaPlayer->play();
-//            playBar->getPbtStartOrPause()->setIcon(QIcon("../resource/icon/pause.png"));
-//            playBar->getSlider()->setSliderPosition(0);
-//        } else {
-//            QMessageBox::information(this, "提示", "未选中音乐");
-//        }
-//    });
+
     connect(mainContent->getFromNetPage()->resultListView, &QListView::clicked, this, [=](const QModelIndex& index) {
         // 获取用户点击的项的数据
         int songId = index.data(Qt::UserRole).toInt();

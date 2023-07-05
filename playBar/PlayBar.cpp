@@ -10,7 +10,7 @@ PlayBar::PlayBar(QWidget *parent) : QFrame(parent) {
 }
 
 void PlayBar::setupUI() {
-    this->setStyleSheet("border: 2px solid gray;border-radius:10px;");
+    this->setStyleSheet("QWidget { border: 2px solid gray; border-radius: 10px; background-color: transparent; }");
     this->setFixedHeight(100);
     qhBoxLayout = new QHBoxLayout(this);
     album = new QPushButton();
@@ -42,16 +42,16 @@ void PlayBar::setupUI() {
 
     finalProcess->setStyleSheet("QLabel {"
                                 "background-color: transparent;"
-                                "border: 1px solid gray;"
-                                //"border: none;"
+                               // "border: 1px solid gray;"
+                                "border: none;"
                                 "border-radius: 4px;"
                                 "padding: 2px;"
                                 "}");
 
     sliderProcess->setStyleSheet("QSlider::groove:horizontal {"    //修改进度条样式
-//                                 "border: none;"
+                               "border: none;"
                                  "height: 8px;"
-//                                 "border-radius: 0px;"
+                                "border-radius: 0px;"
                                  "background: lightgray;"
                                  "}"
                                  "QSlider::handle:horizontal {"
@@ -117,7 +117,8 @@ void PlayBar::retranslateUi() {
     QPixmap scaledPixmap = pixmap.scaled(size, Qt::KeepAspectRatio, Qt::FastTransformation);
     album->setIcon(scaledPixmap);
     pbtLyrics->setIcon(QIcon("../resource/icon/lyricsOff.svg"));
-    pbtModel->setIcon(QIcon("../resource/icon/sequential.svg"));
+    pbtModel->setIcon(QIcon("../resource/icon/sequence.svg"));
+
     pbtPrevious->setIcon(QIcon("../resource/icon/up.svg"));
     pbtPrevious->setIconSize(QSize(50, 50));
     pbtStartOrPause->setIcon(QIcon("../resource/icon/play.svg"));

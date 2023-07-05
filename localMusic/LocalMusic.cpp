@@ -221,14 +221,14 @@ void LocalMusic::addMusicToPlaylist() {
         }
 
         QTextStream out(musicPlaylist);
-//<<<<<<< HEAD
+
         out << "#EXTINF:" << musicName << endl;
         out << currentPlay << endl;
-//=======
+
 //        out.setCodec("UTF-8");
 //        out << "#EXTINF:" << musicName << endl;
 //        out << currentPlay << endl;
-//>>>>>>> b0843030d6578c814ea95a508a8d430dedb1b77d
+
 
         musicPlaylist->close();
     } catch (const std::exception& e) {

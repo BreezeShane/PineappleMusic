@@ -19,6 +19,7 @@ void FavoriteList::setupUI() {
     refreshList->setStyleSheet("QPushButton {"
                                 "background-color: #555555;"
                                 "border: none;"
+                                "border: 2px solid gray;"
                                 "color: white;"
                                 "    padding: 4px;"
                                 "}"
