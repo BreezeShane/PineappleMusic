@@ -24,9 +24,10 @@ private:
     QSpacerItem *horizontalSpacer{};
     QListView *musicListView{};
     QFile *localPlayListFile{};
-    QFile *musicPlaylist{};
-    QVector<QString> playList{};
-    QVector<QString> playListLrc{};
+    QFile *favoriteListFile{};
+    QVector<QString> localMusicListName{};
+    QVector<QString> localMusicList{};
+    QVector<QString> localMusicListLrc{};
     QString currentPlay{};  //当前正在播放的音乐路径
 
 
@@ -45,6 +46,9 @@ public:
     const QVector<QString> &getPlayList() const;
 
     const QVector<QString> &getPlayListLrc() const; //歌词文件列表
+    const QVector<QString> &getLocalMusicListName() const;
+
+    void setLocalMusicListName(const QVector<QString> &localMusicListName);
 
     ~LocalMusic() override;
 

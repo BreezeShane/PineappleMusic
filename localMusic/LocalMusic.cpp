@@ -80,7 +80,7 @@ void LocalMusic::setupUI() {
     verticalLayout->addWidget(musicListView);
     verticalLayout->addWidget(addMusicPlayPbt);
     localPlayListFile = new QFile("../resource/localMusicList.m3u");
-    musicPlaylist=new QFile("../resource/favoriteListFile.m3u");
+    favoriteListFile=new QFile("../resource/favoriteListFile.m3u");
 
     connect(reloadMusicPbt, SIGNAL(clicked()), this, SLOT(scanLocalMusic()));
     connect(addMusicPlayPbt, &QPushButton::clicked, this, &LocalMusic::addMusicToPlaylist);
@@ -171,9 +171,9 @@ void LocalMusic::updateMusicList() {
                 titleLines << line;
             } else if (line.startsWith("lrc#")) {
                 QStringList parts = line.split(QRegExp("#"));
-                playListLrc << parts[1];
+                localMusicListLrc << parts[1];
             } else {
-                playList.push_back(line);
+                localMusicList.push_back(line);
             }
         }
     }
@@ -186,6 +186,7 @@ void LocalMusic::updateMusicList() {
 //            QString title = parts[1];
             QString title = parts[1];
             auto *item = new QStandardItem(title);
+            localMusicListName.push_back(title);
             model->appendRow(item);
         }
     }
@@ -203,7 +204,7 @@ void LocalMusic::addMusicToPlaylist() {
     }
 
     try {
-        currentPlay = playList[row];
+        currentPlay = localMusicList[row];
         QStandardItemModel *playlistModel = new QStandardItemModel;
         QString musicName;
 
@@ -215,12 +216,12 @@ void LocalMusic::addMusicToPlaylist() {
         }
 
         //把播放文件写入musicPlayList.m3u文件
-        if (!musicPlaylist->open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text)) {
+        if (!favoriteListFile->open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text)) {
             qWarning() << "Failed to open playlist file for writing.";
             return;
         }
 
-        QTextStream out(musicPlaylist);
+        QTextStream out(favoriteListFile);
 //<<<<<<< HEAD
         out << "#EXTINF:" << musicName << endl;
         out << currentPlay << endl;
@@ -230,7 +231,7 @@ void LocalMusic::addMusicToPlaylist() {
 //        out << currentPlay << endl;
 //>>>>>>> b0843030d6578c814ea95a508a8d430dedb1b77d
 
-        musicPlaylist->close();
+        favoriteListFile->close();
     } catch (const std::exception& e) {
         qWarning() << "An exception occurred: " << e.what();
     }
@@ -241,11 +242,19 @@ QListView *LocalMusic::getMusicListView() const {
 }
 
 const QVector<QString> &LocalMusic::getPlayList() const {
-    return playList;
+    return localMusicList;
 }
 
 const QVector<QString> &LocalMusic::getPlayListLrc() const {
-    return playListLrc;
+    return localMusicListLrc;
+}
+
+const QVector<QString> &LocalMusic::getLocalMusicListName() const {
+    return localMusicListName;
+}
+
+void LocalMusic::setLocalMusicListName(const QVector<QString> &localMusicListName) {
+    LocalMusic::localMusicListName = localMusicListName;
 }
 
 

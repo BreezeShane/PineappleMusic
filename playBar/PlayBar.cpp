@@ -21,13 +21,16 @@ void PlayBar::setupUI() {
     pbtPrevious = new QPushButton();
     pbtStartOrPause = new QPushButton();
     pbtNext = new QPushButton();
+    playCentralQv = new QVBoxLayout;
+    playCentralQh = new QHBoxLayout;
+    music_name = new QLabel("music name");
+    music_name->setStyleSheet("QLabel { border: none; padding-left: 10px; }");
     speedMenuBar = new QMenuBar();
     QSizePolicy sizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
     speedMenuBar->setSizePolicy(sizePolicy);
     currentProcess = new QLabel();
     finalProcess = new QLabel();
     sliderProcess = new MySlider(Qt::Horizontal, this);
-
     currentProcess->setText("00:00");
     finalProcess->setText("00:00");
     currentProcess->setFixedSize(50, 50);//设置大小
@@ -37,13 +40,13 @@ void PlayBar::setupUI() {
                                   //"border: 1px solid gray;"
                                   "border: none;" //隐藏边框
                                   "border-radius: 4px;"
-                                  "padding: 2px;"
+                                  "padding-right: 2px;"
                                   "}");
 
     finalProcess->setStyleSheet("QLabel {"
                                 "background-color: transparent;"
-                                "border: 1px solid gray;"
-                                //"border: none;"
+//                                "border: 1px solid gray;"
+                                "border: none;"
                                 "border-radius: 4px;"
                                 "padding: 2px;"
                                 "}");
@@ -97,11 +100,15 @@ void PlayBar::setupUI() {
     action4->setText("2.0x");
 
     qhBoxLayout->addWidget(album);
-    qhBoxLayout->addWidget(currentProcess);
-    qhBoxLayout->addWidget(sliderProcess);
-    qhBoxLayout->addWidget(finalProcess);
+
+    playCentralQv->addWidget(music_name);
+    playCentralQh->addWidget(currentProcess);
+    playCentralQh->addWidget(sliderProcess);
+    playCentralQh->addWidget(finalProcess);
+    playCentralQv->addLayout(playCentralQh);
+    qhBoxLayout->addLayout(playCentralQv);
+
     qhBoxLayout->addWidget(pbtLyrics);
-    qhBoxLayout->addWidget(speedMenuBar);
     qhBoxLayout->addWidget(pbtModel);
     qhBoxLayout->addWidget(pbtPrevious);
     qhBoxLayout->addWidget(pbtStartOrPause);
@@ -185,6 +192,14 @@ QPushButton *PlayBar::getAlbum() const {
 
 void PlayBar::setAlbum(const QPixmap &music_album) {
     PlayBar::album->setIcon(music_album);
+}
+
+QLabel *PlayBar::getMusicName() const {
+    return music_name;
+}
+
+void PlayBar::setMusicName(QString musicName) {
+    music_name->setText(musicName);
 }
 
 PlayBar::~PlayBar() = default;

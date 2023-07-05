@@ -31,14 +31,16 @@ private:
     //歌词窗口
     QWidget *widget;
 
-   QToolBar *toolbar{};
-   //工具栏按钮
-   QPushButton *personalizebt{};
+    QToolBar *toolbar{};
+    //工具栏按钮
+    QPushButton *personalizebt{};
     QPushButton *helpbt{};
     //媒体播放器
     QMediaPlayer *mediaPlayer{};    //播放器
+    QVector<QString> currentPlaylistName{};     //当前播放列表
     QVector<QString> currentPlaylist{};     //当前播放列表
     QVector<QString> currentPlaylistLrc{};  //当前播放列表对应的歌词文件列表，没有歌词文件，存储内容为 NoLrc
+    QString currentPlayName{};  //当前正在播放的音乐路径
     QString currentPlay{};  //当前正在播放的音乐路径
     QString currentPlayLrc{};   //当前播放音乐的lrc歌词文件路径
     QString durationTime;

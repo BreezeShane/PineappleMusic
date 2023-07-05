@@ -20,7 +20,7 @@ private:
     QListView *favoriteListView{};
     QPushButton *refreshList{};
     QTextEdit *text{};
-//    QFile *musicPlaylist{};
+//    QFile *favoriteListFile{};
     QVector<QString> favoriteList{};
     QVector<QString> favoriteListLrc{};
 public:

@@ -16,11 +16,11 @@
 #include <QMenuBar>
 #include <QAction>
 #include "qSlider/MySlider.h"
-class PlayBar : public QFrame
-{
-    Q_OBJECT
+
+class PlayBar : public QFrame {
+Q_OBJECT
 private:
-    QHBoxLayout * qhBoxLayout{};
+    QHBoxLayout *qhBoxLayout{};
     QPushButton *album{};    //专辑图片
     QPushButton *pbtModel{};  //播放模式按钮
     QPushButton *pbtLyrics{};
@@ -31,23 +31,28 @@ private:
     QPushButton *pbtPrevious{};
     QPushButton *pbtStartOrPause{};
     QPushButton *pbtNext{};
-    MySlider *sliderProcess{};
     QLabel *currentProcess{};
     QLabel *finalProcess{};
-    QMenuBar  *speedMenuBar{};
+    QMenuBar *speedMenuBar{};
     QMenu *speedMenu{};
     QAction *action1{};//倍速
     QAction *action2{};
     QAction *action3{};
     QAction *action4{};
+    QVBoxLayout *playCentralQv{};
+    QHBoxLayout *playCentralQh{};
+    MySlider *sliderProcess{};
+    QLabel *music_name{};
 public:
     explicit PlayBar(QWidget *parent = nullptr);
+
     void setupUI();
+
     void retranslateUi();
 
     QPushButton *getAlbum() const;
 
-    void setAlbum(const QPixmap& music_album);
+    void setAlbum(const QPixmap &music_album);
 
     QPushButton *getPbtPrevious() const;
 
@@ -59,19 +64,24 @@ public:
 
     MySlider *getSlider() const;
 
-    QLabel * getCurrentProcess() const;
+    QLabel *getCurrentProcess() const;
 
-    QLabel * getFinalProcess() const;
+    QLabel *getFinalProcess() const;
 
-    QMenu * getSpeedMenu() const;
+    QMenu *getSpeedMenu() const;
 
-    QAction  *getAction1() const;
+    QAction *getAction1() const;
 
-    QAction  *getAction2() const;
+    QAction *getAction2() const;
 
-    QAction  *getAction3() const;
+    QAction *getAction3() const;
 
-    QAction  *getAction4() const;
+    QAction *getAction4() const;
+
+    QLabel *getMusicName() const;
+
+    void setMusicName(QString musicName);
+
     ~PlayBar() override;
 
     static const QMetaObject &getStaticMetaObject();

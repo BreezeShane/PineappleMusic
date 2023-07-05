@@ -244,17 +244,20 @@ void MainWindow::setupUI() {
         int row = index.row();
         if (row >= 0 && row < mainContent->getLocalMusicPage()->getPlayList().size()) {
             currentPlaylist = mainContent->getLocalMusicPage()->getPlayList();
+            currentPlaylistName = mainContent->getLocalMusicPage()->getLocalMusicListName();
             currentPlaylistLrc = mainContent->getLocalMusicPage()->getPlayListLrc();
+            currentPlayName = currentPlaylistName[row];
             currentPlay = currentPlaylist[row];
             currentPlayLrc = currentPlaylistLrc[row];
             mediaPlayer->setMedia(QUrl::fromLocalFile(currentPlay));
-            qDebug()<<currentPlay<<endl;
             mediaPlayer->play();
+
+            playBar->setMusicName(currentPlayName);
             playBar->getPbtStartOrPause()->setIcon(QIcon("../resource/icon/stopp.svg"));
             playBar->getSlider()->setSliderPosition(0);
         }
     });
-    //播放列表点击事件
+    //我喜欢列表点击事件
     connect(mainContent->getPlayListPage()->getFavoriteListView(), &QListView::clicked, [&](const QModelIndex &index) {
         // 获取所选项的QMediaPlayer对象，并播放音乐
         int row = index.row();
@@ -270,26 +273,7 @@ void MainWindow::setupUI() {
             playBar->getSlider()->setSliderPosition(0);
         }
     });
-//    //点击播放列表项播放音乐
-//    connect(mainContent->getPlayListPage()->getPlayMusicListView(), &QListView::clicked, this, [&](const QModelIndex &index) {
-//        // 获取选中项的索引
-//        QModelIndex selectedIndex = mainContent->getPlayListPage()->getPlayMusicListView()->model()->index(index.row(), 0);
-//
-//        // 根据选中项的索引获取数据或执行其他操作
-//        if (selectedIndex.isValid()) {
-//            currentPlaylist = mainContent->getLocalMusicPage()->getPlayList();
-//            currentPlaylistLrc = mainContent->getLocalMusicPage()->getPlayListLrc();
-//            currentPlay = currentPlaylist[senderSignalIndex()];
-//            currentPlayLrc = currentPlaylistLrc[senderSignalIndex()];
-//            qDebug()<<currentPlay<<endl;
-//            mediaPlayer->setMedia(QUrl::fromLocalFile(currentPlay));
-//            mediaPlayer->play();
-//            playBar->getPbtStartOrPause()->setIcon(QIcon("../resource/icon/pause.png"));
-//            playBar->getSlider()->setSliderPosition(0);
-//        } else {
-//            QMessageBox::information(this, "提示", "未选中音乐");
-//        }
-//    });
+
     connect(mainContent->getFromNetPage()->resultListView, &QListView::clicked, this, [=](const QModelIndex& index) {
         // 获取用户点击的项的数据
         int songId = index.data(Qt::UserRole).toInt();
