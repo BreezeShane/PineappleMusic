@@ -9,6 +9,7 @@
 #include <QStyledItemDelegate>
 #include <QPainter>
 #include <QScrollBar>
+#include <QTimer>
 
 Chatroom::Chatroom(QWidget *parent)
         : QFrame(parent) {
@@ -150,20 +151,18 @@ void Chatroom::on_join_clicked() {
         connect(socket, &QTcpSocket::stateChanged, this, [=](QAbstractSocket::SocketState state) {
             if (state == QAbstractSocket::ConnectedState) {
                 // 连接成功，做出提示
-
                 qDebug() << "Connected to server";
 
             } else if (state == QAbstractSocket::UnconnectedState) {
                 if (socket->error() == QAbstractSocket::RemoteHostClosedError) {
                     // 服务器已断开，做出提示
-
+                    connet = false;
+                    join->setIcon(QIcon("../resource/icon/disconnection.svg"));
+                    QMessageBox::information(this,"连接提示","服务器已断开");
                     qDebug() << "Server has disconnected";
-
                 } else {
                     // 连接失败，做出提示
-
                     qDebug() << "Failed to connect to server:" << socket->errorString();
-
                 }
             }
         });
@@ -171,7 +170,10 @@ void Chatroom::on_join_clicked() {
         connect(socket,&QTcpSocket::readyRead,this,&Chatroom::ClientDate);
 
         connect(socket,&QTcpSocket::connected,[=](){
-            QMessageBox::information(this,"连接提示","连接成功");
+           // QMessageBox::information(this,"连接提示","连接成功");
+            QMessageBox* msgBox = new QMessageBox(QMessageBox::Information, "连接提示", "连接成功", QMessageBox::NoButton, this);
+            QTimer::singleShot(2000, msgBox, &QMessageBox::close);
+            msgBox->exec();
         });
 
     }else{
@@ -187,6 +189,5 @@ void Chatroom::on_join_clicked() {
 void Chatroom::newClent() {
 
 }
-
 
 Chatroom::~Chatroom() = default;
