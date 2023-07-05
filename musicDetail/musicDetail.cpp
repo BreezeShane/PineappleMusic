@@ -21,6 +21,10 @@ musicDetail::musicDetail(QWidget *parent) :
 }
 
 musicDetail::musicDetail(CloudMusic currMusic,QWidget *parent) { // on Coding...
+    qDebug()<<"music detail!";
+    qDebug()<<currMusic.getName();
+    qDebug()<<currMusic.getAlbumUrl();
+
     uiBar = new PlayBar(this);
     uiBar->setupUI();
     ui->setupUi(this);

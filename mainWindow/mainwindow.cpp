@@ -17,6 +17,7 @@
 #include "sidebar/Sidebar.h"
 #include "mainContent/MainContent.h"
 #include "playBar/PlayBar.h"
+#include "musicDetail/musicDetail.h"
 #include <QGraphicsEffect>
 #include <QGraphicsOpacityEffect>
 
@@ -552,12 +553,9 @@ void MainWindow::setPlaySpeed() {
 }
 //展示播放详情页
 void MainWindow::openDetailWindow() {
-    // 创建一个新窗口
-    QWidget* newWindow = new QWidget();
-    newWindow->setWindowTitle("新窗口");
-
-    // 显示新窗口
-    newWindow->show();
+    musicDetail* win = new musicDetail(music);
+//    win->setMusic(music);
+    win->show();
 }
 
 MainWindow::~MainWindow() = default;
