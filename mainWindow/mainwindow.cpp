@@ -249,7 +249,7 @@ void MainWindow::setupUI() {
             mediaPlayer->setMedia(QUrl::fromLocalFile(currentPlay));
             qDebug()<<currentPlay<<endl;
             mediaPlayer->play();
-            playBar->getPbtStartOrPause()->setIcon(QIcon("../resource/icon/pause.png"));
+            playBar->getPbtStartOrPause()->setIcon(QIcon("../resource/icon/stopp.svg"));
             playBar->getSlider()->setSliderPosition(0);
         }
     });
@@ -344,7 +344,7 @@ void MainWindow::setupUI() {
         QUrl url1(currentPlay);
         mediaPlayer->setMedia(url1);
         mediaPlayer->play();
-        playBar->getPbtStartOrPause()->setIcon(QIcon("../resource/icon/pause.png"));
+        playBar->getPbtStartOrPause()->setIcon(QIcon("../resource/icon/stopp.png"));
         playBar->getSlider()->setSliderPosition(0);
     });
     connect(mediaPlayer,SIGNAL(positionChanged(qint64)),this,SLOT(onPositionChanged(qint64)));
@@ -396,10 +396,10 @@ void MainWindow::changeBackground() {
 void MainWindow::startOrPauseMusic() {
     if (mediaPlayer != nullptr && mediaPlayer->state() == QMediaPlayer::PlayingState) {
         mediaPlayer->pause();
-        playBar->getPbtStartOrPause()->setIcon(QIcon("../resource/icon/start.png"));
+        playBar->getPbtStartOrPause()->setIcon(QIcon("../resource/icon/play.svg"));
     } else {
         mediaPlayer->play();
-        playBar->getPbtStartOrPause()->setIcon(QIcon("../resource/icon/pause.png"));
+        playBar->getPbtStartOrPause()->setIcon(QIcon("../resource/icon/stopp.svg"));
     }
 }
 
