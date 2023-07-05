@@ -474,7 +474,7 @@ void MainWindow::previousMusic() {
     }
     mediaPlayer->setMedia(QUrl::fromLocalFile(currentPlay));
     mediaPlayer->play();
-    playBar->getPbtStartOrPause()->setIcon(QIcon("../resource/icon/pause.png"));
+    playBar->getPbtStartOrPause()->setIcon(QIcon("../resource/icon/stopp.svg"));
 }
 
 void MainWindow::nextMusic() {
@@ -528,7 +528,7 @@ void MainWindow::nextMusic() {
     }
     mediaPlayer->setMedia(QUrl::fromLocalFile(currentPlay));
     mediaPlayer->play();
-    playBar->getPbtStartOrPause()->setIcon(QIcon("../resource/icon/pause.png"));
+    playBar->getPbtStartOrPause()->setIcon(QIcon("../resource/icon/stopp.svg"));
 }
 
 //进度条滑块数值改变槽函数

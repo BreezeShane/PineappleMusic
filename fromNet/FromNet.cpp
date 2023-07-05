@@ -13,6 +13,7 @@
 #include <QStandardItemModel>
 #include <QEventLoop>
 #include <QFile>
+#include <QMenu>
 
 FromNet::FromNet(QWidget *parent)
         : QFrame(parent) {
@@ -71,19 +72,62 @@ void FromNet::setupUI() {
     connect(search, SIGNAL(clicked()),
             this, SLOT(search_music()));
 
-    // 连接QListView的双击信号到一个槽函数
-    QObject::connect(resultListView, &QListView::doubleClicked, [&](const QModelIndex &index) {
-        // 获取被双击的项目的索引
-        int item_index = index.row();
-        // 使用索引获取项目的数据
-        int  songId = index.data(Qt::UserRole).toInt();
+    QMenu* menu = new QMenu(resultListView);
+
+    // 创建弹窗菜单项
+    QAction* playAction = new QAction("播放", menu);
+    QAction* download = new QAction("下载", menu);
+    QAction* addPlay = new QAction("添加播放", menu);
+    menu->addAction(playAction);
+    menu->addAction(addPlay);
+    menu->addAction(download);
+
+
+// 设置ListView的setContextMenuPolicy属性
+    resultListView->setContextMenuPolicy(Qt::CustomContextMenu);
+
+// 创建customContextMenuRequested信号槽
+    connect(resultListView, &QListView::customContextMenuRequested, [=](const QPoint& pos) {
+        // 在ListView上显示自定义菜单
+        menu->exec(resultListView->mapToGlobal(pos));
+    });
+
+    // 创建删除项的槽函数
+    connect(playAction, &QAction::triggered, [=]() {
+        // 获取ListView的选中项
+        QModelIndexList indexes = resultListView->selectionModel()->selectedIndexes();
+
+        // 删除选中项
+        for (const QModelIndex& index : indexes) {
+            resultListView->model()->removeRow(index.row());
+        }
+    });
+
+    // 创建添加播放项的槽函数
+    connect(addPlay, &QAction::triggered, [=]() {
+        // 获取ListView的选中项
+        QModelIndexList indexes = resultListView->selectionModel()->selectedIndexes();
+
+
+    });
+
+    // 创建下载项的槽函数
+    connect(download, &QAction::triggered, [=]() {
+        // 获取ListView的选中项
+        QModelIndexList indexes = resultListView->selectionModel()->selectedIndexes();
+        int item_index;
+        int  songId;
+        for (const QModelIndex& index : indexes) {
+            item_index = index.row();
+            // 使用索引获取项目的数据
+            songId = index.data(Qt::UserRole).toInt();
+        }
 
         QString url = "https://service-qbrcywo4-1314545420.gz.apigw.tencentcs.com/release/song/url";
         QUrlQuery query;
         query.addQueryItem("id", QString::number(songId));
         url.append("?" + query.toString());
         QNetworkRequest request(url);
-
 
         auto *manager = new QNetworkAccessManager(this);
         QNetworkReply *reply = manager->get(request);
@@ -103,7 +147,8 @@ void FromNet::setupUI() {
                                 url = item["url"].toString();
                                 current_music_url = url;
                                 qDebug() << "download file";
-                                downloadFile(current_music_url,"D:/music/music.mp3");
+                                //下载路径
+                                downloadFile(current_music_url,"D:/music/"+songs.at(item_index).name+".mp3");
                             }
                         }
                     }
@@ -117,10 +162,13 @@ void FromNet::setupUI() {
 
         });
         qDebug() << "Double clicked on item " << item_index << ": " << songId;
+
     });
+
 }
 
 void FromNet::search_music() {
+    songs.clear();
     keyword = keyword_input->text();
     auto *manager = new QNetworkAccessManager(this);
     QString url = "https://service-qbrcywo4-1314545420.gz.apigw.tencentcs.com/release/search";
