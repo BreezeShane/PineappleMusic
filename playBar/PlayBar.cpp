@@ -118,11 +118,11 @@ void PlayBar::retranslateUi() {
     album->setIcon(scaledPixmap);
     pbtLyrics->setIcon(QIcon("../resource/icon/lyricsOff.svg"));
     pbtModel->setIcon(QIcon("../resource/icon/sequential.svg"));
-    pbtPrevious->setIcon(QIcon("../resource/icon/previous.png"));
+    pbtPrevious->setIcon(QIcon("../resource/icon/up.svg"));
     pbtPrevious->setIconSize(QSize(50, 50));
-    pbtStartOrPause->setIcon(QIcon("../resource/icon/start.png"));
+    pbtStartOrPause->setIcon(QIcon("../resource/icon/play.svg"));
     pbtStartOrPause->setIconSize(QSize(50, 50));
-    pbtNext->setIcon(QIcon("../resource/icon/next.png"));
+    pbtNext->setIcon(QIcon("../resource/icon/later.svg"));
     pbtNext->setIconSize(QSize(50, 50));
 
 }

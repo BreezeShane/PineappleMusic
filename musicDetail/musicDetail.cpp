@@ -34,10 +34,19 @@ musicDetail::musicDetail(CloudMusic currMusic, QWidget *parent) :
     ui->setupUi(this);
     uiBar->setGeometry(154,409,717,358);
     ui->textBrowser->setStyleSheet("text-align: center;");
-    ui->textBrowser->setHtml(QString("<html><head><style>body {text-align: center;}</style></head>"
-                                     "<body>%1</body></html>").arg("Ciallo~ Pineapple!"));
+
     uiBar->setAlbum(currMusic.getAlbumUrl());
-//    QFile lyricsFile(currMusic.getMusicUrl());
+//    QFile lyricsFile(currMusic.getLrcPath());
+//    lyricsFile.open(QIODevice::ReadOnly | QIODevice::Text);
+    qDebug() << currMusic.getLrcPath();
+    const QString& lrcFilePath = currMusic.getLrcPath();
+    if (lrcFilePath == "NoLrc") {
+        ui->textBrowser->setHtml(QString("<html><head><style>body {text-align: center;}</style></head>"
+                                         "<body>%1</body></html>").arg("Ciallo~ Pineapple!"));
+    } else {
+        ui->textBrowser->setSource(QUrl::fromLocalFile(currMusic.getLrcPath()));
+        ui->textBrowser->show();
+    }
 }
 
 void musicDetail::paintEvent(QPaintEvent *event) {
