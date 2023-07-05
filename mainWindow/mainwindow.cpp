@@ -143,7 +143,7 @@ void MainWindow::setupUI() {
     auto centralwidget = new QWidget(this);
 
     // 从持久化设置中读取背景图路径，默认为默认背景图
-    QString imagePath = QSettings().value("BackgroundImage", "../resource/image/1.jpg").toString();
+    QString imagePath = QSettings().value("BackgroundImage", "../resource/image/4.jpg").toString();
     // 设置背景图的样式
     QPalette palette;
     palette.setBrush(this->backgroundRole(), QBrush(QPixmap(imagePath)));
