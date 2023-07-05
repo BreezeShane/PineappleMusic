@@ -20,6 +20,7 @@ private:
     QListWidgetItem *chatroom_item{};
     QListWidget *contentLists{};
 
+
 public:
 
     explicit Sidebar(QWidget *parent = nullptr);
