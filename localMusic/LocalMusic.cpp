@@ -56,16 +56,16 @@ void LocalMusic::setupUI() {
     addMusicPlayPbt->setFont(QFont("宋体", 13));
     addMusicPlayPbt->setStyleSheet("QPushButton {"
                                    "border: 2px;"
-                                   "    background-color:#ADD8E6 ;"
+                                   "    background-color:#CCCCCC;"
 
                                    "border-radius:10px;"
                                    "padding: 6px;"
                                    "}"
                                    "QPushButton:hover {"
-                                   "    background-color: #B0E0E6;"
+                                   "    background-color:gray;"
                                    "}"
                                    "QPushButton:pressed {"
-                                   "background-color: #87CEEB;"
+                                   "background-color:gray;"
                                    "}");
 
 
