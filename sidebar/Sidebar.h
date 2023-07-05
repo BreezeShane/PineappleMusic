@@ -16,7 +16,7 @@ Q_OBJECT
 private:
     QVBoxLayout *mainLayout{};
     QListWidgetItem *localMusic_item{};
-    QListWidgetItem *playList_item{};
+    QListWidgetItem *favoriteList_item{};
     QListWidgetItem *fromNet_item{};
     QListWidgetItem *chatroom_item{};
     QListWidget *contentLists{};

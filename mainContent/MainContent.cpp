@@ -19,12 +19,12 @@ void MainContent::setupUI() {
 
 void MainContent::initContentPages() {
     localMusicPage = new LocalMusic;
-    playListPage = new PlayList;
+    favoriteListPage = new FavoriteList;
     fromNetPage = new FromNet;
     chatroomPage = new Chatroom;
     contentPages = new QStackedWidget;
+    contentPages->addWidget(favoriteListPage);
     contentPages->addWidget(localMusicPage);
-    contentPages->addWidget(playListPage);
     contentPages->addWidget(fromNetPage);
     contentPages->addWidget(chatroomPage);
     qhBoxLayout->addWidget(contentPages);
@@ -42,12 +42,12 @@ void MainContent::setLocalMusicPage(LocalMusic *localMusicPage) {
     MainContent::localMusicPage = localMusicPage;
 }
 
-PlayList *MainContent::getPlayListPage() const {
-    return playListPage;
+FavoriteList *MainContent::getPlayListPage() const {
+    return favoriteListPage;
 }
 
-void MainContent::setPlayListPage(PlayList *playListPage) {
-    MainContent::playListPage = playListPage;
+void MainContent::setPlayListPage(FavoriteList *playListPage) {
+    MainContent::favoriteListPage = playListPage;
 }
 
 FromNet *MainContent::getFromNetPage() const {

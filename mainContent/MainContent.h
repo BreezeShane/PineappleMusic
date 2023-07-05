@@ -10,7 +10,7 @@
 #include <QStackedWidget>
 #include <QHBoxLayout>
 #include "localMusic/LocalMusic.h"
-#include "playList/PlayList.h"
+#include "favoriteList/FavoriteList.h"
 #include "fromNet/FromNet.h"
 #include "chatroom/Chatroom.h"
 class MainContent : public QFrame
@@ -20,7 +20,7 @@ private:
     QHBoxLayout * qhBoxLayout{};
     QStackedWidget *contentPages{};
     LocalMusic* localMusicPage;
-    PlayList* playListPage;
+    FavoriteList* favoriteListPage;
     FromNet* fromNetPage;
     Chatroom* chatroomPage;
 public:
@@ -34,9 +34,9 @@ public:
 
     void setLocalMusicPage(LocalMusic *localMusicPage);
 
-    PlayList *getPlayListPage() const;
+    FavoriteList *getPlayListPage() const;
 
-    void setPlayListPage(PlayList *playListPage);
+    void setPlayListPage(FavoriteList *playListPage);
 
     FromNet *getFromNetPage() const;
 

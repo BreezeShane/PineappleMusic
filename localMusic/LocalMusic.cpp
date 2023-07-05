@@ -62,7 +62,7 @@ void LocalMusic::setupUI() {
     musicListView->setStyleSheet("QListView{padding:5px;}"
                                  "QListView::item{padding:5px;}"
     );
-    addMusicPlayPbt=new QPushButton("添加播放");
+    addMusicPlayPbt=new QPushButton("我喜欢");
     addMusicPlayPbt->setFont(QFont("宋体", 13));
     addMusicPlayPbt->setStyleSheet("QPushButton {"
                                    "border: 2px;"

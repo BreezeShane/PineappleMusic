@@ -1,22 +1,22 @@
 
 
 #include <QStandardItemModel>
-#include "PlayList.h"
+#include "FavoriteList.h"
 #include <QTextStream>
 #include <QDebug>
-PlayList::PlayList(QWidget *parent)
+FavoriteList::FavoriteList(QWidget *parent)
         : QFrame(parent) {
 
     setupUI();
 }
 
-void PlayList::setupUI() {
-    playLayout=new QVBoxLayout();//垂直布局
+void FavoriteList::setupUI() {
+    qvBoxLayout=new QVBoxLayout();//垂直布局
     this->setStyleSheet("border: 2px solid gray;border-radius:10px;background-color: transparent");
     this->setContentsMargins(3, 3, 3, 3);
-    playMusicPbt =new QPushButton("播放");
-    playMusicPbt->setFont(QFont("宋体", 13));
-    playMusicPbt->setStyleSheet("QPushButton {"
+    refreshList =new QPushButton("刷新");
+    refreshList->setFont(QFont("宋体", 13));
+    refreshList->setStyleSheet("QPushButton {"
                                 "background-color: #555555;"
                                 "border: none;"
                                 "color: white;"
@@ -28,25 +28,24 @@ void PlayList::setupUI() {
                                 "QPushButton:pressed {"
                                 "    background-color:gray ;"
                                 "}");
-    playListView=new QListView();
-    playListView->setFont(QFont("宋体", 13));
+    favoriteListView=new QListView();
+    favoriteListView->setFont(QFont("宋体", 13));
 
-    playLayout->addWidget(playMusicPbt);
-    playLayout->addWidget(playListView);
-    playLayout->addWidget(text);
-    this->setLayout(playLayout);
+    qvBoxLayout->addWidget(refreshList);
+    qvBoxLayout->addWidget(favoriteListView);
+    qvBoxLayout->addWidget(text);
+    this->setLayout(qvBoxLayout);
     updatePlayList();
     //点击刷新播放列表
-    connect(playMusicPbt, &QPushButton::clicked, this, &PlayList::playListUp);
+    connect(refreshList, &QPushButton::clicked, this, &FavoriteList::playListUp);
 }
-void PlayList::playListUp() {
+void FavoriteList::playListUp() {
     updatePlayList();
 }
-void PlayList::updatePlayList() {
-    qDebug()<<"hhh"<<endl;
+void FavoriteList::updatePlayList() {
     QFile musicPlaylistFile ("../resource/musicPlaylist.m3u");
     auto *model = new QStandardItemModel;
-    playListView->setModel(model);
+    favoriteListView->setModel(model);
     if (!musicPlaylistFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
         qWarning() << "Failed to open playlist file for reading.";
         return;
@@ -61,9 +60,9 @@ void PlayList::updatePlayList() {
                 titleLines << line;
             } else if (line.startsWith("lrc#")) {
                 QStringList parts = line.split(QRegExp("#"));
-                musicPlayLrc << parts[1];
+                favoriteListLrc << parts[1];
             } else {
-                musicPlay.push_back(line);
+                favoriteList.push_back(line);
             }
         }
     }
@@ -82,28 +81,28 @@ void PlayList::updatePlayList() {
     musicPlaylistFile.close();
 }
 
-const QVector<QString> &PlayList::getMusicPlay() const {
-    return musicPlay;
+const QVector<QString> &FavoriteList::getFavoriteList() const {
+    return favoriteList;
 }
 
-void PlayList::setMusicPlay(const QVector<QString> &musicPlay) {
-    PlayList::musicPlay = musicPlay;
+void FavoriteList::setFavoriteList(const QVector<QString> &musicPlay) {
+    FavoriteList::favoriteList = musicPlay;
 }
 
-QListView *PlayList::getPlayListView() const {
-    return playListView;
+QListView *FavoriteList::getFavoriteListView() const {
+    return favoriteListView;
 }
 
-void PlayList::setPlayListView(QListView *playListView) {
-    PlayList::playListView = playListView;
+void FavoriteList::setFavoriteListView(QListView *playListView) {
+    FavoriteList::favoriteListView = playListView;
 }
 
-const QVector<QString> &PlayList::getMusicPlayLrc() const {
-    return musicPlayLrc;
+const QVector<QString> &FavoriteList::getFavoriteListLrc() const {
+    return favoriteListLrc;
 }
 
-void PlayList::setMusicPlayLrc(const QVector<QString> &musicPlayLrc) {
-    PlayList::musicPlayLrc = musicPlayLrc;
+void FavoriteList::setFavoriteListLrc(const QVector<QString> &musicPlayLrc) {
+    FavoriteList::favoriteListLrc = musicPlayLrc;
 }
 
-PlayList::~PlayList() = default;
+FavoriteList::~FavoriteList() = default;

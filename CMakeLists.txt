@@ -26,8 +26,8 @@ set(PROJECT_SOURCES
         playBar/PlayBar.h
         localMusic/LocalMusic.cpp
         localMusic/LocalMusic.h
-        playList/PlayList.cpp
-        playList/PlayList.h
+        favoriteList/FavoriteList.cpp
+        favoriteList/FavoriteList.h
         fromNet/FromNet.cpp
         fromNet/FromNet.h chatroom/Chatroom.cpp chatroom/Chatroom.h qSlider/MySlider.cpp qSlider/MySlider.h model/CloudMusic.cpp musicDetail/musicDetail.cpp musicDetail/musicDetail.h musicDetail/musicDetail.ui)
 
