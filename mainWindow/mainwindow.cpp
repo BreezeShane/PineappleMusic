@@ -6,6 +6,8 @@
 #include <QTimer>
 #include <QPropertyAnimation>
 #include <QMessageBox>
+#include <QFileDialog>
+#include <QSettings>
 #include "mainwindow.h"
 #include "sidebar/Sidebar.h"
 #include "mainContent/MainContent.h"
@@ -129,6 +131,14 @@ void MainWindow::setupUI() {
 
     //主部件
     auto centralwidget = new QWidget(this);
+    // 从持久化设置中读取背景图路径，默认为默认背景图
+    QString imagePath = QSettings().value("BackgroundImage", "../resource/image/1.jpg").toString();
+    // 设置背景图的样式
+    QPalette palette;
+    palette.setBrush(this->backgroundRole(), QBrush(QPixmap(imagePath)));
+    this->setPalette(palette);
+
+    // 创建一个QWidget作为中央部件
     centralwidget->setMinimumSize(1200, 800);
     centralwidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     setCentralWidget(centralwidget);
@@ -143,10 +153,37 @@ void MainWindow::setupUI() {
     mainContent = new MainContent();
     // 播放控制栏
     playBar = new PlayBar();
+    //工具栏
+    toolbar=new QToolBar();
+    toolLayout=new QHBoxLayout();
+//    toolbar->setStyleSheet("border: 2px solid gray;border-radius:10px;");
+    personalizebt=new QPushButton();
+    personalizebt->setIcon(QIcon("../resource/icon/skin.svg"));
+    // 设置个性化按钮的样式
+    personalizebt->setFont(QFont("宋体", 8));
+    personalizebt->setStyleSheet("QPushButton {"
+                                     "    border: 2px;"
+                                     "border-radius:10px;"
+                                     "    padding: 6px;"
+                                     "}"
+                                     "QPushButton:hover {"
+                                     "    background-color: #ADD8E6;"
+                                     "}"
+                                     "QPushButton:pressed {"
+                                     "    background-color:#ADD8E6 ;"
+                                     "}");
 
+    // 添加伸缩器到工具栏，将按钮推到最右边
+    QWidget *spacer = new QWidget();
+    spacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+    toolbar->addWidget(spacer);
+    toolbar->addWidget(personalizebt);
+    toolLayout->addWidget(toolbar);
     // 子布局中加入两个部件
+    subLayout->addLayout(toolLayout);
     subLayout->addWidget(mainContent);
     subLayout->addWidget(playBar);
+
     // 主布局中加入侧边栏和子布局
     mainLayout->addWidget(sidebar);
     mainLayout->addLayout(subLayout);
@@ -197,13 +234,34 @@ void MainWindow::setupUI() {
     connect(playBar->getAction2(), SIGNAL(triggered()), this, SLOT(setPlaySpeed()));
     connect(playBar->getAction3(), SIGNAL(triggered()), this, SLOT(setPlaySpeed()));
     connect(playBar->getAction4(), SIGNAL(triggered()), this, SLOT(setPlaySpeed()));
+    // 换肤连接
+    connect(personalizebt, &QPushButton::clicked, this, &MainWindow::changeBackground);
 }
 
 void MainWindow::retranslateUi() {
     //标题
     this->setWindowTitle("Pineapple Music");
 }
+void MainWindow::changeBackground() {
 
+    // 打开文件选择对话框，选择图片文件
+    QString imagePath = QFileDialog::getOpenFileName(this, "选择图片", QDir::homePath(), "Images (*.png *.jpg *.jpeg *.svg)");
+    qDebug()<<"换肤"<<endl;
+    // 如果用户选择了图片文件
+    if (!imagePath.isEmpty()) {
+        // 设置新的背景图路径
+//        centralWidget()->setStyleSheet(QString("QWidget { background-image: url(%1); }").arg(imagePath));
+        QPalette palette;
+        palette.setBrush(this->backgroundRole(), QBrush(QPixmap(imagePath)));
+        this->setPalette(palette);
+        // 将背景图路径存储到持久化设置中
+        QSettings().setValue("BackgroundImage", imagePath);
+    } else {
+        // 如果用户取消选择图片，则将背景图路径从持久化设置中删除
+        QSettings().remove("BackgroundImage");
+    }
+
+}
 void MainWindow::startOrPauseMusic() {
     if (mediaPlayer != nullptr && mediaPlayer->state() == QMediaPlayer::PlayingState) {
         mediaPlayer->pause();

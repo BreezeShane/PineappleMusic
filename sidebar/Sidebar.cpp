@@ -23,13 +23,15 @@ void Sidebar::setupUI() {
 
 void Sidebar::setupContentLists() {
     contentLists = new QListWidget;
+    contentLists->setSpacing(10);
     contentLists->setCurrentRow(0);
     contentLists->setFont(QFont("宋体", 15));
-    contentLists->setStyleSheet("border: 2px solid gray;border-radius:10px;padding:5px;");
+    contentLists->setStyleSheet("border: 2px solid gray;border-radius:10px;padding:5px;background-color: transparent;");
 
     localMusic_item = new QListWidgetItem(contentLists);  //设置显示列表
     localMusic_item->setText(tr("本地音乐"));
     localMusic_item->setIcon(QIcon("../resource/icon/musicLocal.svg"));
+    localMusic_item->setBackground(QColor(0,0,0,0));
     localMusic_item->setTextAlignment(Qt::AlignHCenter);
     localMusic_item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 
