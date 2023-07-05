@@ -19,8 +19,8 @@ private:
     QVBoxLayout *qvBoxLayout{};
     QListView *favoriteListView{};
     QPushButton *refreshList{};
+    QPushButton *deleteMyfPbt{};
     QTextEdit *text{};
-//    QFile *musicPlaylist{};
     QVector<QString> favoriteList{};
     QVector<QString> favoriteListLrc{};
 public:
@@ -28,6 +28,7 @@ public:
     void setupUI();
     void updatePlayList();
     void playListUp();
+    void deleteMyFavorite();
 
     QListView *getFavoriteListView() const;
 

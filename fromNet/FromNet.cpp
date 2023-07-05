@@ -44,10 +44,10 @@ void FromNet::setupUI() {
                         "padding: 6px;"
                         "}"
                         "QPushButton:hover {"
-                        "    background-color: #ADD8E6;"
+                        "    background-color:#FFFFF0;"
                         "}"
                         "QPushButton:pressed {"
-                        "    background-color:#ADD8E6 ;"
+                        "    background-color:#FFFFF0;"
                         "}");
     topLayout->addWidget(keyword_input);
     topLayout->addWidget(search);

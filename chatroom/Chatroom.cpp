@@ -39,10 +39,10 @@ void Chatroom::setupUI() {
                         "padding: 6px;"
                         "}"
                         "QPushButton:hover {"
-                        "    background-color: #ADD8E6;"
+                        "    background-color: #FFFFF0;"
                         "}"
                         "QPushButton:pressed {"
-                        "    background-color:#ADD8E6 ;"
+                        "    background-color:#FFFFF0;"
                         "}");
     top_layout->addWidget(nickNameLabel);
 
@@ -67,10 +67,10 @@ void Chatroom::setupUI() {
                                  "padding: 6px;"
                                  "}"
                                  "QPushButton:hover {"
-                                 "    background-color: #ADD8E6;"
+                                 "    background-color: #FFFFF0;"
                                  "}"
                                  "QPushButton:pressed {"
-                                 "    background-color:#ADD8E6 ;"
+                                 "    background-color:#FFFFF0;"
                                  "}");
     top_layout->addWidget(join);
     //加入主布局
@@ -114,10 +114,10 @@ void Chatroom::setupUI() {
                         "padding: 6px;"
                         "}"
                         "QPushButton:hover {"
-                        "    background-color: #ADD8E6;"
+                        "    background-color: #FFFFF0;"
                         "}"
                         "QPushButton:pressed {"
-                        "    background-color:#ADD8E6 ;"
+                        "    background-color:#FFFFF0;"
                         "}");
     horizontalLayout->addWidget(pbtSend);
 

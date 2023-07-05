@@ -39,7 +39,7 @@ void Sidebar::setupContentLists() {
 
     favoriteList_item = new QListWidgetItem(contentLists);
     favoriteList_item->setText(tr("我喜欢"));
-    favoriteList_item->setIcon(QIcon("../resource/icon/musicSheet.svg"));
+    favoriteList_item->setIcon(QIcon("../resource/icon/like.svg"));
     favoriteList_item->setTextAlignment(Qt::AlignHCenter);
     favoriteList_item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 
