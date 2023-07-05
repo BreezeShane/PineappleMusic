@@ -44,39 +44,66 @@ void PlayList::playListUp() {
 }
 void PlayList::updatePlayList() {
     qDebug()<<"hhh"<<endl;
-    QFile musicPlaylist ("../resource/musicPlaylist.m3u");
+    QFile musicPlaylistFile ("../resource/musicPlaylist.m3u");
     auto *model = new QStandardItemModel;
     playListView->setModel(model);
-
-    if(!musicPlaylist.open(QIODevice::ReadOnly | QIODevice::Text)){
-        qDebug() << "Failed to open file";
-        return ;
+    if (!musicPlaylistFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        qWarning() << "Failed to open playlist file for reading.";
+        return;
     }
-    QTextStream in(&musicPlaylist);
+    QTextStream in(&musicPlaylistFile);
     in.setCodec("UTF-8");
     QStringList titleLines;
     while (!in.atEnd()) {
         QString line = in.readLine();
-
         if (!line.isEmpty()) {
-            if (line.startsWith("#")){
+            if (line.startsWith("#")) {
                 titleLines << line;
-            } else{
+            } else if (line.startsWith("lrc#")) {
+                QStringList parts = line.split(QRegExp("#"));
+                musicPlayLrc << parts[1];
+            } else {
                 musicPlay.push_back(line);
             }
         }
     }
 
     // 添加歌曲信息到模型中
-    for (const QString &line : titleLines) {
+    for (const QString &line: titleLines) {
         QStringList parts = line.split(QRegExp(":"));
         if (parts.size() == 2) {
+//            QString artist = parts[0];
+//            QString title = parts[1];
             QString title = parts[1];
             auto *item = new QStandardItem(title);
-
             model->appendRow(item);
         }
     }
-    musicPlaylist.close();
+    musicPlaylistFile.close();
 }
-    PlayList::~PlayList() = default;
+
+const QVector<QString> &PlayList::getMusicPlay() const {
+    return musicPlay;
+}
+
+void PlayList::setMusicPlay(const QVector<QString> &musicPlay) {
+    PlayList::musicPlay = musicPlay;
+}
+
+QListView *PlayList::getPlayListView() const {
+    return playListView;
+}
+
+void PlayList::setPlayListView(QListView *playListView) {
+    PlayList::playListView = playListView;
+}
+
+const QVector<QString> &PlayList::getMusicPlayLrc() const {
+    return musicPlayLrc;
+}
+
+void PlayList::setMusicPlayLrc(const QVector<QString> &musicPlayLrc) {
+    PlayList::musicPlayLrc = musicPlayLrc;
+}
+
+PlayList::~PlayList() = default;
