@@ -79,8 +79,8 @@ void LocalMusic::setupUI() {
 
     verticalLayout->addWidget(musicListView);
     verticalLayout->addWidget(addMusicPlayPbt);
-    localPlayListFile = new QFile("../resource/local_playlist.m3u");
-    musicPlaylist=new QFile("../resource/musicPlaylist.m3u");
+    localPlayListFile = new QFile("../resource/localMusicList.m3u");
+    musicPlaylist=new QFile("../resource/favoriteListFile.m3u");
 
     connect(reloadMusicPbt, SIGNAL(clicked()), this, SLOT(scanLocalMusic()));
     connect(addMusicPlayPbt, &QPushButton::clicked, this, &LocalMusic::addMusicToPlaylist);

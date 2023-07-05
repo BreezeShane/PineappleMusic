@@ -43,11 +43,11 @@ void FavoriteList::playListUp() {
     updatePlayList();
 }
 void FavoriteList::updatePlayList() {
-    QFile musicPlaylistFile ("../resource/musicPlaylist.m3u");
+    QFile musicPlaylistFile ("../resource/favoriteListFile.m3u");
     auto *model = new QStandardItemModel;
     favoriteListView->setModel(model);
     if (!musicPlaylistFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        qWarning() << "Failed to open playlist file for reading.";
+        qWarning() << "Failed to open favoriteList file for reading.";
         return;
     }
     QTextStream in(&musicPlaylistFile);
