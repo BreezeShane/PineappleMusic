@@ -38,6 +38,11 @@ void Chatroom::setupUI() {
     nickNameInput = new QLineEdit();
     nickNameInput->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Maximum);
     nickNameInput->setFixedHeight(32);
+    nickNameInput->setStyleSheet("QLineEdit{"
+                                 "background-color: #F5F5F5;"
+                                 "border: 2px solid gray;"
+                                 "background-color: transparent"
+                                 "}");
     top_layout->addWidget(nickNameInput);
 
     top_layout->addSpacerItem(new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum));
@@ -53,6 +58,18 @@ void Chatroom::setupUI() {
     infoListView = new QListView();
     //infoListView->setFont(QFont("Arial", 14));
     infoListView->setSpacing(7);
+    infoListView->setStyleSheet("QListView {"
+                                  "background-color: #F5F5F5;"
+                                  "border: 2px solid gray;"
+                                  "background-color: transparent"
+                                  "}"
+                                  "QListView::item {"
+                                  "padding: 10px;"
+                                  "border-bottom: 1px solid #CCCCCC;"
+                                  "}"
+                                  "QListView::item:selected {"
+                                  "background-color: #E0E0E0;"
+                                  "}");
     verticalLayout->addWidget(infoListView);
 
     //消息发送布局
@@ -60,6 +77,11 @@ void Chatroom::setupUI() {
 
     messageInput = new QLineEdit();
     messageInput->setFixedHeight(32);
+    messageInput->setStyleSheet("QLineEdit{"
+                                 "background-color: #F5F5F5;"
+                                 "border: 2px solid gray;"
+                                 "background-color: transparent"
+                                 "}");
     horizontalLayout->addWidget(messageInput);
 
     pbtSend = new QPushButton();

@@ -57,7 +57,6 @@ void LocalMusic::setupUI() {
     addMusicPlayPbt->setStyleSheet("QPushButton {"
                                    "border: 2px;"
                                    "    background-color:#CCCCCC;"
-
                                    "border-radius:10px;"
                                    "padding: 6px;"
                                    "}"
