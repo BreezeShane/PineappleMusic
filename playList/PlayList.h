@@ -20,14 +20,18 @@ private:
     QListView *playListView{};
     QPushButton *playMusicPbt{};
     QTextEdit *text{};
-//    QFile *musicPlaylist{};
     QVector<QString> musicPlay{};
+    QVector<QString> playListLrc{};
 public:
     explicit PlayList(QWidget *parent = nullptr);
     void setupUI();
     void updatePlayList();
     void playListUp();
+    QListView *getPlayMusicListView() const;
 
+    const QVector<QString> &getPlayMusicList() const;
+
+    const QVector<QString> &getPlayMusicListLrc() const; //歌词文件列表
     ~PlayList() override;
 };
 

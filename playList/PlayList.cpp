@@ -14,7 +14,7 @@ void PlayList::setupUI() {
     playLayout=new QVBoxLayout();//垂直布局
     this->setStyleSheet("border: 2px solid gray;border-radius:10px;background-color: transparent");
     this->setContentsMargins(3, 3, 3, 3);
-    playMusicPbt =new QPushButton("播放");
+    playMusicPbt =new QPushButton("刷新播放");
     playMusicPbt->setFont(QFont("宋体", 13));
     playMusicPbt->setStyleSheet("QPushButton {"
                                 "background-color: #555555;"
@@ -43,7 +43,6 @@ void PlayList::playListUp() {
     updatePlayList();
 }
 void PlayList::updatePlayList() {
-    qDebug()<<"hhh"<<endl;
     QFile musicPlaylist ("../resource/musicPlaylist.m3u");
     auto *model = new QStandardItemModel;
     playListView->setModel(model);
@@ -53,7 +52,7 @@ void PlayList::updatePlayList() {
         return ;
     }
     QTextStream in(&musicPlaylist);
-    in.setCodec("UTF-8");
+   // in.setCodec("UTF-8");
     QStringList titleLines;
     while (!in.atEnd()) {
         QString line = in.readLine();
@@ -78,5 +77,17 @@ void PlayList::updatePlayList() {
         }
     }
     musicPlaylist.close();
+}
+QListView *PlayList::getPlayMusicListView() const {
+    return  playListView;
+}
+
+const QVector<QString> &PlayList::getPlayMusicList() const {
+    return  musicPlay;
+    ;
+}
+
+const QVector<QString> &PlayList::getPlayMusicListLrc() const {
+    return playListLrc;
 }
     PlayList::~PlayList() = default;

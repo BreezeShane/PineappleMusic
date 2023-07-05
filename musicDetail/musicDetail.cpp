@@ -28,16 +28,25 @@ musicDetail::musicDetail(CloudMusic currMusic, QWidget *parent) :
 //    qDebug()<<"music detail!";
 //    qDebug()<<currMusic.getName();
 //    qDebug()<<currMusic.getAlbumUrl();
-
+    this->setStyleSheet("background-color: transparent;border: 2px solid gray;border-radius:10px;");
     uiBar = new PlayBar(this);
     uiBar->setupUI();
     ui->setupUi(this);
     uiBar->setGeometry(154,409,717,358);
-    ui->textBrowser->setStyleSheet("text-align: center;");
-    ui->textBrowser->setHtml(QString("<html><head><style>body {text-align: center;}</style></head>"
-                                     "<body>%1</body></html>").arg("Ciallo~ Pineapple!"));
+    ui->textBrowser->setStyleSheet("text-align: center;margin-top:20px");
+
     uiBar->setAlbum(currMusic.getAlbumUrl());
-//    QFile lyricsFile(currMusic.getMusicUrl());
+//    QFile lyricsFile(currMusic.getLrcPath());
+//    lyricsFile.open(QIODevice::ReadOnly | QIODevice::Text);
+    qDebug() << currMusic.getLrcPath();
+    const QString& lrcFilePath = currMusic.getLrcPath();
+    if (lrcFilePath == "NoLrc") {
+        ui->textBrowser->setHtml(QString("<html><head><style>body {text-align: center;}</style></head>"
+                                         "<body>%1</body></html>").arg("Ciallo~ Pineapple!"));
+    } else {
+        ui->textBrowser->setSource(QUrl::fromLocalFile(currMusic.getLrcPath()));
+        ui->textBrowser->show();
+    }
 }
 
 void musicDetail::paintEvent(QPaintEvent *event) {
