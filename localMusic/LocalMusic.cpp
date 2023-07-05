@@ -52,20 +52,21 @@ void LocalMusic::setupUI() {
                                  "QListView::item{padding:5px;}"
     );
     addMusicPlayPbt=new QPushButton("添加播放");
-
-    addMusicPlayPbt->setStyleSheet("QPushButton {"
-                                   "background-color:#ADD8E6 "
-                                 "    border: 2px;"
-                                 "border-radius:10px;"
-                                 "    padding: 6px;"
-                                 "}"
-                                 "QPushButton:hover {"
-                                 "    background-color: #ADD8E6;"
-                                 "}"
-                                 "QPushButton:pressed {"
-                                 "    background-color:#ADD8E6 ;"
-                                 "}");
     addMusicPlayPbt->setFont(QFont("宋体", 13));
+    addMusicPlayPbt->setStyleSheet("QPushButton {"
+                                   "border: 2px;"
+                                   "    background-color:#ADD8E6 ;"
+
+                                   "border-radius:10px;"
+                                   "padding: 6px;"
+                                   "}"
+                                   "QPushButton:hover {"
+                                   "    background-color: #B0E0E6;"
+                                   "}"
+                                   "QPushButton:pressed {"
+                                   "background-color: #87CEEB;"
+                                   "}");
+
 
     verticalLayout->addWidget(musicListView);
     verticalLayout->addWidget(addMusicPlayPbt);
