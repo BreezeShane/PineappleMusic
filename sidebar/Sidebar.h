@@ -9,11 +9,12 @@
 #include <QWidget>
 #include <QFrame>
 #include <QListWidget>
+#include <QVBoxLayout>
 class QHBoxLayout;
 class Sidebar : public QFrame {
 Q_OBJECT
 private:
-    QHBoxLayout *mainLayout{};
+    QVBoxLayout *mainLayout{};
     QListWidgetItem *localMusic_item{};
     QListWidgetItem *playList_item{};
     QListWidgetItem *fromNet_item{};

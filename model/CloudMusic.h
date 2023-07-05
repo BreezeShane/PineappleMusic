@@ -44,7 +44,9 @@ private:
     QString album_url;  // 专辑封面 URL
     QString artist;  // 专辑所属艺术家
     QString music_url;//音乐网络地址
+    QString lrc_path;//歌词文件路径
     int duration;  // 歌曲时长（毫秒）
+    QString position_time; //播放进度
 public:
     const QString &getName() const;
 
@@ -65,6 +67,14 @@ public:
     int getDuration() const;
 
     void setDuration(int duration);
+
+    const QString &getLrcPath() const;
+
+    void setLrcPath(const QString &lrcPath);
+
+    const QString &getPositionTime() const;
+
+    void setPositionTime(const QString &positionTime);
 };
 
 

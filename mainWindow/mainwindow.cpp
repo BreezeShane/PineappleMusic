@@ -575,6 +575,11 @@ void MainWindow::setPlaySpeed() {
 }
 //展示播放详情页
 void MainWindow::openDetailWindow() {
+    music.setName(currentPlay);
+    music.setMusicUrl(currentPlay);
+    music.setDuration(durationTime.toInt());
+    music.setPositionTime(positionTime);
+    music.setLrcPath(currentPlayLrc);
     musicDetail* win = new musicDetail(music);
 //    win->setMusic(music);
     win->show();
