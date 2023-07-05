@@ -183,10 +183,10 @@ void MainWindow::setupUI() {
                                      "    padding: 6px;"
                                      "}"
                                      "QPushButton:hover {"
-                                     "    background-color: #ADD8E6;"
+                                     "    background-color: #FFFFF0;"
                                      "}"
                                      "QPushButton:pressed {"
-                                     "    background-color:#ADD8E6 ;"
+                                     "    background-color:#FFFFF0;"
                                      "}");
     helpbt->setStyleSheet("QPushButton {"
                                  "    border: 2px;"
@@ -194,10 +194,10 @@ void MainWindow::setupUI() {
                                  "    padding: 6px;"
                                  "}"
                                  "QPushButton:hover {"
-                                 "    background-color: #ADD8E6;"
+                                 "    background-color: #FFFFF0;"
                                  "}"
                                  "QPushButton:pressed {"
-                                 "    background-color:#ADD8E6 ;"
+                                 "    background-color:#FFFFF0;"
                                  "}");
 
     // 添加伸缩器到工具栏，将按钮推到最右边
@@ -266,7 +266,7 @@ void MainWindow::setupUI() {
 //            currentPlayLrc = currentPlaylistLrc[row];
             mediaPlayer->setMedia(QUrl::fromLocalFile(currentPlay));
             mediaPlayer->play();
-            playBar->getPbtStartOrPause()->setIcon(QIcon("../resource/icon/pause.png"));
+            playBar->getPbtStartOrPause()->setIcon(QIcon("../resource/icon/stopp.svg"));
             playBar->getSlider()->setSliderPosition(0);
         }
     });
@@ -369,7 +369,16 @@ void MainWindow::retranslateUi() {
     this->setWindowIcon(QIcon("../resource/app.png"));
 }
 void MainWindow::helpShow() {
-    QMessageBox::information(this, "帮助文档", "这里是帮助文档的内容");
+    QMessageBox::about(this,u8"关于"," Pineapple Music| 一款精致小巧的本地音乐播放器\n"
+                                     "【歌词文件说明】需要与对应歌曲MP3在同目录且同名（.lry文件）\n"
+                                     "【使用说明】\n"
+                                     " Pineapple Music音乐播放器暂未设置快捷键使用\n"
+                                     " 上一曲/下一曲/暂停/播放  点击播放栏的相应图标即可\n"
+                                     " 顺序播放/随机播放/循环播放 点击播放栏的相应图标即可\n"
+                                     " 播放速度 可设置0.5/1/1.5/2倍数播放音乐\n"
+                                     "【添加本地音乐】点击本地音乐界面的扫描添加按钮\n"
+                                     "【音乐文件类型】添加过程中会自动过滤得到可播放的文件类型（.mp3/.flac/.mpga文件），所以添加时无需考虑文件类型，使用\"Ctrl+A\"选择文件夹内全部文件添加即可\n"
+                                     "\n注：鼠标移动到不认识的按钮上，会有说明哦~\n");
 }
 void MainWindow::changeBackground() {
 
