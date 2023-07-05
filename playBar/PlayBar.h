@@ -45,6 +45,10 @@ public:
     void setupUI();
     void retranslateUi();
 
+    QLabel *getAlbum() const;
+
+    void setAlbum(const QPixmap& music_album);
+
     QPushButton *getPbtPrevious() const;
 
     QPushButton *getPbtStartOrPause() const;

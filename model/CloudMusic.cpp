@@ -43,3 +43,44 @@ Song Song::fromJson(const QJsonObject& songObject)
 
     return song;
 }
+
+
+const QString &CloudMusic::getName() const {
+    return name;
+}
+
+void CloudMusic::setName(const QString &name) {
+    CloudMusic::name = name;
+}
+
+const QString &CloudMusic::getAlbumUrl() const {
+    return album_url;
+}
+
+void CloudMusic::setAlbumUrl(const QString &albumUrl) {
+    album_url = albumUrl;
+}
+
+const QString &CloudMusic::getArtist() const {
+    return artist;
+}
+
+void CloudMusic::setArtist(const QString &artist) {
+    CloudMusic::artist = artist;
+}
+
+const QString &CloudMusic::getMusicUrl() const {
+    return music_url;
+}
+
+void CloudMusic::setMusicUrl(const QString &musicUrl) {
+    music_url = musicUrl;
+}
+
+int CloudMusic::getDuration() const {
+    return duration;
+}
+
+void CloudMusic::setDuration(int duration) {
+    CloudMusic::duration = duration;
+}

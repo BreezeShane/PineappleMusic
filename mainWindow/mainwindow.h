@@ -6,6 +6,7 @@
 #include "sidebar/Sidebar.h"
 #include "mainContent/MainContent.h"
 #include "playBar/PlayBar.h"
+#include "model/CloudMusic.h"
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QMediaPlayer>
@@ -44,6 +45,8 @@ private:
     QString positionTime;
     qreal currentSpeed;
     qreal newSpeed;
+
+    CloudMusic music;
 public:
     explicit MainWindow(QWidget *parent = nullptr);
 

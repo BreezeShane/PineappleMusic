@@ -34,6 +34,18 @@ void FromNet::setupUI() {
 
 
     resultListView = new QListView;
+    resultListView->setIconSize(QSize(80, 80));
+    resultListView->setStyleSheet("QListView {"
+                                  "background-color: #F5F5F5;"
+                                  "border: 1px solid #CCCCCC;"
+                                  "}"
+                                  "QListView::item {"
+                                  "padding: 10px;"
+                                  "border-bottom: 1px solid #CCCCCC;"
+                                  "}"
+                                  "QListView::item:selected {"
+                                  "background-color: #E0E0E0;"
+                                  "}");
 
     mainLayout->addLayout(topLayout);
     mainLayout->addWidget(resultListView);
@@ -81,35 +93,48 @@ void FromNet::search_music() {
 void FromNet::updateResultView() {
 // 创建一个数据模型
     QStandardItemModel *model = new QStandardItemModel(this);
-
 // 遍历所有歌曲，将其转换为 QStandardItem 对象，并添加到数据模型中
     for (int i = 0; i < songs.size(); i++) {
         Song song = songs.at(i);
-
-        // 创建一个 QStandardItem 对象，并设置其数据
         // 创建一个 QStandardItem 对象，并设置其数据
         auto *item = new QStandardItem();
+        //加载专辑图
+        auto *manager = new QNetworkAccessManager(this);
+        QUrl url(song.album.artist.img1v1Url);
+        QNetworkRequest request(url);
+        QNetworkReply *reply = manager->get(request);
+        connect(reply, &QNetworkReply::finished, [=]() {
+            if (reply->error() == QNetworkReply::NoError) {
+                QByteArray data = reply->readAll();
+                QPixmap pixmap;
+                pixmap.loadFromData(data);
+                // 将pixmap显示在UI上
+                item->setIcon(QIcon(pixmap));
+            } else {
+                // 处理错误情况
+                qWarning()<<"can not load album"<<url;
+            }
+        });
+        //设置歌曲信息
         item->setText(song.name.append("-").append(song.artists.first().name));
-//        // 设置歌曲 ID 为 UserRole
-//        item->setData(song.id, Qt::UserRole);
-//
-//        // 将艺术家信息转换为字符串，并设置为 QStandardItem 对象的子项
-//        QString artistText;
-//        for (int j = 0; j < song.artists.size(); j++) {
-//            Artist artist = song.artists.at(j);
-//            if (!artistText.isEmpty()) {
-//                artistText += " / ";
-//            }
-//            artistText += artist.name;
-//        }
-//        // 使用 setData() 函数来设置不同角色的数据
-//        item->setData(artistText, Qt::UserRole + 1);
-//
-//        // 将专辑信息转换为字符串，并设置为 QStandardItem 对象的子项
-//        QString albumText = song.album.name;
-//        // 使用 setData() 函数来设置不同角色的数据
-//        item->setData(albumText, Qt::UserRole + 2);
+        // 设置歌曲 ID 为 UserRole
+        item->setData(song.id, Qt::UserRole);
 
+        // 将艺术家信息转换为字符串，并设置为 QStandardItem 对象的子项
+        QString artistText = song.artists.first().name;
+        // 使用 setData() 函数来设置不同角色的数据
+        item->setData(artistText, Qt::UserRole + 1);
+
+        // 将专辑信息转换为字符串，并设置为 QStandardItem 对象的子项
+        QString albumText = song.album.artist.img1v1Url;
+        // 使用 setData() 函数来设置不同角色的数据
+        item->setData(albumText, Qt::UserRole + 2);
+
+        // 将专辑信息转换为字符串，并设置为 QStandardItem 对象的子项
+        int duration = song.duration;
+        // 使用 setData() 函数来设置不同角色的数据
+        item->setData(duration, Qt::UserRole + 3);
+        item->setData(song.name, Qt::UserRole+4);
         // 将 QStandardItem 对象添加到数据模型中
         model->appendRow(item);
     }
