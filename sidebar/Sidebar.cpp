@@ -3,6 +3,7 @@
 //
 
 #include <QHBoxLayout>
+#include <QPushButton>
 #include "Sidebar.h"
 
 Sidebar::Sidebar(QWidget *parent)
@@ -14,8 +15,16 @@ Sidebar::Sidebar(QWidget *parent)
 void Sidebar::setupUI() {
     this->setStyleSheet("border: 2px solid gray;border-radius:10px;padding:10px;");
     this->setFixedWidth(200);
+
+    mainLayout = new QVBoxLayout;
+
+    QWidget *logo1 = new QWidget;
+    logo1->setFixedHeight(150);
+    //logo1->setStyleSheet("border-image: url(../resource/icon/logo.png);background-size: stretch;");
+    mainLayout->addWidget(logo1);
+
     setupContentLists();
-    mainLayout = new QHBoxLayout;
+
     mainLayout->addWidget(contentLists);
     mainLayout->setContentsMargins(0,0,0,0);    //取出外边距
     this->setLayout(mainLayout);

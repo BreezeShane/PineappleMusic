@@ -27,10 +27,25 @@ void FromNet::setupUI() {
     topLayout = new QHBoxLayout;
     keyword_input = new QLineEdit;
     keyword_input->setFixedHeight(50);
+    keyword_input->setStyleSheet("QLineEdit{"
+                                 "background-color: #F5F5F5;"
+                                 "border: 2px solid gray;"
+                                 "background-color: transparent"
+                                 "}");
     search = new QPushButton();
     search->setIcon(QIcon("../resource/icon/search.svg"));
     search->setFixedWidth(80);
-
+    search->setStyleSheet("QPushButton {"
+                        "border: 2px;"
+                        "border-radius:10px;"
+                        "padding: 6px;"
+                        "}"
+                        "QPushButton:hover {"
+                        "    background-color: #ADD8E6;"
+                        "}"
+                        "QPushButton:pressed {"
+                        "    background-color:#ADD8E6 ;"
+                        "}");
     topLayout->addWidget(keyword_input);
     topLayout->addWidget(search);
 
@@ -39,7 +54,8 @@ void FromNet::setupUI() {
     resultListView->setIconSize(QSize(80, 80));
     resultListView->setStyleSheet("QListView {"
                                   "background-color: #F5F5F5;"
-                                  "border: 1px solid #CCCCCC;"
+                                  "border: 2px solid gray;"
+                                  "background-color: transparent"
                                   "}"
                                   "QListView::item {"
                                   "padding: 10px;"
