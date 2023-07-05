@@ -241,6 +241,9 @@ void Chatroom::on_join_clicked() {
                     qDebug() << "Server has disconnected";
                 } else {
                     // 连接失败，做出提示
+                    QMessageBox::information(this,"连接提示","服务器已断开");
+                    connet = false;
+                    join->setIcon(QIcon("../resource/icon/disconnection.svg"));
                     qDebug() << "Failed to connect to server:" << socket->errorString();
                 }
             }
@@ -259,7 +262,7 @@ void Chatroom::on_join_clicked() {
         join->setIcon(QIcon("../resource/icon/disconnection.svg"));
         if (socket->state() == QAbstractSocket::ConnectedState) {
             socket->abort();
-            QMessageBox::information(this,"连接提示","连接已断开");
+            //QMessageBox::information(this,"连接提示","连接已断开");
         }
     }
 }
