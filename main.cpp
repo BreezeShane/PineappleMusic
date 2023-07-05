@@ -13,8 +13,5 @@ int main(int argc, char *argv[])
     app.setWindowIcon(icon);
     MainWindow w;
     w.show();
-
-//    musicDetail s;
-//    s.show();
     return app.exec();
 }

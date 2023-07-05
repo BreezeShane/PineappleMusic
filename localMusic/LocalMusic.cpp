@@ -123,10 +123,10 @@ void LocalMusic::scanLocalMusic() {
             // 写入m3u文件中
             QTextStream out(localPlayListFile);
 //        out << "#EXTINF:" << lengthString << "," << title << "\n";
-            out << "#EXTINF:" << title << "\n";
-            out << fileInfo.filePath() << "\n";
+            out << "#EXTINF:" << title.toLocal8Bit().data() << "\n";
+            out << fileInfo.filePath().toLocal8Bit().data() << "\n";
             if (lrcFileInfo.exists() && lrcFileInfo.isFile()) {
-                out << "lrc#" << lrcFileInfo.filePath() << "\n";
+                out << "lrc#" << lrcFileInfo.filePath().toLocal8Bit().data() << "\n";
             } else {
                 out << "lrc#NoLrc" << "\n";
             }
@@ -210,8 +210,8 @@ void LocalMusic::addMusicToPlaylist() {
         }
 
         QTextStream out(musicPlaylist);
-        out << "#EXTINF:" << musicName << endl;
-        out << currentPlay << endl;
+        out << "#EXTINF:" << musicName.toLocal8Bit().data() << endl;
+        out << currentPlay.toLocal8Bit().data() << endl;
 
         musicPlaylist->close();
     } catch (const std::exception& e) {
