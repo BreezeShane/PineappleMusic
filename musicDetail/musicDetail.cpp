@@ -28,12 +28,12 @@ musicDetail::musicDetail(CloudMusic currMusic, QWidget *parent) :
 //    qDebug()<<"music detail!";
 //    qDebug()<<currMusic.getName();
 //    qDebug()<<currMusic.getAlbumUrl();
-
+    this->setStyleSheet("background-color: transparent;border: 2px solid gray;border-radius:10px;");
     uiBar = new PlayBar(this);
     uiBar->setupUI();
     ui->setupUi(this);
     uiBar->setGeometry(154,409,717,358);
-    ui->textBrowser->setStyleSheet("text-align: center;");
+    ui->textBrowser->setStyleSheet("text-align: center;margin-top:20px");
 
     uiBar->setAlbum(currMusic.getAlbumUrl());
 //    QFile lyricsFile(currMusic.getLrcPath());
