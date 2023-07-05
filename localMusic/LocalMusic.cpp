@@ -66,8 +66,7 @@ void LocalMusic::setupUI() {
     addMusicPlayPbt=new QPushButton("我喜欢");
     addMusicPlayPbt->setFont(QFont("宋体", 13));
     addMusicPlayPbt->setStyleSheet("QPushButton {"
-                                   "border: 2px;"
-
+                                   "border: 2px solid gray;"
                                    "border-radius:10px;"
                                    "padding: 6px;"
                                    "}"
