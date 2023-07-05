@@ -12,7 +12,7 @@ PlayList::PlayList(QWidget *parent)
 
 void PlayList::setupUI() {
     playLayout=new QVBoxLayout();//垂直布局
-    this->setStyleSheet("border: 2px solid gray;border-radius:10px;");
+    this->setStyleSheet("border: 2px solid gray;border-radius:10px;background-color: transparent");
     this->setContentsMargins(3, 3, 3, 3);
     playMusicPbt =new QPushButton("播放");
     playMusicPbt->setStyleSheet("padding:5px;");

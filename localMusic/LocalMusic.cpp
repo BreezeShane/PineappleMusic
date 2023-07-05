@@ -12,6 +12,7 @@
 #include <QMediaMetaData>
 #include <QJsonDocument>
 #include <QStandardItemModel>
+#include <QMessageBox>
 #include "LocalMusic.h"
 
 LocalMusic::LocalMusic(QWidget *parent)
@@ -21,8 +22,9 @@ LocalMusic::LocalMusic(QWidget *parent)
 }
 
 void LocalMusic::setupUI() {
-    this->setStyleSheet("border: 2px solid gray;border-radius:10px;");
+    this->setStyleSheet("border: 2px solid gray;border-radius:10px;background-color: transparent;");
     this->setContentsMargins(3, 3, 3, 3);
+
     verticalLayout = new QVBoxLayout(this);
     verticalLayout->setSizeConstraint(QLayout::SetDefaultConstraint);
     horizontalLayout = new QHBoxLayout();
@@ -51,8 +53,21 @@ void LocalMusic::setupUI() {
                                  "QListView::item{padding:5px;}"
     );
     addMusicPlayPbt=new QPushButton("添加播放");
-    addMusicPlayPbt->setStyleSheet("padding:5px;");
     addMusicPlayPbt->setFont(QFont("宋体", 13));
+    addMusicPlayPbt->setStyleSheet("QPushButton {"
+                                   "border: 2px;"
+                                   "    background-color:#ADD8E6 ;"
+
+                                   "border-radius:10px;"
+                                   "padding: 6px;"
+                                   "}"
+                                   "QPushButton:hover {"
+                                   "    background-color: #B0E0E6;"
+                                   "}"
+                                   "QPushButton:pressed {"
+                                   "background-color: #87CEEB;"
+                                   "}");
+
 
     verticalLayout->addWidget(musicListView);
     verticalLayout->addWidget(addMusicPlayPbt);
@@ -168,26 +183,43 @@ void LocalMusic::updateMusicList() {
 }
 void LocalMusic::addMusicToPlaylist() {
     QModelIndex index = musicListView->currentIndex();
-    int row=index.row();
-    currentPlay = playList[row];
-    QStandardItemModel *playlistModel=new QStandardItemModel;
-    QString musicName;
-    if (index.isValid())
-    {
-        musicName = index.data(Qt::DisplayRole).toString();
-        qDebug()<<"jjj"<<index.data(Qt::DisplayRole).toString()<<endl;
-        playlistModel->appendRow(new QStandardItem(musicName));
-    }
-    //把播放文件写入musicPlayList.m3u文件
-    if (!musicPlaylist->open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text)) {
-        qWarning() << "Failed to open playlist file for writing.";
+    int row = index.row();
+
+    if (row < 0) {
+        qDebug() << "No music selected.";
+        // 创建一个信息提示框
+        QMessageBox::information(nullptr, "提示", "请选择音乐");
         return;
     }
-    QTextStream out(musicPlaylist);
-    out << "#EXTINF:" <<musicName<< endl;
-    out <<currentPlay<< endl;
-    musicPlaylist->close();
+
+    try {
+        currentPlay = playList[row];
+        QStandardItemModel *playlistModel = new QStandardItemModel;
+        QString musicName;
+
+        if (index.isValid())
+        {
+            musicName = index.data(Qt::DisplayRole).toString();
+            qDebug() << "jjj" << index.data(Qt::DisplayRole).toString() << endl;
+            playlistModel->appendRow(new QStandardItem(musicName));
+        }
+
+        //把播放文件写入musicPlayList.m3u文件
+        if (!musicPlaylist->open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text)) {
+            qWarning() << "Failed to open playlist file for writing.";
+            return;
+        }
+
+        QTextStream out(musicPlaylist);
+        out << "#EXTINF:" << musicName << endl;
+        out << currentPlay << endl;
+
+        musicPlaylist->close();
+    } catch (const std::exception& e) {
+        qWarning() << "An exception occurred: " << e.what();
+    }
 }
+
 QListView *LocalMusic::getMusicListView() const {
     return musicListView;
 }

@@ -12,13 +12,16 @@
 #include <QMediaPlayer>
 #include <QEvent>
 #include <QtGlobal>
+#include <QToolBar>
 class MainWindow : public QMainWindow {
     Q_OBJECT
 private:
     // 主布局---水平布局
     QHBoxLayout *mainLayout{};
+    QHBoxLayout *toolLayout{};
     // 子布局---垂直布局
     QVBoxLayout *subLayout{};
+
     // 侧边栏
     Sidebar *sidebar{};
     // 内容显示区域
@@ -27,8 +30,11 @@ private:
     PlayBar *playBar{};
     //歌词窗口
     QWidget *widget;
-
-
+    //
+   // QWidget *tool{};
+   QToolBar *toolbar{};
+   //
+   QPushButton *personalizebt{};
     //媒体播放器
     QMediaPlayer *mediaPlayer{};    //播放器
     QVector<QString> currentPlaylist{};     //当前播放列表
@@ -81,6 +87,10 @@ public slots:
     void setPlaySpeed();
     void lyricsModel();
     void creatLyricsWindow();
+    void changeBackground();
+
+    //打开播放详情页
+    void openDetailWindow();
 };
 
 #endif // MAINWINDOW_H
