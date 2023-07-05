@@ -17,6 +17,9 @@
 #include "sidebar/Sidebar.h"
 #include "mainContent/MainContent.h"
 #include "playBar/PlayBar.h"
+#include <QGraphicsEffect>
+#include <QGraphicsOpacityEffect>
+
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 
     lyricsUi();
@@ -43,6 +46,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     QObject::connect(playBar->getPbtLyrics(), SIGNAL(clicked()),
                      this,
                      SLOT(creatLyricsWindow()));
+
 }
 
 void MainWindow::lyricsUi(){
@@ -94,7 +98,7 @@ void MainWindow::lyricsModel() {
 
 // 槽函数，用于切换播放模式
 void MainWindow::togglePlayMode() {
-    qDebug()<<"hhhh";
+
     switch (currentPlayMode) {
         case SingleLoop:
             currentPlayMode = Sequential;
@@ -136,6 +140,7 @@ void MainWindow::setupUI() {
 
     //主部件
     auto centralwidget = new QWidget(this);
+
     // 从持久化设置中读取背景图路径，默认为默认背景图
     QString imagePath = QSettings().value("BackgroundImage", "../resource/image/2.jpg").toString();
     // 设置背景图的样式
@@ -161,7 +166,7 @@ void MainWindow::setupUI() {
     //工具栏
     toolbar=new QToolBar();
     toolLayout=new QHBoxLayout();
-//    toolbar->setStyleSheet("border: 2px solid gray;border-radius:10px;");
+
     personalizebt=new QPushButton();
     personalizebt->setIcon(QIcon("../resource/icon/skin.svg"));
     // 设置个性化按钮的样式
@@ -321,6 +326,7 @@ void MainWindow::setupUI() {
 void MainWindow::retranslateUi() {
     //标题
     this->setWindowTitle("Pineapple Music");
+    this->setWindowIcon(QIcon("../resource/app.png"));
 }
 void MainWindow::changeBackground() {
 

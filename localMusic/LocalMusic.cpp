@@ -12,6 +12,7 @@
 #include <QMediaMetaData>
 #include <QJsonDocument>
 #include <QStandardItemModel>
+#include <QMessageBox>
 #include "LocalMusic.h"
 
 LocalMusic::LocalMusic(QWidget *parent)
@@ -186,6 +187,8 @@ void LocalMusic::addMusicToPlaylist() {
 
     if (row < 0) {
         qDebug() << "No music selected.";
+        // 创建一个信息提示框
+        QMessageBox::information(nullptr, "提示", "请选择音乐");
         return;
     }
 
