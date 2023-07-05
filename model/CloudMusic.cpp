@@ -84,3 +84,19 @@ int CloudMusic::getDuration() const {
 void CloudMusic::setDuration(int duration) {
     CloudMusic::duration = duration;
 }
+
+const QString &CloudMusic::getLrcPath() const {
+    return lrc_path;
+}
+
+void CloudMusic::setLrcPath(const QString &lrcPath) {
+    lrc_path = lrcPath;
+}
+
+const QString &CloudMusic::getPositionTime() const {
+    return position_time;
+}
+
+void CloudMusic::setPositionTime(const QString &positionTime) {
+    position_time = positionTime;
+}

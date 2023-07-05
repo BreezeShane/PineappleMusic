@@ -17,6 +17,7 @@
 #include "sidebar/Sidebar.h"
 #include "mainContent/MainContent.h"
 #include "playBar/PlayBar.h"
+#include "musicDetail/musicDetail.h"
 #include <QGraphicsEffect>
 #include <QGraphicsOpacityEffect>
 
@@ -142,11 +143,14 @@ void MainWindow::setupUI() {
     auto centralwidget = new QWidget(this);
 
     // 从持久化设置中读取背景图路径，默认为默认背景图
-    QString imagePath = QSettings().value("BackgroundImage", "../resource/image/2.jpg").toString();
+    QString imagePath = QSettings().value("BackgroundImage", "../resource/image/4.jpg").toString();
     // 设置背景图的样式
     QPalette palette;
     palette.setBrush(this->backgroundRole(), QBrush(QPixmap(imagePath)));
     this->setPalette(palette);
+//    // 创建颜色调整效果
+    QGraphicsEffect* effect = new QGraphicsOpacityEffect(this);
+    effect->setEnabled("");
 
     // 创建一个QWidget作为中央部件
     centralwidget->setMinimumSize(1200, 800);
@@ -168,7 +172,9 @@ void MainWindow::setupUI() {
     toolLayout=new QHBoxLayout();
 
     personalizebt=new QPushButton();
+    helpbt=new QPushButton();
     personalizebt->setIcon(QIcon("../resource/icon/skin.svg"));
+    helpbt->setIcon(QIcon("../resource/icon/help.svg"));
     // 设置个性化按钮的样式
     personalizebt->setFont(QFont("宋体", 8));
     personalizebt->setStyleSheet("QPushButton {"
@@ -182,12 +188,24 @@ void MainWindow::setupUI() {
                                      "QPushButton:pressed {"
                                      "    background-color:#ADD8E6 ;"
                                      "}");
+    helpbt->setStyleSheet("QPushButton {"
+                                 "    border: 2px;"
+                                 "border-radius:10px;"
+                                 "    padding: 6px;"
+                                 "}"
+                                 "QPushButton:hover {"
+                                 "    background-color: #ADD8E6;"
+                                 "}"
+                                 "QPushButton:pressed {"
+                                 "    background-color:#ADD8E6 ;"
+                                 "}");
 
     // 添加伸缩器到工具栏，将按钮推到最右边
     QWidget *spacer = new QWidget();
     spacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
     toolbar->addWidget(spacer);
     toolbar->addWidget(personalizebt);
+    toolbar->addWidget(helpbt);
     toolLayout->addWidget(toolbar);
     // 子布局中加入两个部件
     subLayout->addLayout(toolLayout);
@@ -321,12 +339,17 @@ void MainWindow::setupUI() {
     connect(playBar->getAlbum(), SIGNAL(clicked()), this, SLOT(openDetailWindow()));
     // 换肤连接
     connect(personalizebt, &QPushButton::clicked, this, &MainWindow::changeBackground);
+    //打开帮助文档
+    connect(helpbt, &QPushButton::clicked, this, &MainWindow::helpShow);
 }
 
 void MainWindow::retranslateUi() {
     //标题
     this->setWindowTitle("Pineapple Music");
     this->setWindowIcon(QIcon("../resource/app.png"));
+}
+void MainWindow::helpShow() {
+    QMessageBox::information(this, "帮助文档", "这里是帮助文档的内容");
 }
 void MainWindow::changeBackground() {
 
@@ -552,12 +575,14 @@ void MainWindow::setPlaySpeed() {
 }
 //展示播放详情页
 void MainWindow::openDetailWindow() {
-    // 创建一个新窗口
-    QWidget* newWindow = new QWidget();
-    newWindow->setWindowTitle("新窗口");
-
-    // 显示新窗口
-    newWindow->show();
+    music.setName(currentPlay);
+    music.setMusicUrl(currentPlay);
+    music.setDuration(durationTime.toInt());
+    music.setPositionTime(positionTime);
+    music.setLrcPath(currentPlayLrc);
+    musicDetail* win = new musicDetail(music);
+//    win->setMusic(music);
+    win->show();
 }
 
 MainWindow::~MainWindow() = default;

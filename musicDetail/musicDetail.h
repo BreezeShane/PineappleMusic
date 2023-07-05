@@ -7,6 +7,7 @@
 
 #include <QWidget>
 #include <QFile>
+#include <QFrame>
 #include "playBar/PlayBar.h"
 #include "model/CloudMusic.h"
 
@@ -14,14 +15,8 @@
 QT_BEGIN_NAMESPACE
 namespace Ui {
     class musicDetail;
-//    class DetailedPagePlayBar;
 }
 QT_END_NAMESPACE
-
-//class DetailedPagePlayBar : public ::PlayBar {
-//public:
-//    explicit DetailedPagePlayBar(QWidget *parent = nullptr);
-//};
 
 class musicDetail : public QWidget {
 Q_OBJECT
@@ -35,7 +30,7 @@ public:
 
 private:
     Ui::musicDetail *ui;
-    ::PlayBar *uiBar;
+    PlayBar *uiBar;
 };
 
 
