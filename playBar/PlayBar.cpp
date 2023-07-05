@@ -178,4 +178,14 @@ QAction  *PlayBar::getAction3() const {
 QAction  *PlayBar::getAction4() const {
     return action4;
 }
+
+QLabel *PlayBar::getAlbum() const {
+    return album;
+}
+
+void PlayBar::setAlbum(const QPixmap& music_album) {
+    PlayBar::album->setScaledContents(true);
+    PlayBar::album->setPixmap(music_album.scaled(PlayBar::album->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+}
+
 PlayBar::~PlayBar() = default;

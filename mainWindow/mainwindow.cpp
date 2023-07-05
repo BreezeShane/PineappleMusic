@@ -236,6 +236,23 @@ void MainWindow::setupUI() {
 
         });
         // 在这里处理用户点击事件，例如显示该歌曲的详细信息
+        QUrl url2(music.getAlbumUrl());
+        QNetworkRequest request2(url2);
+        qDebug()<<url2;
+        QNetworkReply *reply2 = manager->get(request2);
+        //显示专辑图
+        connect(reply2, &QNetworkReply::finished, [=]() {
+            if (reply->error() == QNetworkReply::NoError) {
+                QByteArray data2 = reply2->readAll();
+                QPixmap pixmap2;
+                pixmap2.loadFromData(data2);
+                // 将pixmap显示在UI上
+                playBar->setAlbum(pixmap2);
+            } else {
+                // 处理错误情况
+                qWarning()<<"can not load album"<<url;
+            }
+        });
         currentPlaylist.clear();
         currentPlaylist.append(music.getName());
         currentPlaylistLrc.clear();
