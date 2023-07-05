@@ -53,6 +53,7 @@ void PlayList::updatePlayList() {
         return ;
     }
     QTextStream in(&musicPlaylist);
+    in.setCodec("UTF-8");
     QStringList titleLines;
     while (!in.atEnd()) {
         QString line = in.readLine();

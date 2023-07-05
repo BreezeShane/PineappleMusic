@@ -131,6 +131,7 @@ void LocalMusic::scanLocalMusic() {
 
             // 写入m3u文件中
             QTextStream out(localPlayListFile);
+            out.setCodec("UTF-8");
 //        out << "#EXTINF:" << lengthString << "," << title << "\n";
             out << "#EXTINF:" << title << "\n";
             out << fileInfo.filePath() << "\n";
@@ -161,6 +162,7 @@ void LocalMusic::updateMusicList() {
         return;
     }
     QTextStream in(localPlayListFile);
+    in.setCodec("UTF-8");
     QStringList titleLines;
     while (!in.atEnd()) {
         QString line = in.readLine();
@@ -219,6 +221,7 @@ void LocalMusic::addMusicToPlaylist() {
         }
 
         QTextStream out(musicPlaylist);
+        out.setCodec("UTF-8");
         out << "#EXTINF:" << musicName << endl;
         out << currentPlay << endl;
 
