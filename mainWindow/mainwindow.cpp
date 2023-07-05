@@ -137,7 +137,7 @@ void MainWindow::setupUI() {
     //主部件
     auto centralwidget = new QWidget(this);
     // 从持久化设置中读取背景图路径，默认为默认背景图
-    QString imagePath = QSettings().value("BackgroundImage", "../resource/image/1.jpg").toString();
+    QString imagePath = QSettings().value("BackgroundImage", "../resource/image/2.jpg").toString();
     // 设置背景图的样式
     QPalette palette;
     palette.setBrush(this->backgroundRole(), QBrush(QPixmap(imagePath)));
@@ -314,6 +314,8 @@ void MainWindow::setupUI() {
     connect(playBar->getAction4(), SIGNAL(triggered()), this, SLOT(setPlaySpeed()));
     //跳转播放详情页
     connect(playBar->getAlbum(), SIGNAL(clicked()), this, SLOT(openDetailWindow()));
+    // 换肤连接
+    connect(personalizebt, &QPushButton::clicked, this, &MainWindow::changeBackground);
 }
 
 void MainWindow::retranslateUi() {
