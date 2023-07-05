@@ -186,8 +186,7 @@ void LocalMusic::updateMusicList() {
     for (const QString &line: titleLines) {
         QStringList parts = line.split(QRegExp(":"));
         if (parts.size() == 2) {
-//            QString artist = parts[0];
-//            QString title = parts[1];
+
             QString title = parts[1];
             auto *item = new QStandardItem(title);
             localMusicListName.push_back(title);

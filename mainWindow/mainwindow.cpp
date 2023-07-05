@@ -266,11 +266,15 @@ void MainWindow::setupUI() {
         qDebug()<<index.row();
         if (row >= 0 && row < mainContent->getPlayListPage()->getFavoriteList().size()) {
             currentPlaylist = mainContent->getPlayListPage()->getFavoriteList();
+            currentPlaylistName = mainContent->getPlayListPage()->getFavoriteListName();
             currentPlaylistLrc = mainContent->getPlayListPage()->getFavoriteListLrc();
             currentPlay = currentPlaylist[row];
+            currentPlayName = currentPlaylistName[row];
 //            currentPlayLrc = currentPlaylistLrc[row];
             mediaPlayer->setMedia(QUrl::fromLocalFile(currentPlay));
             mediaPlayer->play();
+
+            playBar->setMusicName(currentPlayName);
             playBar->getPbtStartOrPause()->setIcon(QIcon("../resource/icon/stopp.svg"));
             playBar->getSlider()->setSliderPosition(0);
         }

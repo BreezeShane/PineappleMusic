@@ -13,6 +13,7 @@ FavoriteList::FavoriteList(QWidget *parent)
 }
 
 void FavoriteList::setupUI() {
+
     qvBoxLayout=new QVBoxLayout();//垂直布局
     QWidget *widget = new QWidget; // 创建一个小部件用于包含水平布局和按钮
     QHBoxLayout *buttonLayout = new QHBoxLayout; // 创建水平布局用于放置按钮
@@ -153,10 +154,10 @@ void FavoriteList::updatePlayList() {
     for (const QString &line: titleLines) {
         QStringList parts = line.split(QRegExp(":"));
         if (parts.size() == 2) {
-//            QString artist = parts[0];
-//            QString title = parts[1];
+
             QString title = parts[1];
             auto *item = new QStandardItem(title);
+            favoriteListName.push_back(title);
             model->appendRow(item);
         }
     }
@@ -185,6 +186,13 @@ const QVector<QString> &FavoriteList::getFavoriteListLrc() const {
 
 void FavoriteList::setFavoriteListLrc(const QVector<QString> &musicPlayLrc) {
     FavoriteList::favoriteListLrc = musicPlayLrc;
+}
+const QVector<QString> &FavoriteList::getFavoriteListName() const {
+    return favoriteListName;
+}
+
+void FavoriteList::setFavoriteListName(const QVector<QString> &localMusicListName) {
+    FavoriteList:: favoriteListName= localMusicListName;
 }
 
 FavoriteList::~FavoriteList() = default;

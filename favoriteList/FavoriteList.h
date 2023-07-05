@@ -22,6 +22,7 @@ private:
     QPushButton *deleteMyfPbt{};
     QTextEdit *text{};
 //    QFile *favoriteListFile{};
+    QVector<QString> favoriteListName{};
     QVector<QString> favoriteList{};
     QVector<QString> favoriteListLrc{};
 public:
@@ -42,6 +43,9 @@ public:
     const QVector<QString> &getFavoriteListLrc() const;
 
     void setFavoriteListLrc(const QVector<QString> &favoriteListLrc);
+    const QVector<QString> &getFavoriteListName() const;
+
+    void setFavoriteListName(const QVector<QString> &localMusicListName);
 
     ~FavoriteList() override;
 };
