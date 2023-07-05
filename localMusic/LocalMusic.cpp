@@ -51,6 +51,9 @@ void LocalMusic::setupUI() {
                                  "QListView::item{padding:5px;}"
     );
     addMusicPlayPbt=new QPushButton("添加播放");
+    addMusicPlayPbt->setStyleSheet("padding:5px;");
+    addMusicPlayPbt->setFont(QFont("宋体", 13));
+
     verticalLayout->addWidget(musicListView);
     verticalLayout->addWidget(addMusicPlayPbt);
     localPlayListFile = new QFile("../resource/local_playlist.m3u");
