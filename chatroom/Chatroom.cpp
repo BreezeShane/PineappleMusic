@@ -51,8 +51,10 @@ void Chatroom::setupUI() {
 
     //消息显示框
     infoListView = new QListView();
-    //infoListView->setFont(QFont("Arial", 14));
+    infoListView->setFont(QFont("宋体", 12,QFont::Normal));
     infoListView->setSpacing(7);
+    //infoListView->setStyleSheet("border-radius: 10px;");
+
     verticalLayout->addWidget(infoListView);
 
     //消息发送布局
@@ -103,13 +105,13 @@ void Chatroom::ClientDate() {
     QString message = name + "       " + str +"\n     " + info;
 
     //在listview中显示
-    QStandardItem *item2 = new QStandardItem();
+    QStandardItem *item2 = new QStandardItem(message);
 
-    QFont font1("宋体", 12, QFont::Normal);
-    QFont font2("Times", 15, QFont::Normal);
-    item2->setData(message, Qt::DisplayRole);
-    item2->setData(font1, Qt::FontRole);
-    item2->setData(font2, Qt::FontRole + 1);
+//    QFont font1("宋体", 12, QFont::Normal);
+//    QFont font2("Times", 15, QFont::Normal);
+//    item2->setData(message, Qt::DisplayRole);
+//    item2->setData(font1, Qt::FontRole);
+//    item2->setData(font2, Qt::FontRole + 1);
 
     item2->setTextAlignment(Qt::AlignLeft);
     model->appendRow(item2);
@@ -148,11 +150,11 @@ void Chatroom::server_start() {
     //在listview中显示
     QStandardItem *item1 = new QStandardItem(local_info);
 
-    QFont font1("宋体", 12, QFont::Normal);
-    QFont font2("Times", 15, QFont::Normal);
-    item1->setData(local_info, Qt::DisplayRole);
-    item1->setData(font1, Qt::FontRole);
-    item1->setData(font2, Qt::FontRole + 1);
+//    QFont font1("宋体", 12, QFont::Normal);
+//    QFont font2("Times", 15, QFont::Normal);
+//    item1->setData(local_info, Qt::DisplayRole);
+//    item1->setData(font1, Qt::FontRole);
+//    item1->setData(font2, Qt::FontRole + 1);
     item1->setTextAlignment(Qt::AlignLeft);
     model->appendRow(item1);
     infoListView->setModel(model);
