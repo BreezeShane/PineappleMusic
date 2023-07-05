@@ -21,9 +21,9 @@ class PlayBar : public QFrame
     Q_OBJECT
 private:
     QHBoxLayout * qhBoxLayout{};
-    QLabel *album{};    //专辑图片
-    QPushButton *pbtModel;  //播放模式按钮
-    QPushButton *pbtLyrics;
+    QPushButton *album{};    //专辑图片
+    QPushButton *pbtModel{};  //播放模式按钮
+    QPushButton *pbtLyrics{};
 public:
     QPushButton *getPbtLyrics() const;
 
@@ -35,7 +35,7 @@ private:
     QLabel *currentProcess{};
     QLabel *finalProcess{};
     QMenuBar  *speedMenuBar{};
-    QMenu *speedMenu;
+    QMenu *speedMenu{};
     QAction *action1{};//倍速
     QAction *action2{};
     QAction *action3{};
@@ -45,7 +45,7 @@ public:
     void setupUI();
     void retranslateUi();
 
-    QLabel *getAlbum() const;
+    QPushButton *getAlbum() const;
 
     void setAlbum(const QPixmap& music_album);
 

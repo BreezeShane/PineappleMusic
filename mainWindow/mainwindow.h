@@ -88,6 +88,9 @@ public slots:
     void lyricsModel();
     void creatLyricsWindow();
     void changeBackground();
+
+    //打开播放详情页
+    void openDetailWindow();
 };
 
 #endif // MAINWINDOW_H

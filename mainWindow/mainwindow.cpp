@@ -312,6 +312,8 @@ void MainWindow::setupUI() {
     connect(playBar->getAction2(), SIGNAL(triggered()), this, SLOT(setPlaySpeed()));
     connect(playBar->getAction3(), SIGNAL(triggered()), this, SLOT(setPlaySpeed()));
     connect(playBar->getAction4(), SIGNAL(triggered()), this, SLOT(setPlaySpeed()));
+    //跳转播放详情页
+    connect(playBar->getAlbum(), SIGNAL(clicked()), this, SLOT(openDetailWindow()));
     // 换肤连接
     connect(personalizebt, &QPushButton::clicked, this, &MainWindow::changeBackground);
 }
@@ -541,6 +543,15 @@ void MainWindow::setPlaySpeed() {
         playBar->getSpeedMenu()->setTitle("2.0x");
     }
     mediaPlayer->setPlaybackRate(currentSpeed);
+}
+//展示播放详情页
+void MainWindow::openDetailWindow() {
+    // 创建一个新窗口
+    QWidget* newWindow = new QWidget();
+    newWindow->setWindowTitle("新窗口");
+
+    // 显示新窗口
+    newWindow->show();
 }
 
 MainWindow::~MainWindow() = default;
