@@ -16,8 +16,7 @@ Chatroom::Chatroom(QWidget *parent)
 
     setupUI();
     model = new QStandardItemModel(infoListView);
-    scrollBar = new QScrollBar;
-    scrollBar = infoListView->verticalScrollBar();
+
     //发送按钮监听
     connect(pbtSend,&QPushButton::clicked,this,&Chatroom::info_Send);
     //连接按钮监听
@@ -53,10 +52,7 @@ void Chatroom::setupUI() {
     //消息显示框
     infoListView = new QListView();
     //infoListView->setFont(QFont("Arial", 14));
-    infoListView->setStyleSheet("QListView {"
-                            "padding: 5px;"
-                            "spacing: 5px;"
-                            "}");
+    infoListView->setSpacing(7);
     verticalLayout->addWidget(infoListView);
 
     //消息发送布局
@@ -96,7 +92,7 @@ void Chatroom::ClientDate() {
     //获取当前时间
     QDateTime *datatime=new QDateTime(QDateTime::currentDateTime());
     //QString str = datatime->toString("yyyy-MM-dd hh:mm:ss ddd");    //设置时间格式
-    QString str = datatime->toString("yyyy-MM-dd hh:mm:ss");    //设置时间格式
+    QString str = datatime->toString("hh:mm:ss");    //设置时间格式
 
     qDebug() << "Received response:" << str;
 
@@ -104,12 +100,12 @@ void Chatroom::ClientDate() {
     QStringList parts = response.split(":");
     QString name = parts[0];
     QString info = parts[1];
-    QString message = name + "       " + str +"\n     " + info + "\n";
+    QString message = name + "       " + str +"\n     " + info;
 
     //在listview中显示
     QStandardItem *item2 = new QStandardItem();
 
-    QFont font1("Arial", 11, QFont::Normal);
+    QFont font1("宋体", 12, QFont::Normal);
     QFont font2("Times", 15, QFont::Normal);
     item2->setData(message, Qt::DisplayRole);
     item2->setData(font1, Qt::FontRole);
@@ -118,7 +114,8 @@ void Chatroom::ClientDate() {
     item2->setTextAlignment(Qt::AlignLeft);
     model->appendRow(item2);
     infoListView->setModel(model);
-    scrollBar->setValue(scrollBar->maximum());
+    infoListView->scrollToBottom();
+
 }
 //发送按钮槽函数
 void Chatroom::info_Send() {
@@ -130,17 +127,18 @@ void Chatroom::server_start() {
     //获取昵称和输入框的消息,拼接成完整的字符串
     QString name = nickNameInput->text();
     QString message = messageInput->text();
-
+    messageInput->clear();
     if (name.isEmpty() || message.isEmpty()) {
         return ;
     }
+
     //获取当前时间
     QDateTime *datatime=new QDateTime(QDateTime::currentDateTime());
-    QString str = datatime->toString("yyyy-MM-dd hh:mm:ss");    //设置时间格式
+    QString str = datatime->toString("hh:mm:ss");    //设置时间格式
 
     QString information = name + " : " + message;
 
-    QString local_info = "[我] "+ name + "       " + str + "\n     " + message + "\n";
+    QString local_info = "[我] "+ name + "       " + str + "\n     " + message;
     QByteArray data = QString(information).toUtf8();
 
     //发送
@@ -150,7 +148,7 @@ void Chatroom::server_start() {
     //在listview中显示
     QStandardItem *item1 = new QStandardItem(local_info);
 
-    QFont font1("Arial", 11, QFont::Normal);
+    QFont font1("宋体", 12, QFont::Normal);
     QFont font2("Times", 15, QFont::Normal);
     item1->setData(local_info, Qt::DisplayRole);
     item1->setData(font1, Qt::FontRole);
@@ -158,7 +156,8 @@ void Chatroom::server_start() {
     item1->setTextAlignment(Qt::AlignLeft);
     model->appendRow(item1);
     infoListView->setModel(model);
-    scrollBar->setValue(scrollBar->maximum());
+    infoListView->scrollToBottom();
+
 }
 
 //连接服务器槽函数
