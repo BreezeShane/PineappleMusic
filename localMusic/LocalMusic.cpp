@@ -33,7 +33,17 @@ void LocalMusic::setupUI() {
     horizontalLayout->addItem(horizontalSpacer);
 
     reloadMusicPbt = new QPushButton(this);
-    reloadMusicPbt->setStyleSheet("padding:5px;");
+    reloadMusicPbt->setStyleSheet("QPushButton {"
+                        "border: 2px;"
+                        "border-radius:10px;"
+                        "padding: 6px;"
+                        "}"
+                        "QPushButton:hover {"
+                        "    background-color: #ADD8E6;"
+                        "}"
+                        "QPushButton:pressed {"
+                        "    background-color:#ADD8E6 ;"
+                        "}");
     reloadMusicPbt->setEnabled(true);
     QSizePolicy sizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     sizePolicy.setHorizontalStretch(0);
@@ -57,7 +67,6 @@ void LocalMusic::setupUI() {
     addMusicPlayPbt->setStyleSheet("QPushButton {"
                                    "border: 2px;"
                                    "    background-color:#CCCCCC;"
-
                                    "border-radius:10px;"
                                    "padding: 6px;"
                                    "}"
@@ -122,11 +131,12 @@ void LocalMusic::scanLocalMusic() {
 
             // 写入m3u文件中
             QTextStream out(localPlayListFile);
+            out.setCodec("UTF-8");
 //        out << "#EXTINF:" << lengthString << "," << title << "\n";
-            out << "#EXTINF:" << title.toLocal8Bit().data() << "\n";
-            out << fileInfo.filePath().toLocal8Bit().data() << "\n";
+            out << "#EXTINF:" << title << "\n";
+            out << fileInfo.filePath() << "\n";
             if (lrcFileInfo.exists() && lrcFileInfo.isFile()) {
-                out << "lrc#" << lrcFileInfo.filePath().toLocal8Bit().data() << "\n";
+                out << "lrc#" << lrcFileInfo.filePath() << "\n";
             } else {
                 out << "lrc#NoLrc" << "\n";
             }
@@ -152,6 +162,7 @@ void LocalMusic::updateMusicList() {
         return;
     }
     QTextStream in(localPlayListFile);
+    in.setCodec("UTF-8");
     QStringList titleLines;
     while (!in.atEnd()) {
         QString line = in.readLine();
@@ -210,8 +221,14 @@ void LocalMusic::addMusicToPlaylist() {
         }
 
         QTextStream out(musicPlaylist);
-        out << "#EXTINF:" << musicName.toLocal8Bit().data() << endl;
-        out << currentPlay.toLocal8Bit().data() << endl;
+//<<<<<<< HEAD
+        out << "#EXTINF:" << musicName << endl;
+        out << currentPlay << endl;
+//=======
+//        out.setCodec("UTF-8");
+//        out << "#EXTINF:" << musicName << endl;
+//        out << currentPlay << endl;
+//>>>>>>> b0843030d6578c814ea95a508a8d430dedb1b77d
 
         musicPlaylist->close();
     } catch (const std::exception& e) {

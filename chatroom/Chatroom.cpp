@@ -33,18 +33,45 @@ void Chatroom::setupUI() {
     nickNameLabel = new QPushButton();
     nickNameLabel->setFixedSize(32,32);
     nickNameLabel->setEnabled(false);
+    nickNameLabel->setStyleSheet("QPushButton {"
+                        "border: 2px;"
+                        "border-radius:10px;"
+                        "padding: 6px;"
+                        "}"
+                        "QPushButton:hover {"
+                        "    background-color: #ADD8E6;"
+                        "}"
+                        "QPushButton:pressed {"
+                        "    background-color:#ADD8E6 ;"
+                        "}");
     top_layout->addWidget(nickNameLabel);
 
     nickNameInput = new QLineEdit();
     nickNameInput->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Maximum);
     nickNameInput->setFixedHeight(32);
+    nickNameInput->setStyleSheet("QLineEdit{"
+                                 "background-color: #F5F5F5;"
+                                 "border: 2px solid gray;"
+                                 "background-color: transparent"
+                                 "}");
     top_layout->addWidget(nickNameInput);
 
     top_layout->addSpacerItem(new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum));
     //发送按钮
     join = new QPushButton("");
     join->setFixedSize(82,32);
-    join->setStyleSheet("border-radius: 10px;border: 1px solid gray");
+//    join->setStyleSheet("border-radius: 10px;border: 1px solid gray");
+    join->setStyleSheet("QPushButton {"
+                                 "border: 2px;"
+                                 "border-radius:10px;"
+                                 "padding: 6px;"
+                                 "}"
+                                 "QPushButton:hover {"
+                                 "    background-color: #ADD8E6;"
+                                 "}"
+                                 "QPushButton:pressed {"
+                                 "    background-color:#ADD8E6 ;"
+                                 "}");
     top_layout->addWidget(join);
     //加入主布局
     verticalLayout->addLayout(top_layout);
@@ -53,6 +80,18 @@ void Chatroom::setupUI() {
     infoListView = new QListView();
     //infoListView->setFont(QFont("Arial", 14));
     infoListView->setSpacing(7);
+    infoListView->setStyleSheet("QListView {"
+                                  "background-color: #F5F5F5;"
+                                  "border: 2px solid gray;"
+                                  "background-color: transparent"
+                                  "}"
+                                  "QListView::item {"
+                                  "padding: 10px;"
+                                  "border-bottom: 1px solid #CCCCCC;"
+                                  "}"
+                                  "QListView::item:selected {"
+                                  "background-color: #E0E0E0;"
+                                  "}");
     verticalLayout->addWidget(infoListView);
 
     //消息发送布局
@@ -60,10 +99,26 @@ void Chatroom::setupUI() {
 
     messageInput = new QLineEdit();
     messageInput->setFixedHeight(32);
+    messageInput->setStyleSheet("QLineEdit{"
+                                 "background-color: #F5F5F5;"
+                                 "border: 2px solid gray;"
+                                 "background-color: transparent"
+                                 "}");
     horizontalLayout->addWidget(messageInput);
 
     pbtSend = new QPushButton();
     pbtSend->setFixedWidth(50);
+    pbtSend->setStyleSheet("QPushButton {"
+                        "border: 2px;"
+                        "border-radius:10px;"
+                        "padding: 6px;"
+                        "}"
+                        "QPushButton:hover {"
+                        "    background-color: #ADD8E6;"
+                        "}"
+                        "QPushButton:pressed {"
+                        "    background-color:#ADD8E6 ;"
+                        "}");
     horizontalLayout->addWidget(pbtSend);
 
     verticalLayout->addLayout(horizontalLayout);
