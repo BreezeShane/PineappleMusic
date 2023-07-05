@@ -7,9 +7,8 @@
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
-    // ����Ӧ��ͼ�����
-    QIcon icon("../resource/app.png");
-    // ����Ӧ�ô��ڵ�ͼ��
+
+    QIcon icon(":/resource/app.png");
     app.setWindowIcon(icon);
     MainWindow w;
     w.show();
