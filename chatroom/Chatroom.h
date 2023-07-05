@@ -40,6 +40,7 @@ private:
     QTcpSocket *client;
 
     QStandardItemModel *model;
+    QScrollBar *scrollBar;
 
     bool connet;
 
