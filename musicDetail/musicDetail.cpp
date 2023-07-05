@@ -18,20 +18,26 @@ musicDetail::musicDetail(QWidget *parent) :
     uiBar->setupUI();
     ui->setupUi(this);
     uiBar->setGeometry(154,409,717,358);
+    ui->textBrowser->setStyleSheet("text-align: center;");
+    ui->textBrowser->setHtml(QString("<html><head><style>body {text-align: center;}</style></head>"
+                                     "<body>%1</body></html>").arg("Ciallo~ Pineapple!"));
 }
 
-musicDetail::musicDetail(CloudMusic currMusic,QWidget *parent) { // on Coding...
-    qDebug()<<"music detail!";
-    qDebug()<<currMusic.getName();
-    qDebug()<<currMusic.getAlbumUrl();
+musicDetail::musicDetail(CloudMusic currMusic, QWidget *parent) :
+        QWidget(parent), ui(new Ui::musicDetail) { // on Coding...
+//    qDebug()<<"music detail!";
+//    qDebug()<<currMusic.getName();
+//    qDebug()<<currMusic.getAlbumUrl();
 
     uiBar = new PlayBar(this);
     uiBar->setupUI();
     ui->setupUi(this);
     uiBar->setGeometry(154,409,717,358);
-
+    ui->textBrowser->setStyleSheet("text-align: center;");
+    ui->textBrowser->setHtml(QString("<html><head><style>body {text-align: center;}</style></head>"
+                                     "<body>%1</body></html>").arg("Ciallo~ Pineapple!"));
     uiBar->setAlbum(currMusic.getAlbumUrl());
-    QFile lyricsFile(currMusic.getMusicUrl());
+//    QFile lyricsFile(currMusic.getMusicUrl());
 }
 
 void musicDetail::paintEvent(QPaintEvent *event) {
