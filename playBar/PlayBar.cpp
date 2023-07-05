@@ -10,7 +10,7 @@ PlayBar::PlayBar(QWidget *parent) : QFrame(parent) {
 }
 
 void PlayBar::setupUI() {
-    this->setStyleSheet("border: 2px solid gray;border-radius:10px;");
+    this->setStyleSheet("QWidget { border: 2px solid gray; border-radius: 10px; background-color: transparent; }");
     this->setFixedHeight(100);
     qhBoxLayout = new QHBoxLayout(this);
     album = new QPushButton();
@@ -21,6 +21,7 @@ void PlayBar::setupUI() {
     pbtPrevious = new QPushButton();
     pbtStartOrPause = new QPushButton();
     pbtNext = new QPushButton();
+
     playCentralQv = new QVBoxLayout;
     playCentralQh = new QHBoxLayout;
     music_name = new QLabel("music name");
@@ -31,6 +32,7 @@ void PlayBar::setupUI() {
     currentProcess = new QLabel();
     finalProcess = new QLabel();
     sliderProcess = new MySlider(Qt::Horizontal, this);
+
     currentProcess->setText("00:00");
     finalProcess->setText("00:00");
     currentProcess->setFixedSize(50, 50);//设置大小
@@ -40,7 +42,7 @@ void PlayBar::setupUI() {
                                   //"border: 1px solid gray;"
                                   "border: none;" //隐藏边框
                                   "border-radius: 4px;"
-                                  "padding-right: 2px;"
+                                  "padding: 2px;"
                                   "}");
 
     finalProcess->setStyleSheet("QLabel {"
@@ -52,9 +54,9 @@ void PlayBar::setupUI() {
                                 "}");
 
     sliderProcess->setStyleSheet("QSlider::groove:horizontal {"    //修改进度条样式
-//                                 "border: none;"
+                               "border: none;"
                                  "height: 8px;"
-//                                 "border-radius: 0px;"
+                                "border-radius: 0px;"
                                  "background: lightgray;"
                                  "}"
                                  "QSlider::handle:horizontal {"
@@ -124,7 +126,8 @@ void PlayBar::retranslateUi() {
     QPixmap scaledPixmap = pixmap.scaled(size, Qt::KeepAspectRatio, Qt::FastTransformation);
     album->setIcon(scaledPixmap);
     pbtLyrics->setIcon(QIcon("../resource/icon/lyricsOff.svg"));
-    pbtModel->setIcon(QIcon("../resource/icon/sequential.svg"));
+    pbtModel->setIcon(QIcon("../resource/icon/sequence.svg"));
+
     pbtPrevious->setIcon(QIcon("../resource/icon/up.svg"));
     pbtPrevious->setIconSize(QSize(50, 50));
     pbtStartOrPause->setIcon(QIcon("../resource/icon/play.svg"));

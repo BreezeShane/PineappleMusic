@@ -14,6 +14,8 @@
 #include <QEventLoop>
 #include <QFile>
 #include <QMenu>
+#include <QFileDialog>
+#include <QMessageBox>
 
 FromNet::FromNet(QWidget *parent)
         : QFrame(parent) {
@@ -42,10 +44,10 @@ void FromNet::setupUI() {
                         "padding: 6px;"
                         "}"
                         "QPushButton:hover {"
-                        "    background-color: #ADD8E6;"
+                        "    background-color:#FFFFF0;"
                         "}"
                         "QPushButton:pressed {"
-                        "    background-color:#ADD8E6 ;"
+                        "    background-color:#FFFFF0;"
                         "}");
     topLayout->addWidget(keyword_input);
     topLayout->addWidget(search);
@@ -113,6 +115,14 @@ void FromNet::setupUI() {
 
     // 创建下载项的槽函数
     connect(download, &QAction::triggered, [=]() {
+
+        QString filename = QFileDialog::getExistingDirectory(nullptr, "Select Directory", QDir::homePath());
+        //QString filename = QFileDialog::getSaveFileName(this,"保存文件位置",QDir::currentPath());
+        qDebug()<<filename;
+        if(filename.isNull()){
+            QMessageBox::information(this,"提示", "请输入文件名");
+            return ;
+        }
         // 获取ListView的选中项
         QModelIndexList indexes = resultListView->selectionModel()->selectedIndexes();
         int item_index;
@@ -148,7 +158,7 @@ void FromNet::setupUI() {
                                 current_music_url = url;
                                 qDebug() << "download file";
                                 //下载路径
-                                downloadFile(current_music_url,"D:/music/"+songs.at(item_index).name+".mp3");
+                                downloadFile(current_music_url,filename + "/"+songs.at(item_index).name+".mp3");
                             }
                         }
                     }

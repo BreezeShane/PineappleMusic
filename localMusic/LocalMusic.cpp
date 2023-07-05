@@ -39,16 +39,17 @@ void LocalMusic::setupUI() {
                         "padding: 6px;"
                         "}"
                         "QPushButton:hover {"
-                        "    background-color: #ADD8E6;"
+                        "    background-color: #FFFFF0;"
                         "}"
                         "QPushButton:pressed {"
-                        "    background-color:#ADD8E6 ;"
+                        "    background-color:#FFFFF0;"
                         "}");
     reloadMusicPbt->setEnabled(true);
     QSizePolicy sizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     sizePolicy.setHorizontalStretch(0);
     sizePolicy.setVerticalStretch(0);
     sizePolicy.setHeightForWidth(reloadMusicPbt->sizePolicy().hasHeightForWidth());
+
     reloadMusicPbt->setSizePolicy(sizePolicy);
     reloadMusicPbt->setLayoutDirection(Qt::LeftToRight);
 
@@ -66,15 +67,15 @@ void LocalMusic::setupUI() {
     addMusicPlayPbt->setFont(QFont("宋体", 13));
     addMusicPlayPbt->setStyleSheet("QPushButton {"
                                    "border: 2px;"
-                                   "    background-color:#CCCCCC;"
+
                                    "border-radius:10px;"
                                    "padding: 6px;"
                                    "}"
                                    "QPushButton:hover {"
-                                   "    background-color:gray;"
+                                   "    background-color:#FFFFF0;"
                                    "}"
                                    "QPushButton:pressed {"
-                                   "background-color:gray;"
+                                   "background-color: #FFFFF0;"
                                    "}");
 
     verticalLayout->addWidget(musicListView);
@@ -222,14 +223,13 @@ void LocalMusic::addMusicToPlaylist() {
         }
 
         QTextStream out(favoriteListFile);
-//<<<<<<< HEAD
-        out << "#EXTINF:" << musicName << endl;
-        out << currentPlay << endl;
-//=======
-//        out.setCodec("UTF-8");
+
 //        out << "#EXTINF:" << musicName << endl;
 //        out << currentPlay << endl;
-//>>>>>>> b0843030d6578c814ea95a508a8d430dedb1b77d
+        out.setCodec("UTF-8");
+        out << "#EXTINF:" << musicName << endl;
+        out << currentPlay << endl;
+
 
         favoriteListFile->close();
     } catch (const std::exception& e) {
