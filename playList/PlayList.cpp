@@ -15,7 +15,8 @@ void PlayList::setupUI() {
     this->setStyleSheet("border: 2px solid gray;border-radius:10px;");
     this->setContentsMargins(3, 3, 3, 3);
     playMusicPbt =new QPushButton("播放");
-
+    playMusicPbt->setStyleSheet("padding:5px;");
+    playMusicPbt->setFont(QFont("宋体", 13));
     playListView=new QListView();
     playListView->setFont(QFont("宋体", 13));
 
