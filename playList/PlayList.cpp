@@ -17,6 +17,17 @@ void PlayList::setupUI() {
     this->setMinimumSize(200, 400);
     mainLayout = new QVBoxLayout;
     playListView = new QListView;
+    playListView->setStyleSheet("background-color: transparent;");
+    QPalette palette;
+    QPixmap backgroundPixmap("../resource/image/4.jpg"); // 替换成实际的图片路径
+// 设置背景图片
+    palette.setBrush(QPalette::Background, backgroundPixmap);
+// 将palette应用于窗口或其他QWidget
+    this->setPalette(palette);
+    this->setAutoFillBackground(true); // 确保自动填充背景
+
+// 更新窗口以显示更改
+    this->update();
 
     mainLayout->addWidget(playListView);
     this->setLayout(mainLayout);
