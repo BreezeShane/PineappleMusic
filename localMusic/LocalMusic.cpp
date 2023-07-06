@@ -301,27 +301,6 @@ void LocalMusic::addMusicToPlaylist() {
     }
 }
 
-
-QListView *LocalMusic::getMusicListView() const {
-    return musicListView;
-}
-
-const QVector<QString> &LocalMusic::getPlayList() const {
-    return localMusicList;
-}
-
-const QVector<QString> &LocalMusic::getPlayListLrc() const {
-    return localMusicListLrc;
-}
-
-const QVector<QString> &LocalMusic::getLocalMusicListName() const {
-    return localMusicListName;
-}
-
-void LocalMusic::setLocalMusicListName(const QVector<QString> &localMusicListName) {
-    LocalMusic::localMusicListName = localMusicListName;
-}
-
 //添加下载后的文件
 void LocalMusic::addDownload() {
     QString download_path = "C:\\Music";
@@ -372,6 +351,29 @@ void LocalMusic::addDownload() {
     }
     //localPlayListFile->close();
 }
+
+
+QListView *LocalMusic::getMusicListView() const {
+    return musicListView;
+}
+
+const QVector<QString> &LocalMusic::getPlayList() const {
+    return localMusicList;
+}
+
+const QVector<QString> &LocalMusic::getPlayListLrc() const {
+    return localMusicListLrc;
+}
+
+const QVector<QString> &LocalMusic::getLocalMusicListName() const {
+    return localMusicListName;
+}
+
+void LocalMusic::setLocalMusicListName(const QVector<QString> &localMusicListName) {
+    LocalMusic::localMusicListName = localMusicListName;
+}
+
+
 
 void LocalMusic::reflash_mushic() {
 
