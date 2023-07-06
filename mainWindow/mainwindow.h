@@ -30,6 +30,11 @@ private:
     PlayBar *playBar{};
     //歌词窗口
     QWidget *widget;
+    QVBoxLayout *layoutV;
+    QHBoxLayout *layoutB_1;
+    QHBoxLayout *layoutB_2;
+    QLabel *labelLeft;
+    QLabel *labelRight;
 
     QToolBar *toolbar{};
     //工具栏按钮
@@ -40,7 +45,7 @@ private:
     QVector<QString> currentPlaylistName{};     //当前播放列表
     QVector<QString> currentPlaylist{};     //当前播放列表
     QVector<QString> currentPlaylistLrc{};  //当前播放列表对应的歌词文件列表，没有歌词文件，存储内容为 NoLrc
-    QString currentPlayName{};  //当前正在播放的音乐路径
+    QString currentPlayName{};  //当前正在播放的音乐名称
     QString currentPlay{};  //当前正在播放的音乐路径
     QString currentPlayLrc{};   //当前播放音乐的lrc歌词文件路径
     QString durationTime;
@@ -58,6 +63,8 @@ public:
 
     void retranslateUi();
 
+    QVector<int> timestamps;
+    QVector<QString> lyrics;
 
     // 声明一个枚举类型来表示播放模式
     enum PlayMode { SingleLoop, Sequential, Random };
@@ -93,6 +100,8 @@ public slots:
     void helpShow();
     //打开播放详情页
     void openDetailWindow();
+    void displayLyrics();
+    void getLyrics(const QString& filepath);
 };
 
 #endif // MAINWINDOW_H
