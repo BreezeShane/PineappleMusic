@@ -17,10 +17,15 @@ void PlayBar::setupUI() {
     album->setFixedSize(80, 80);
     album->setIconSize(QSize(80, 80));
     pbtLyrics = new QPushButton();
+    pbtLyrics->setStyleSheet("border: none;");
     pbtModel = new QPushButton();
+    pbtModel->setStyleSheet("border: none;");
     pbtPrevious = new QPushButton();
+    pbtPrevious->setStyleSheet("border: none;");
     pbtStartOrPause = new QPushButton();
+    pbtStartOrPause->setStyleSheet("border: none;");
     pbtNext = new QPushButton();
+    pbtNext->setStyleSheet("border: none;");
 
     playCentralQv = new QVBoxLayout;
     playCentralQh = new QHBoxLayout;
@@ -47,16 +52,15 @@ void PlayBar::setupUI() {
 
     finalProcess->setStyleSheet("QLabel {"
                                 "background-color: transparent;"
-//                                "border: 1px solid gray;"
                                 "border: none;"
                                 "border-radius: 4px;"
                                 "padding: 2px;"
                                 "}");
 
     sliderProcess->setStyleSheet("QSlider::groove:horizontal {"    //修改进度条样式
-                               "border: none;"
+                                 "border: none;"
                                  "height: 8px;"
-                                "border-radius: 0px;"
+                                 "border-radius: 0px;"
                                  "background: lightgray;"
                                  "}"
                                  "QSlider::handle:horizontal {"
@@ -68,19 +72,21 @@ void PlayBar::setupUI() {
                                  "border-radius: 8px;"
                                  "}"
                                  "QSlider::sub-page:horizontal {"
+                                 "border: none;"
                                  "height: 4px;"
                                  "border-radius: 3px;"
                                  "background: rgb(255, 170, 0);"
                                  "}"
                                  "QSlider::add-page:horizontal {"
                                  "height: 4px;"
+                                 "border: none;"
                                  "border-radius: 3px;"
                                  "background: lightgray;"
                                  "}");
 
-
     speedMenu = new QMenu(speedMenuBar);
     speedMenuBar->addAction(speedMenu->menuAction());
+    speedMenuBar->setStyleSheet("border: none;");
     speedMenu->setStyleSheet("background: rgb(255, 255, 255);");
     speedMenu->setTitle(tr("1.0x"));
     //QMenu *playMenu = speedMenu->addMenu("1.0x");
@@ -103,6 +109,7 @@ void PlayBar::setupUI() {
     action4->setText("2.0x");
 
     pbtPlayList = new QPushButton();
+    pbtPlayList->setStyleSheet("border: none;");
     pbtPlayList->setIcon(QIcon("../resource/icon/playList.svg"));
 
     qhBoxLayout->addWidget(album);
@@ -115,7 +122,7 @@ void PlayBar::setupUI() {
     qhBoxLayout->addLayout(playCentralQv);
 
     qhBoxLayout->addWidget(pbtPlayList);    //播放列表按键
-    qhBoxLayout->addWidget(speedMenuBar);    //播放列表按键
+    qhBoxLayout->addWidget(speedMenuBar);
     qhBoxLayout->addWidget(pbtLyrics);
     qhBoxLayout->addWidget(pbtModel);
     qhBoxLayout->addWidget(pbtPrevious);
