@@ -49,40 +49,32 @@ void CurrentPlayList::saveCurrentMusic()
     QModelIndex index = playListView->currentIndex();
     int row = index.row();
     currentPlay = currentPlaylist[row];
-
     QString sourceFilePath = currentPlay;  // 获取当前音乐的原始文件路径
-
     QString destinationFolderPath = QFileDialog::getExistingDirectory(nullptr, "Select Destination Folder", QDir::homePath());
     if (destinationFolderPath.isNull()) {
         QMessageBox::information(this, "提示", "请选择目标文件夹");
         return;
     }
-
     QFileInfo fileInfo(sourceFilePath);
     QString destinationFilePath = destinationFolderPath + "/" + fileInfo.fileName();
-
     // 打开当前音乐文件
     QFile sourceFile(sourceFilePath);
     if (!sourceFile.open(QIODevice::ReadOnly)) {
         QMessageBox::critical(this, "错误", "无法打开音乐文件");
         return;
     }
-
     // 创建目标文件并打开以进行写入
     QFile destinationFile(destinationFilePath);
     if (!destinationFile.open(QIODevice::WriteOnly)) {
         QMessageBox::critical(this, "错误", "无法创建目标文件");
         return;
     }
-
     // 读取源文件并将数据写入目标文件
     QByteArray data = sourceFile.readAll();
     destinationFile.write(data);
-
     // 关闭文件
     sourceFile.close();
     destinationFile.close();
-
     QMessageBox::information(this, "提示", "音乐已保存到目标文件夹");
 }
 QListView *CurrentPlayList::getPlayListView() const {
