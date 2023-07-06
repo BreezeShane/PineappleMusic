@@ -254,7 +254,7 @@ void Chatroom::on_join_clicked() {
         connect(socket,&QTcpSocket::connected,[=](){
            // QMessageBox::information(this,"连接提示","连接成功");
             QMessageBox* msgBox = new QMessageBox(QMessageBox::Information, "连接提示", "连接成功", QMessageBox::NoButton, this);
-            QTimer::singleShot(2000, msgBox, &QMessageBox::close);
+            QTimer::singleShot(1400, msgBox, &QMessageBox::close);
             msgBox->exec();
         });
 
