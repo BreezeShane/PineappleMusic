@@ -29,6 +29,7 @@ private:
     QVector<QString> localMusicList{};
     QVector<QString> localMusicListLrc{};
     QString currentPlay{};  //当前正在播放的音乐路径
+    QString currentPlayLrc{};  //当前正在播放的歌词路径
 
 
 public:

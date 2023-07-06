@@ -291,7 +291,7 @@ void MainWindow::setupUI() {
             currentPlaylistLrc = mainContent->getFavoriteListPage()->getFavoriteListLrc();
             currentPlay = currentPlaylist[row];
             currentPlayName = currentPlaylistName[row];
-//            currentPlayLrc = currentPlaylistLrc[row];
+            currentPlayLrc = currentPlaylistLrc[row];
             mediaPlayer->setMedia(QUrl::fromLocalFile(currentPlay));
             mediaPlayer->play();
 

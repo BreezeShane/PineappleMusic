@@ -22,10 +22,10 @@ LocalMusic::LocalMusic(QWidget *parent)
 
     setupUI();
 
-    QMenu* menu = new QMenu(musicListView);
+    QMenu *menu = new QMenu(musicListView);
 
     // 创建弹窗菜单项
-    QAction* addPlay = new QAction("我喜欢", menu);
+    QAction *addPlay = new QAction("我喜欢", menu);
     addPlay->setIcon(QIcon("../resource/icon/like.svg"));
     menu->addAction(addPlay);
 
@@ -33,7 +33,7 @@ LocalMusic::LocalMusic(QWidget *parent)
     musicListView->setContextMenuPolicy(Qt::CustomContextMenu);
 
     // 创建customContextMenuRequested信号槽
-    connect(musicListView, &QListView::customContextMenuRequested, [=](const QPoint& pos) {
+    connect(musicListView, &QListView::customContextMenuRequested, [=](const QPoint &pos) {
         // 获取右键单击的项的索引
         QModelIndex index = musicListView->indexAt(pos);
         // 如果右键单击的位置在任何项上，则显示自定义菜单
@@ -43,7 +43,7 @@ LocalMusic::LocalMusic(QWidget *parent)
         }
     });
 
-    connect(addPlay, &QAction::triggered,this,&LocalMusic::addMusicToPlaylist);
+    connect(addPlay, &QAction::triggered, this, &LocalMusic::addMusicToPlaylist);
 
 }
 
@@ -61,31 +61,32 @@ void LocalMusic::setupUI() {
     reloadMusicPbt = new QPushButton(this);
     reloadMusicPbt->setToolTip("扫描本地音乐");
     reloadMusicPbt->setStyleSheet("QPushButton {"
-                        "border: 2px;"
-                        "border-radius:10px;"
-                        "padding: 6px;"
-                        "}"
-                        "QPushButton:hover {"
-                        "    background-color: #FFFFF0;"
-                        "}"
-                        "QPushButton:pressed {"
-                        "    background-color:#FFFFF0;"
-                        "}");
+                                  "border: 2px;"
+                                  "border-radius:10px;"
+                                  "padding: 6px;"
+                                  "}"
+                                  "QPushButton:hover {"
+                                  "    background-color: #FFFFF0;"
+                                  "}"
+                                  "QPushButton:pressed {"
+                                  "    background-color:#FFFFF0;"
+                                  "}");
     reloadMusicPbt->setEnabled(true);
 
     musicListView = new QListView(this);
     musicListView->setFont(QFont("宋体", 13));
-    musicListView->setStyleSheet("QListView { border: 2px solid gray; border-radius: 10px;background-color: transparent;padding:5px}"
+    musicListView->setStyleSheet(
+            "QListView { border: 2px solid gray; border-radius: 10px;background-color: transparent;padding:5px}"
             "QListView::item { padding: 5px; }");
-    addMusicPlayPbt=new QPushButton();
+    addMusicPlayPbt = new QPushButton();
     addMusicPlayPbt->setToolTip("添加喜欢");
     musicListView->setStyleSheet("QListView{padding:5px;background-color: transparent;}"
                                  "QListView::item{padding:5px;}"
     );
-    addMusicPlayPbt=new QPushButton("我喜欢");
+    addMusicPlayPbt = new QPushButton("我喜欢");
     addMusicPlayPbt->setFont(QFont("宋体", 13));
 
-        addMusicPlayPbt->setIcon(QIcon("../resource/icon/islike.svg"));
+    addMusicPlayPbt->setIcon(QIcon("../resource/icon/islike.svg"));
 
 
     addMusicPlayPbt->setStyleSheet("QPushButton {"
@@ -109,10 +110,9 @@ void LocalMusic::setupUI() {
     widget->setLayout(horizontalLayout); // 将水平布局设置为小部件的布局
     verticalLayout->addWidget(widget);
     verticalLayout->addWidget(musicListView);
-   // verticalLayout->addWidget(addMusicPlayPbt);
+    // verticalLayout->addWidget(addMusicPlayPbt);
     localPlayListFile = new QFile("../resource/localMusicList.m3u");
-    favoriteListFile=new QFile("../resource/favoriteListFile.m3u");
-
+    favoriteListFile = new QFile("../resource/favoriteListFile.m3u");
 
 
     connect(reloadMusicPbt, SIGNAL(clicked()), this, SLOT(scanLocalMusic()));
@@ -222,6 +222,7 @@ void LocalMusic::updateMusicList() {
     }
     localPlayListFile->close();
 }
+
 void LocalMusic::addMusicToPlaylist() {
     QModelIndex index = musicListView->currentIndex();
     int row = index.row();
@@ -247,11 +248,11 @@ void LocalMusic::addMusicToPlaylist() {
 
     try {
         currentPlay = localMusicList[row];
+        currentPlayLrc = localMusicListLrc[row];
         QStandardItemModel *playlistModel = new QStandardItemModel;
         QString musicName;
 
-        if (index.isValid())
-        {
+        if (index.isValid()) {
             musicName = index.data(Qt::DisplayRole).toString();
 //            qDebug() << "jjj" << index.data(Qt::DisplayRole).toString() << endl;
             playlistModel->appendRow(new QStandardItem(musicName));
@@ -268,11 +269,12 @@ void LocalMusic::addMusicToPlaylist() {
         out.setCodec("UTF-8");
         out << "#EXTINF:" << musicName << endl;
         out << currentPlay << endl;
+        out << "lrc#" << currentPlayLrc << endl;
 
 
         favoriteListFile->close();
 
-    } catch (const std::exception& e) {
+    } catch (const std::exception &e) {
         qWarning() << "An exception occurred: " << e.what();
     }
 }
