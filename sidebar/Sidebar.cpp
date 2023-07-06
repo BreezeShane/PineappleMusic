@@ -64,7 +64,7 @@ void Sidebar::setupContentLists() {
 
     playList_item = new QListWidgetItem(contentLists);
     playList_item->setText(tr("播放列表"));
-    playList_item->setIcon(QIcon("../resource/icon/message.svg"));
+    playList_item->setIcon(QIcon("../resource/icon/play.svg"));
     playList_item->setTextAlignment(Qt::AlignHCenter);
     playList_item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 }

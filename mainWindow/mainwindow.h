@@ -56,6 +56,7 @@ private:
     PlayDetail* detailWindow= nullptr;
     CloudMusic music;
     CurrentPlayList *playList;
+    PlayList *playListC;
 public:
     explicit MainWindow(QWidget *parent = nullptr);
 
@@ -65,7 +66,8 @@ public:
 
     void retranslateUi();
 
-
+    //打开侧边栏播放列表
+    void openPlayListC();
     // 声明一个枚举类型来表示播放模式
     enum PlayMode {
         SingleLoop, Sequential, Random
@@ -86,7 +88,7 @@ public:
 
 public slots:
 
-    void changePage(QListWidgetItem *current, QListWidgetItem *previous) const;
+    void changePage(QListWidgetItem *current, QListWidgetItem *previous);
 
     void startOrPauseMusic();
 
