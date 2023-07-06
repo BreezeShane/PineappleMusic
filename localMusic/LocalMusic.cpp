@@ -181,7 +181,6 @@ void LocalMusic::scanLocalMusic() {
         }
 
     }
-
     localPlayListFile->close();
     updateMusicList();
 }
