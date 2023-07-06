@@ -2,6 +2,7 @@
 #include <QDesktopWidget>
 #include <QVBoxLayout>
 #include <iostream>
+#include <QTime>
 #include <QTimer>
 #include <QPropertyAnimation>
 #include <QMessageBox>
@@ -18,6 +19,7 @@
 #include "playBar/PlayBar.h"
 #include "musicDetail/musicDetail.h"
 #include <QGraphicsEffect>
+#include <QGraphicsOpacityEffect>
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 
@@ -263,7 +265,7 @@ void MainWindow::setupUI() {
     connect(mainContent->getPlayListPage()->getFavoriteListView(), &QListView::clicked, [&](const QModelIndex &index) {
         // 获取所选项的QMediaPlayer对象，并播放音乐
         int row = index.row();
-        qDebug() << index.row();
+        qDebug()<<index.row();
         if (row >= 0 && row < mainContent->getPlayListPage()->getFavoriteList().size()) {
             currentPlaylist = mainContent->getPlayListPage()->getFavoriteList();
             currentPlaylistName = mainContent->getPlayListPage()->getFavoriteListName();

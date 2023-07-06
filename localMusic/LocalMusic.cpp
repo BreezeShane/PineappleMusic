@@ -104,7 +104,6 @@ void LocalMusic::setupUI() {
     horizontalLayout->addSpacing(10); // 添加一些间距
     horizontalLayout->addWidget(addMusicPlayPbt);
 
-//    horizontalLayout->addWidget(reloadMusicPbt);
 
     widget->setLayout(horizontalLayout); // 将水平布局设置为小部件的布局
     verticalLayout->addWidget(widget);
@@ -124,7 +123,7 @@ void LocalMusic::setupUI() {
 void LocalMusic::retranslateUi() {
 //    reloadMusicPbt->setText("重新扫描");
     reloadMusicPbt->setIcon(QIcon("../resource/icon/search.svg"));
-} // retranslateUi
+}
 
 void LocalMusic::scanLocalMusic() {
     // 创建一个QMediaPlayer对象
@@ -254,7 +253,7 @@ void LocalMusic::addMusicToPlaylist() {
         if (index.isValid())
         {
             musicName = index.data(Qt::DisplayRole).toString();
-            qDebug() << "jjj" << index.data(Qt::DisplayRole).toString() << endl;
+//            qDebug() << "jjj" << index.data(Qt::DisplayRole).toString() << endl;
             playlistModel->appendRow(new QStandardItem(musicName));
         }
 
