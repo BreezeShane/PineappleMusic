@@ -14,7 +14,7 @@ PlayList::PlayList(QWidget *parent)
 
 void PlayList::setupUI() {
     this->setStyleSheet("border-radius: 10px;");
-    this->setMinimumSize(200,400);
+    this->setMinimumSize(200, 400);
     mainLayout = new QVBoxLayout;
     playListView = new QListView;
 
@@ -45,7 +45,7 @@ void PlayList::setCurrentPlaylistName(const QVector<QString> &currentPlaylistNam
 void PlayList::showEvent(QShowEvent *event) {
     QWidget::showEvent(event);
     auto *model = new QStandardItemModel;
-    for (const QString &name : currentPlaylistName) {
+    for (const QString &name: currentPlaylistName) {
         auto *item = new QStandardItem(name);
         model->appendRow(item);
     }
@@ -54,7 +54,43 @@ void PlayList::showEvent(QShowEvent *event) {
 
 void PlayList::hideEvent(QHideEvent *event) {
     QWidget::hideEvent(event);
-    qDebug()<<"hide play list";
+    qDebug() << "hide play list";
+}
+
+void PlayList::setPlayListView(QListView *playListView) {
+    PlayList::playListView = playListView;
+}
+
+const QVector<QString> &PlayList::getCurrentPlaylist() const {
+    return currentPlaylist;
+}
+
+void PlayList::setCurrentPlaylist(const QVector<QString> &currentPlaylist) {
+    PlayList::currentPlaylist = currentPlaylist;
+}
+
+const QVector<QString> &PlayList::getCurrentPlaylistLrc() const {
+    return currentPlaylistLrc;
+}
+
+void PlayList::setCurrentPlaylistLrc(const QVector<QString> &currentPlaylistLrc) {
+    PlayList::currentPlaylistLrc = currentPlaylistLrc;
+}
+
+const QString &PlayList::getCurrentPlay() const {
+    return currentPlay;
+}
+
+void PlayList::setCurrentPlay(const QString &currentPlay) {
+    PlayList::currentPlay = currentPlay;
+}
+
+const QString &PlayList::getCurrentPlayLrc() const {
+    return currentPlayLrc;
+}
+
+void PlayList::setCurrentPlayLrc(const QString &currentPlayLrc) {
+    PlayList::currentPlayLrc = currentPlayLrc;
 }
 
 PlayList::~PlayList() = default;

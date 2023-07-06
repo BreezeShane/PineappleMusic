@@ -265,7 +265,7 @@ void MainWindow::setupUI() {
     connect(mainContent->getPlayListPage()->getFavoriteListView(), &QListView::clicked, [&](const QModelIndex &index) {
         // 获取所选项的QMediaPlayer对象，并播放音乐
         int row = index.row();
-        qDebug()<<index.row();
+        qDebug() << index.row();
         if (row >= 0 && row < mainContent->getPlayListPage()->getFavoriteList().size()) {
             currentPlaylist = mainContent->getPlayListPage()->getFavoriteList();
             currentPlaylistName = mainContent->getPlayListPage()->getFavoriteListName();
@@ -375,12 +375,36 @@ void MainWindow::setupUI() {
     //打开播放列表
     connect(playBar->getPbtPlayList(), &QPushButton::clicked, this, &MainWindow::openPlayList);
 
+    //播放列表点击事件
+    connect(playList->getPlayListView(), &QListView::clicked, [&](const QModelIndex &index) {
+        // 获取所选项的QMediaPlayer对象，并播放音乐
+        int row = index.row();
+        qDebug() << index.row();
+        if (row >= 0 && row < playList->getCurrentPlaylist().size()) {
+            currentPlaylist = playList->getCurrentPlaylist();
+            currentPlaylistName = playList->getCurrentPlaylistName();
+            currentPlaylistLrc = playList->getCurrentPlaylistLrc();
+            currentPlay = currentPlaylist[row];
+            currentPlayName = currentPlaylistName[row];
+            mediaPlayer->setMedia(QUrl::fromLocalFile(currentPlay));
+            mediaPlayer->play();
+
+            playBar->setMusicName(currentPlayName);
+            playBar->getPbtStartOrPause()->setIcon(QIcon("../resource/icon/stopp.svg"));
+            playBar->getSlider()->setSliderPosition(0);
+        }
+    });
 }
 
 void MainWindow::openPlayList() {
 
     if (playList->isHidden()) {
         playList->setCurrentPlaylistName(currentPlaylistName);
+        playList->setCurrentPlaylist(currentPlaylist);
+        playList->setCurrentPlay(currentPlay);
+        playList->setCurrentPlaylistLrc(currentPlaylistLrc);
+        playList->setCurrentPlayLrc(currentPlayLrc);
+        playList->setCurrentPlayName(currentPlayName);
         playList->show();
     } else {
         playList->hide();
@@ -390,7 +414,7 @@ void MainWindow::openPlayList() {
 void MainWindow::retranslateUi() {
     //标题
     this->setWindowTitle("Pineapple Music");
-    this->setWindowIcon(QIcon("../resource/app.png"));
+    this->setWindowIcon(QIcon("../resource/icon/app.png"));
 }
 
 void MainWindow::helpShow() {
@@ -601,18 +625,6 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event) {
     return QMainWindow::eventFilter(obj, event);
 }
 
-//void MainWindow::setPlaySpeed(){
-//    if (playBar->getSpeedMenu()->title() == "0.5x") {
-//        currentSpeed = 0.5;
-//    } else if (playBar->getSpeedMenu()->title() == "1.0x") {
-//        currentSpeed = 1.0;
-//    } else if (playBar->getSpeedMenu()->title() == "1.5x") {
-//        currentSpeed = 1.5;
-//    } else if (playBar->getSpeedMenu()->title() == "2.0x") {
-//        currentSpeed = 2.0;
-//    }
-//    mediaPlayer->setPlaybackRate(currentSpeed);
-//}
 void MainWindow::setPlaySpeed() {
     QObject *senderObj = sender(); // 获取信号发送者对象指针
 
