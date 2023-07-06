@@ -27,10 +27,22 @@ musicDetail::musicDetail(QWidget *parent) :
     uiBar->setGeometry(154,409,717,358);
 }
 
+//<<<<<<< HEAD
 musicDetail::musicDetail(const CloudMusic& currMusic, QMediaPlayer * player, QWidget *parent) :
         QWidget(parent), ui(new Ui::musicDetail) {
 //    this->setStyleSheet("background-color: transparent;border: 0px solid gray;border-radius:10px;");
     mediaPlayer = player;
+//=======
+//musicDetail::musicDetail(CloudMusic currMusic, QWidget *parent) :
+//        QWidget(parent), ui(new Ui::musicDetail) { // on Coding...
+////    qDebug()<<"music detail!";
+////    qDebug()<<currMusic.getName();
+////    qDebug()<<currMusic.getAlbumUrl();
+//    //标题
+//    this->setWindowTitle("歌词详情");
+//    this->setWindowIcon(QIcon("../resource/icon/music.svg"));
+//    this->setStyleSheet("background-color: transparent;border: 2px solid gray;border-radius:10px;");
+//>>>>>>> fd0bdf3e850b0be4f558e771c37462e0ccff27be
     uiBar = new PlayBar(this);
     uiBar->setupUI();
     ui->setupUi(this);
@@ -67,10 +79,10 @@ musicDetail::musicDetail(const CloudMusic& currMusic, QMediaPlayer * player, QWi
     connect(mediaPlayer, &QMediaPlayer::positionChanged, this, &musicDetail::onPositionChanged);
 }
 
-void musicDetail::paintEvent(QPaintEvent *event) {
-    QPainter painter(this);
-    painter.drawPixmap(0,0,1200,800, QPixmap("../resource/bgp/bgp_musicDetail.jpg"));
-}
+//void musicDetail::paintEvent(QPaintEvent *event) {
+//    QPainter painter(this);
+//    painter.drawPixmap(0,0,1200,800, QPixmap("../resource/bgp/bgp_musicDetail.jpg"));
+//}
 
 void musicDetail::onPositionChanged(qint64 position) {
     int pos = position / 10;
@@ -107,6 +119,13 @@ void musicDetail::onPositionChanged(qint64 position) {
         }
         iter++;
     }
+}
+
+void musicDetail::paintEvent(QPaintEvent *event) {
+    // 设置背景图的样式
+    QPalette palette;
+    palette.setBrush(backgroundRole(), QBrush(QPixmap("../resource/image/17.jpg")));
+    this->setPalette(palette);
 }
 
 musicDetail::~musicDetail() {

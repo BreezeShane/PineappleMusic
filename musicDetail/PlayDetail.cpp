@@ -5,6 +5,9 @@
 #include "PlayDetail.h"
 #include <QDebug>
 void PlayDetail::setupUI() {
+    //标题
+    this->setWindowTitle("歌词详情");
+    this->setWindowIcon(QIcon("../resource/icon/music.svg"));
     this->setStyleSheet("border-radius: 10px;");
     this->setMinimumSize(1200, 800);
     mainLayout = new QVBoxLayout;
