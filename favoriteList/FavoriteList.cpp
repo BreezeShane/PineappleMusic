@@ -5,7 +5,7 @@
 #include <QTextStream>
 #include <QDebug>
 #include <QScrollArea>
-
+#include <QTimer>
 FavoriteList::FavoriteList(QWidget *parent)
         : QFrame(parent) {
 
@@ -13,18 +13,22 @@ FavoriteList::FavoriteList(QWidget *parent)
 }
 
 void FavoriteList::setupUI() {
+
     qvBoxLayout=new QVBoxLayout();//垂直布局
-    this->setStyleSheet("QWidget { border: 2px solid gray; border-radius: 10px; background-color: transparent; }");
+    QWidget *widget = new QWidget; // 创建一个小部件用于包含水平布局和按钮
+    QHBoxLayout *buttonLayout = new QHBoxLayout; // 创建水平布局用于放置按钮
+    this->setStyleSheet("FavoriteList { border: 2px solid gray; border-radius: 10px; background-color: transparent; }");
     this->setContentsMargins(3, 3, 3, 3);
-    refreshList =new QPushButton("刷新");
-    deleteMyfPbt=new QPushButton("取消喜欢");
+    refreshList =new QPushButton();
+    deleteMyfPbt=new QPushButton();
     refreshList->setFont(QFont("宋体", 13));
+    refreshList->setIcon(QIcon("../resource/icon/refresh.svg"));
+    deleteMyfPbt->setToolTip("取消喜欢");
     deleteMyfPbt->setFont(QFont("宋体", 13));
+    deleteMyfPbt->setIcon(QIcon("../resource/icon/like.svg"));
+    refreshList->setToolTip("刷新列表");
     refreshList->setStyleSheet("QPushButton {"
-
                                 "border: none;"
-                                "border: 2px solid gray;"
-
                                 "    padding: 4px;"
                                 "}"
                                 "QPushButton:hover {"
@@ -34,10 +38,7 @@ void FavoriteList::setupUI() {
                                "background-color: #FFFFF0;"
                                 "}");
     deleteMyfPbt->setStyleSheet("QPushButton {"
-
                                "border: none;"
-                               "border: 2px solid gray;"
-
                                "    padding: 4px;"
                                "}"
                                 "QPushButton:hover {"
@@ -46,18 +47,24 @@ void FavoriteList::setupUI() {
                                 "QPushButton:pressed {"
                                 "background-color: #FFFFF0;"
                                 "}");
+
+    // 在水平布局中添加按钮
+    buttonLayout->addStretch(); // 将按钮推到最右侧
+    buttonLayout->addWidget(refreshList);
+    buttonLayout->addSpacing(10); // 添加一些间距
+    buttonLayout->addWidget(deleteMyfPbt);
+    widget->setLayout(buttonLayout); // 将水平布局设置为小部件的布局
+
     favoriteListView=new QListView();
     favoriteListView->setFont(QFont("宋体", 13));
-    favoriteListView->setStyleSheet("QListView{padding:5px;}"
-                                 "QListView::item{padding:5px;}");
+    favoriteListView->setStyleSheet("QListView::item { padding: 5px; }");
     // 放置在 QScrollArea 中
     QScrollArea* scrollArea = new QScrollArea();
     scrollArea->setWidgetResizable(true);
     scrollArea->setWidget(favoriteListView);
-
-    qvBoxLayout->addWidget(refreshList);
+    scrollArea->setStyleSheet("  background-color: transparent;");
+    qvBoxLayout->addWidget(widget);
     qvBoxLayout->addWidget(scrollArea);
-    qvBoxLayout->addWidget(deleteMyfPbt);
     this->setLayout(qvBoxLayout);
     updatePlayList();
     //点击刷新播放列表
@@ -69,6 +76,18 @@ void FavoriteList::playListUp() {
     updatePlayList();
 }
 void FavoriteList::deleteMyFavorite() {
+    QTimer *timer = new QTimer(this);
+    connect(deleteMyfPbt, &QPushButton::clicked, this, [=]() {
+        // 设置新的图标
+        deleteMyfPbt->setIcon(QIcon("../resource/icon/dislike.svg"));
+        // 停止计时器（如果正在运行）并启动新的计时器
+        timer->stop();
+        timer->start(2500); // 设置延迟时间，单位为毫秒
+    });
+    connect(timer, &QTimer::timeout, this, [=]() {
+        // 恢复原来的图标
+        deleteMyfPbt->setIcon(QIcon("../resource/icon/like.svg"));
+    });
     // 获取选中音乐的索引
     QModelIndex selectedIndex = favoriteListView->currentIndex();
 
@@ -115,7 +134,7 @@ void FavoriteList::updatePlayList() {
         return;
     }
     QTextStream in(&musicPlaylistFile);
-//    in.setCodec("UTF-8");
+   in.setCodec("UTF-8");
     QStringList titleLines;
     while (!in.atEnd()) {
         QString line = in.readLine();
@@ -135,10 +154,10 @@ void FavoriteList::updatePlayList() {
     for (const QString &line: titleLines) {
         QStringList parts = line.split(QRegExp(":"));
         if (parts.size() == 2) {
-//            QString artist = parts[0];
-//            QString title = parts[1];
+
             QString title = parts[1];
             auto *item = new QStandardItem(title);
+            favoriteListName.push_back(title);
             model->appendRow(item);
         }
     }
@@ -167,6 +186,13 @@ const QVector<QString> &FavoriteList::getFavoriteListLrc() const {
 
 void FavoriteList::setFavoriteListLrc(const QVector<QString> &musicPlayLrc) {
     FavoriteList::favoriteListLrc = musicPlayLrc;
+}
+const QVector<QString> &FavoriteList::getFavoriteListName() const {
+    return favoriteListName;
+}
+
+void FavoriteList::setFavoriteListName(const QVector<QString> &localMusicListName) {
+    FavoriteList:: favoriteListName= localMusicListName;
 }
 
 FavoriteList::~FavoriteList() = default;

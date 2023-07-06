@@ -4,6 +4,7 @@
 
 #include <QFileDialog>
 #include <QTextStream>
+#include <QTimer>
 //#include <QDebug>
 #include <QDirIterator>
 #include <QJsonArray>
@@ -48,15 +49,16 @@ LocalMusic::LocalMusic(QWidget *parent)
 void LocalMusic::setupUI() {
     this->setStyleSheet("border: 2px solid gray;border-radius:10px;");
     this->setContentsMargins(3, 3, 3, 3);
-
+    QWidget *widget = new QWidget; // 创建一个小部件用于包含水平布局和按钮
+    horizontalLayout = new QHBoxLayout();// 创建水平布局用于放置按钮
     verticalLayout = new QVBoxLayout(this);
     verticalLayout->setSizeConstraint(QLayout::SetDefaultConstraint);
-    horizontalLayout = new QHBoxLayout();
-    horizontalSpacer = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum);
-
-    horizontalLayout->addItem(horizontalSpacer);
+//    horizontalSpacer = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum);
+//
+//    horizontalLayout->addItem(horizontalSpacer);
 
     reloadMusicPbt = new QPushButton(this);
+    reloadMusicPbt->setToolTip("扫描本地音乐");
     reloadMusicPbt->setStyleSheet("QPushButton {"
                         "border: 2px;"
                         "border-radius:10px;"
@@ -69,26 +71,22 @@ void LocalMusic::setupUI() {
                         "    background-color:#FFFFF0;"
                         "}");
     reloadMusicPbt->setEnabled(true);
-    QSizePolicy sizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-    sizePolicy.setHorizontalStretch(0);
-    sizePolicy.setVerticalStretch(0);
-    sizePolicy.setHeightForWidth(reloadMusicPbt->sizePolicy().hasHeightForWidth());
-
-    reloadMusicPbt->setSizePolicy(sizePolicy);
-    reloadMusicPbt->setLayoutDirection(Qt::LeftToRight);
-
-    horizontalLayout->addWidget(reloadMusicPbt);
-
-
-    verticalLayout->addLayout(horizontalLayout);
 
     musicListView = new QListView(this);
     musicListView->setFont(QFont("宋体", 13));
+    musicListView->setStyleSheet("QListView { border: 2px solid gray; border-radius: 10px;background-color: transparent;padding:5px}"
+            "QListView::item { padding: 5px; }");
+    addMusicPlayPbt=new QPushButton();
+    addMusicPlayPbt->setToolTip("添加喜欢");
     musicListView->setStyleSheet("QListView{padding:5px;background-color: transparent;}"
                                  "QListView::item{padding:5px;}"
     );
     addMusicPlayPbt=new QPushButton("我喜欢");
     addMusicPlayPbt->setFont(QFont("宋体", 13));
+
+        addMusicPlayPbt->setIcon(QIcon("../resource/icon/islike.svg"));
+
+
     addMusicPlayPbt->setStyleSheet("QPushButton {"
                                    "border: 2px solid gray;"
                                    "border-radius:10px;"
@@ -100,9 +98,18 @@ void LocalMusic::setupUI() {
                                    "QPushButton:pressed {"
                                    "background-color: #FFFFF0;"
                                    "}");
+    // 在水平布局中添加按钮
+    horizontalLayout->addStretch(); // 将按钮推到最右侧
+    horizontalLayout->addWidget(reloadMusicPbt);
+    horizontalLayout->addSpacing(10); // 添加一些间距
+    horizontalLayout->addWidget(addMusicPlayPbt);
 
+//    horizontalLayout->addWidget(reloadMusicPbt);
+
+    widget->setLayout(horizontalLayout); // 将水平布局设置为小部件的布局
+    verticalLayout->addWidget(widget);
     verticalLayout->addWidget(musicListView);
-    verticalLayout->addWidget(addMusicPlayPbt);
+   // verticalLayout->addWidget(addMusicPlayPbt);
     localPlayListFile = new QFile("../resource/localMusicList.m3u");
     favoriteListFile=new QFile("../resource/favoriteListFile.m3u");
 
@@ -208,8 +215,7 @@ void LocalMusic::updateMusicList() {
     for (const QString &line: titleLines) {
         QStringList parts = line.split(QRegExp(":"));
         if (parts.size() == 2) {
-//            QString artist = parts[0];
-//            QString title = parts[1];
+
             QString title = parts[1];
             auto *item = new QStandardItem(title);
             localMusicListName.push_back(title);
@@ -221,7 +227,19 @@ void LocalMusic::updateMusicList() {
 void LocalMusic::addMusicToPlaylist() {
     QModelIndex index = musicListView->currentIndex();
     int row = index.row();
+    QTimer *timer = new QTimer(this);
 
+    connect(addMusicPlayPbt, &QPushButton::clicked, this, [=]() {
+        // 设置新的图标
+        addMusicPlayPbt->setIcon(QIcon("../resource/icon/like.svg"));
+        // 停止计时器（如果正在运行）并启动新的计时器
+        timer->stop();
+        timer->start(2500); // 设置延迟时间，单位为毫秒
+    });
+    connect(timer, &QTimer::timeout, this, [=]() {
+        // 恢复原来的图标
+        addMusicPlayPbt->setIcon(QIcon("../resource/icon/islike.svg"));
+    });
     if (row < 0) {
         qDebug() << "No music selected.";
         // 创建一个信息提示框
@@ -249,13 +267,13 @@ void LocalMusic::addMusicToPlaylist() {
 
         QTextStream out(favoriteListFile);
 
-//        out << "#EXTINF:" << musicName << endl;
-//        out << currentPlay << endl;
         out.setCodec("UTF-8");
         out << "#EXTINF:" << musicName << endl;
         out << currentPlay << endl;
 
+
         favoriteListFile->close();
+
     } catch (const std::exception& e) {
         qWarning() << "An exception occurred: " << e.what();
     }
