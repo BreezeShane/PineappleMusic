@@ -24,8 +24,8 @@
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 
-    lyricsUi();
     setupUI();
+    lyricsUi();
     playBar->getSlider()->installEventFilter(this);
     connect(sidebar->getContentLists(),  //将显示列表与堆栈窗口关联，点击列表中的按键，显示相应的窗口
             SIGNAL(currentItemChanged(QListWidgetItem * , QListWidgetItem * )),
@@ -51,8 +51,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     QObject::connect(mediaPlayer, &QMediaPlayer::mediaStatusChanged, [=](qint64 position) {
         lyrics.clear();
         timestamps.clear();
+        labelRight->clear();
+        labelLeft->clear();
         getLyrics(currentPlayLrc);
-        qDebug() << currentPlayLrc;
     });
 
     QObject::connect(mediaPlayer, &QMediaPlayer::positionChanged, [=](qint64 position) {
@@ -70,9 +71,17 @@ void MainWindow::lyricsUi() {
     labelRight = new QLabel("");
 
     widget->setGeometry(500, 700, 1000, 150);
-    widget->setWindowFlags(Qt::FramelessWindowHint);
     widget->setWindowFlags(Qt::Window | Qt::WindowStaysOnTopHint);
-    widget->setWindowOpacity(0.8);
+    widget->setWindowOpacity(0.5);
+    widget->setWindowTitle("Lyrics");
+
+    QFont font("Arial", 29, QFont::Bold);
+    QPalette palette;
+    palette.setColor(QPalette::WindowText, Qt::darkBlue);
+    labelLeft->setPalette(palette);
+    labelLeft->setFont(font);
+    labelRight->setFont(font);
+    labelRight->setPalette(palette);
 
     layoutB_1->addWidget(labelLeft);
     layoutB_1->addSpacerItem(new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum));
@@ -406,6 +415,7 @@ void MainWindow::setupUI() {
             currentPlaylistLrc = playList->getCurrentPlaylistLrc();
             currentPlay = currentPlaylist[row];
             currentPlayName = currentPlaylistName[row];
+            currentPlayLrc = currentPlaylistLrc[row];
             mediaPlayer->setMedia(QUrl::fromLocalFile(currentPlay));
             mediaPlayer->play();
 
@@ -556,7 +566,7 @@ void MainWindow::previousMusic() {
 }
 
 void MainWindow::nextMusic() {
-    getLyrics(currentPlayLrc);
+//    getLyrics(currentPlayLrc);
     switch (currentPlayMode) {
         case SingleLoop:
             // 如果启用了单曲循环，则下一首歌曲是当前歌曲
@@ -706,7 +716,6 @@ void MainWindow::openDetailWindow() {
 
 //获取歌词
 void MainWindow::getLyrics(const QString& filepath){
-//    qDebug() << filepath;
     QFile file(filepath);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
         return;
@@ -717,8 +726,7 @@ void MainWindow::getLyrics(const QString& filepath){
             int pos = line.indexOf("]");
             QString timestampStr = line.mid(1, pos - 1);
             QString lyricsStr = line.mid(pos + 1).trimmed();
-            qDebug() << lyricsStr;
-            QTime timestamp = QTime::fromString(timestampStr, "mm:ss.zzz");
+            QTime timestamp = QTime::fromString(timestampStr, "mm:ss.z");
             if (!timestamp.isValid()) {
                 qDebug() << "Invalid timestamp: " << timestampStr;
                 continue;
@@ -734,21 +742,18 @@ void MainWindow::displayLyrics() {
   int currentTime = mediaPlayer->position(); // 获取当前播放时间
     // 查找当前应该显示哪一句歌词
     int currentIndex = -1;
-    for (int i = 0; i < timestamps.size()-1; i = i+1) {
+
+    for (int i = 0; i <= timestamps.size()-1; i = i+1) {
         if (timestamps[i] > currentTime+1000) {
-            qDebug()<< currentTime;
             break;
         }
         currentIndex = i;
     }
-    qDebug() << currentIndex;
     // 更新歌词显示
     if (currentIndex >= 0 && currentIndex%2==0 && currentIndex <= lyrics.size() ) {
         labelLeft->setText(lyrics[currentIndex]);
-        qDebug()<< lyrics[currentIndex];
     } else if (currentIndex >= 0 && currentIndex % 2 != 0 && currentIndex <= lyrics.size() ){
         labelRight->setText(lyrics[currentIndex]);
-        qDebug()<< lyrics[currentIndex];
     }
 }
 
