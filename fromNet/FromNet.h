@@ -30,9 +30,14 @@ public:
     QPushButton* search{};
     QListView *resultListView{};
     QString keyword{};
+    QPushButton *playpbt{};
     void downloadFile(const QUrl &url, const QString &filePath);
 
     void updateResultView();
+
+    QPushButton * getFindButton();
+
+    QLineEdit * geturl_in();
 
     ~FromNet() override;
 public slots:

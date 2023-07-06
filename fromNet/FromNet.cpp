@@ -51,8 +51,24 @@ void FromNet::setupUI() {
                         "QPushButton:pressed {"
                         "    background-color:#FFFFF0;"
                         "}");
+
+    playpbt = new QPushButton();
+    playpbt->setIcon(QIcon("../resource/icon/url_play.svg"));
+    playpbt->setFixedWidth(80);
+    playpbt->setStyleSheet("QPushButton {"
+                          "border: 2px;"
+                          "border-radius:10px;"
+                          "padding: 6px;"
+                          "}"
+                          "QPushButton:hover {"
+                          "    background-color:#FFFFF0;"
+                          "}"
+                          "QPushButton:pressed {"
+                          "    background-color:#FFFFF0;"
+                          "}");
     topLayout->addWidget(keyword_input);
     topLayout->addWidget(search);
+    topLayout->addWidget(playpbt);
 
     resultListView = new QListView;
     resultListView->setIconSize(QSize(80, 80));
@@ -289,6 +305,14 @@ void FromNet::downloadFile(const QUrl &url, const QString &filePath) {
 
     reply->deleteLater();
     manager->deleteLater();
+}
+
+QPushButton * FromNet::getFindButton() {
+    return playpbt;
+}
+
+QLineEdit * FromNet::geturl_in() {
+    return keyword_input;
 }
 
 

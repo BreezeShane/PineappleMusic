@@ -426,6 +426,21 @@ void MainWindow::setupUI() {
             playBar->getSlider()->setSliderPosition(0);
         }
     });
+    //url播放
+    connect(mainContent->getFromNetPage()->getFindButton(),&QPushButton::clicked,[=](){
+        qDebug()<<"播放"<<endl;
+        QString url_text = mainContent->getFromNetPage()->geturl_in()->text();
+        if(url_text == NULL){
+            QMessageBox::information(this,"提示","请输入url");
+            return ;
+        }
+        QUrl url(url_text);
+        mediaPlayer->setMedia(url);
+        mediaPlayer->play();
+        currentPlay = url_text;
+        playBar->setMusicName("unkown");
+    });
+
 }
 
 void MainWindow::openPlayListC() {
