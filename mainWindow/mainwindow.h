@@ -13,8 +13,11 @@
 #include <QEvent>
 #include <QtGlobal>
 #include <QToolBar>
+#include "playList/PlayList.h"
+#include "musicDetail/musicDetail.h"
+
 class MainWindow : public QMainWindow {
-    Q_OBJECT
+Q_OBJECT
 private:
     // 主布局---水平布局
     QHBoxLayout *mainLayout{};
@@ -40,7 +43,7 @@ private:
     QVector<QString> currentPlaylistName{};     //当前播放列表
     QVector<QString> currentPlaylist{};     //当前播放列表
     QVector<QString> currentPlaylistLrc{};  //当前播放列表对应的歌词文件列表，没有歌词文件，存储内容为 NoLrc
-    QString currentPlayName{};  //当前正在播放的音乐路径
+    QString currentPlayName{};  //当前正在播放的音乐名称
     QString currentPlay{};  //当前正在播放的音乐路径
     QString currentPlayLrc{};   //当前播放音乐的lrc歌词文件路径
     QString durationTime;
@@ -48,7 +51,9 @@ private:
     qreal currentSpeed;
     qreal newSpeed;
 
+    musicDetail* detailWindow= nullptr;
     CloudMusic music;
+    PlayList *playList;
 public:
     explicit MainWindow(QWidget *parent = nullptr);
 
@@ -60,13 +65,17 @@ public:
 
 
     // 声明一个枚举类型来表示播放模式
-    enum PlayMode { SingleLoop, Sequential, Random };
+    enum PlayMode {
+        SingleLoop, Sequential, Random
+    };
 
     // 声明一个变量来跟踪当前的播放模式
     PlayMode currentPlayMode = Sequential;
 
     // 声明一个枚举类型来表示歌词状态
-    enum LyricsModel{ yes , no};
+    enum LyricsModel {
+        yes, no
+    };
 
     // 声明一个变量来跟踪当前的歌词状态
     LyricsModel currenLyricsModel = no;
@@ -76,23 +85,42 @@ public:
 public slots:
 
     void changePage(QListWidgetItem *current, QListWidgetItem *previous) const;
+
     void startOrPauseMusic();
+
     void previousMusic();
+
     void nextMusic();
+
     void slot_valueChanged_progress(int value);
+
     void onDurationChanged(qint64 duration);
+
     void onPositionChanged(qint64 position);
+
     void togglePlayMode();
+
     void onSliderPressed();
+
     void updateCurrentProcessText();
-    bool eventFilter(QObject* , QEvent*);
+
+    bool eventFilter(QObject *, QEvent *);
+
     void setPlaySpeed();
+
     void lyricsModel();
+
     void creatLyricsWindow();
+
     void changeBackground();
+
     void helpShow();
+
     //打开播放详情页
     void openDetailWindow();
+
+    //打开播放列表
+    void openPlayList();
 };
 
 #endif // MAINWINDOW_H
