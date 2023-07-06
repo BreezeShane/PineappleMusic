@@ -134,7 +134,7 @@ void MainWindow::changePage(QListWidgetItem *current, QListWidgetItem *previous)
         // 执行特定操作
         int currentIndex = sidebar->getContentLists()->row(current);
         mainContent->getContentPages()->setCurrentIndex(currentIndex);
-        openPlayListC();
+//        openPlayListC();
     } else {
         // 切换到其他页面
         int currentIndex = sidebar->getContentLists()->row(current);

@@ -28,6 +28,9 @@ musicDetail::musicDetail(CloudMusic currMusic, QWidget *parent) :
 //    qDebug()<<"music detail!";
 //    qDebug()<<currMusic.getName();
 //    qDebug()<<currMusic.getAlbumUrl();
+    //标题
+    this->setWindowTitle("歌词详情");
+    this->setWindowIcon(QIcon("../resource/icon/music.svg"));
     this->setStyleSheet("background-color: transparent;border: 2px solid gray;border-radius:10px;");
     uiBar = new PlayBar(this);
     uiBar->setupUI();
@@ -47,11 +50,14 @@ musicDetail::musicDetail(CloudMusic currMusic, QWidget *parent) :
         ui->textBrowser->setSource(QUrl::fromLocalFile(currMusic.getLrcPath()));
         ui->textBrowser->show();
     }
+
 }
 
 void musicDetail::paintEvent(QPaintEvent *event) {
-    QPainter painter(this);
-    painter.drawPixmap(0,0,1024,512, QPixmap("../resource/bgp/bgp_musicDetail.jpg"));
+    // 设置背景图的样式
+    QPalette palette;
+    palette.setBrush(backgroundRole(), QBrush(QPixmap("../resource/image/17.jpg")));
+    this->setPalette(palette);
 }
 
 musicDetail::~musicDetail() {

@@ -5,6 +5,7 @@
 #include "PlayList.h"
 #include <QDebug>
 #include <QStandardItemModel>
+#include "currentPlayList/CurrentPlayList.h"
 
 PlayList::PlayList(QWidget *parent)
         : QFrame(parent) {
@@ -12,23 +13,32 @@ PlayList::PlayList(QWidget *parent)
     setupUI();
 }
 
+//void PlayList::setupUI() {
+//    CurrentPlayList *CWidget = new CurrentPlayList;
+//
+//    this->setStyleSheet("border-radius: 10px;background-color: transparent;border: 2px solid gray;");
+//    this->setMinimumSize(200, 400);
+//
+//    mainLayout->addWidget(playListView);
+//    this->setLayout(mainLayout);
+//}
 void PlayList::setupUI() {
-    this->setStyleSheet("border-radius: 10px;background-color: transparent;border: 2px solid gray;");
-    this->setMinimumSize(200, 400);
-    mainLayout = new QVBoxLayout;
-    playListView = new QListView;
-    model=new QStandardItemModel;
-    pbt_reload = new QPushButton("刷新");
-    //
-    connect(pbt_reload, &QPushButton::clicked, this, &PlayList::show_list);
+        this->setStyleSheet("border-radius: 10px;background-color: transparent;border: 2px solid gray;");
+        this->setMinimumSize(200, 400);
+        mainLayout = new QVBoxLayout;
+        playListView = new QListView;
+        model=new QStandardItemModel;
+        pbt_reload = new QPushButton("刷新");
+        //
+        connect(pbt_reload, &QPushButton::clicked, this, &PlayList::show_list);
 
-    mainLayout->addWidget(pbt_reload);
-    mainLayout->addWidget(playListView);
-    this->setLayout(mainLayout);
-}
+        mainLayout->addWidget(pbt_reload);
+        mainLayout->addWidget(playListView);
+        this->setLayout(mainLayout);
+    }
 
-QListView *PlayList::getPlayListView() const {
-    return playListView;
+    QListView *PlayList::getPlayListView() const {
+        return playListView;
 }
 
 const QString &PlayList::getCurrentPlayName() const {
