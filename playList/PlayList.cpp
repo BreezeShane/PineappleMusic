@@ -3,6 +3,9 @@
 //
 
 #include "PlayList.h"
+#include <QDebug>
+#include <QStandardItemModel>
+
 PlayList::PlayList(QWidget *parent)
         : QFrame(parent) {
 
