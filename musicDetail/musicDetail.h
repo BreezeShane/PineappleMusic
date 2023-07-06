@@ -35,6 +35,9 @@ private:
     PlayBar *uiBar;
     QMediaPlayer* mediaPlayer;
     QMap<int, QString> map;
+    QFile *file;
+protected:
+    void showEvent(QShowEvent *event) override;
 };
 
 

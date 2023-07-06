@@ -24,7 +24,7 @@ musicDetail::musicDetail(QWidget *parent) :
     uiBar = new PlayBar(this);
     uiBar->setupUI();
     ui->setupUi(this);
-    uiBar->setGeometry(154,409,717,358);
+   uiBar->setGeometry(154,409,717,358);
 }
 
 
@@ -61,7 +61,21 @@ musicDetail::musicDetail(const CloudMusic& currMusic, QMediaPlayer * player, QWi
     QPalette palette5 = ui->label_5->palette();  // 获取label的调色板
     palette5.setColor(QPalette::WindowText, Qt::white);
     ui->label_5->setPalette(palette5);  // 应用修改后的调色板到label
+    // 设置布局
+    QVBoxLayout* mainLayout = new QVBoxLayout(this);
+    mainLayout->addWidget(ui->label_1);
+    mainLayout->addWidget(ui->label_2);
+    mainLayout->addWidget(ui->label_3);
+    mainLayout->addWidget(ui->label_4);
+    mainLayout->addWidget(ui->label_5);
+    mainLayout->addWidget(uiBar);
+    ui->verticalLayoutWidget->setLayout(mainLayout);
+
     uiBar->setAlbum(currMusic.getAlbumUrl());
+//    QFile file(currMusic.getLrcPath());
+    file=new QFile;
+    file->setFileName(currMusic.getLrcPath());
+    qDebug()<<currMusic.getLrcPath()<<"文件";
     const QString& lrcFilePath = currMusic.getLrcPath();
     if (lrcFilePath == "NoLrc") {
         ui->label_1->setText("");
@@ -70,11 +84,10 @@ musicDetail::musicDetail(const CloudMusic& currMusic, QMediaPlayer * player, QWi
         ui->label_4->setText("");
         ui->label_5->setText("");
     } else {
-        QFile file(currMusic.getLrcPath());
         QMap<int,QString> lyricMapping;
-        if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        if (file->open(QIODevice::ReadOnly | QIODevice::Text)) {
             QTextCodec *codec = QTextCodec::codecForName("GBK");
-            QTextStream in(&file);
+            QTextStream in(file);
             in.setCodec(codec);
             while (!in.atEnd()) {
                 QString line = in.readLine();
@@ -83,17 +96,22 @@ musicDetail::musicDetail(const CloudMusic& currMusic, QMediaPlayer * player, QWi
                 QString content = line.section(']',1,-1); // Content
                 lyricMapping.insert(timePoint, content);
             }
-            file.close();
+            file->close();
         }
         map = lyricMapping;
     }
     QMap<int, QString>::iterator it = map.begin();
     connect(mediaPlayer, &QMediaPlayer::positionChanged, this, &musicDetail::onPositionChanged);
 }
+void musicDetail::showEvent(QShowEvent *event) {
+
+}
 
 void musicDetail::onPositionChanged(qint64 position) {
     int pos = position / 10;
-    QMap<int, QString>::iterator iter = map.begin();
+   // map.clear();  // 清除QMap中的所有元素
+    QMap<int, QString>::iterator iter = map.begin();  // 获取指向QMap开头位置的迭代器
+//    QMap<int, QString>::iterator iter = map.begin();
     while (iter != map.end())
     {
         if(pos - 50 <= iter.key() && pos + 50 >= iter.key())
