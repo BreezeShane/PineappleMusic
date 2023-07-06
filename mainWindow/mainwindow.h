@@ -15,6 +15,7 @@
 #include <QToolBar>
 #include "currentPlayList/CurrentPlayList.h"
 #include "musicDetail/musicDetail.h"
+#include "musicDetail/PlayDetail.h"
 
 class MainWindow : public QMainWindow {
 Q_OBJECT
@@ -51,7 +52,8 @@ private:
     qreal currentSpeed;
     qreal newSpeed;
 
-    musicDetail* detailWindow= nullptr;
+//    musicDetail* detailWindow= nullptr;
+    PlayDetail* detailWindow= nullptr;
     CloudMusic music;
     CurrentPlayList *playList;
 public:

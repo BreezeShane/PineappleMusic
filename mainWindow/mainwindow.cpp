@@ -347,6 +347,7 @@ void MainWindow::setupUI() {
                 qWarning() << "can not load album" << url;
             }
         });
+        playBar->setMusicName(music.getName());
         currentPlaylist.clear();
         currentPlaylist.append(music.getName());
         currentPlaylistLrc.clear();
@@ -356,7 +357,7 @@ void MainWindow::setupUI() {
         QUrl url1(currentPlay);
         mediaPlayer->setMedia(url1);
         mediaPlayer->play();
-        playBar->getPbtStartOrPause()->setIcon(QIcon("../resource/icon/stopp.png"));
+        playBar->getPbtStartOrPause()->setIcon(QIcon("../resource/icon/stopp.svg"));
         playBar->getSlider()->setSliderPosition(0);
     });
     connect(mediaPlayer, SIGNAL(positionChanged(qint64)), this, SLOT(onPositionChanged(qint64)));
@@ -649,13 +650,14 @@ void MainWindow::setPlaySpeed() {
 
 //展示播放详情页
 void MainWindow::openDetailWindow() {
-    music.setName(currentPlay);
+    music.setName(currentPlayName);
     music.setMusicUrl(currentPlay);
     music.setDuration(durationTime.toInt());
     music.setPositionTime(positionTime);
     music.setLrcPath(currentPlayLrc);
     if (detailWindow == nullptr) {
-        detailWindow = new musicDetail(music);
+//        detailWindow = new musicDetail(music);
+        detailWindow = new PlayDetail(&music,mediaPlayer);
         detailWindow->show();
     } else {
         if (detailWindow->isHidden()) {

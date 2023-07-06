@@ -222,4 +222,9 @@ QPushButton *PlayBar::getPbtPlayList() const {
     return pbtPlayList;
 }
 
+PlayBar::PlayBar(QMediaPlayer *mediaPlayer, QWidget *parent) {
+    this->mediaPlayer = mediaPlayer;
+    setupUI();
+}
+
 PlayBar::~PlayBar() = default;
