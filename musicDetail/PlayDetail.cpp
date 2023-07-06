@@ -15,6 +15,10 @@ void PlayDetail::setupUI() {
     playBar = new PlayBar(mediaPlayer);
     mainLayout->addWidget(lrcLabel);
     mainLayout->addWidget(playBar);
+    // 设置背景图的样式
+    QPalette palette;
+    palette.setBrush(backgroundRole(), QBrush(QPixmap("../resource/image/17.jpg")));
+    this->setPalette(palette);
     this->setLayout(mainLayout);
 }
 
