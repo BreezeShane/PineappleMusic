@@ -31,6 +31,7 @@ void FromNet::setupUI() {
     topLayout = new QHBoxLayout;
     keyword_input = new QLineEdit;
     keyword_input->setFixedHeight(50);
+    keyword_input->setPlaceholderText("输入歌曲名称搜索");
     keyword_input->setStyleSheet("QLineEdit{"
                                  "background-color: #F5F5F5;"
                                  "border: 2px solid gray;"

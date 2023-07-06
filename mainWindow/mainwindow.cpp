@@ -461,6 +461,7 @@ void MainWindow::helpShow() {
                                        "\n注：鼠标移动到不认识的按钮上，会有说明哦~\n");
 }
 
+//个性化
 void MainWindow::changeBackground() {
 
     // 打开文件选择对话框，选择图片文件
@@ -470,7 +471,7 @@ void MainWindow::changeBackground() {
     // 如果用户选择了图片文件
     if (!imagePath.isEmpty()) {
         // 设置新的背景图路径
-//        centralWidget()->setStyleSheet(QString("QWidget { background-image: url(%1); }").arg(imagePath));
+//centralWidget()->setStyleSheet(QString("QWidget { background-image: url(%1); }").arg(imagePath));
         QPalette palette;
         palette.setBrush(this->backgroundRole(), QBrush(QPixmap(imagePath)));
         this->setPalette(palette);

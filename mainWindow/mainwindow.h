@@ -40,6 +40,8 @@ private:
     QLabel *labelLeft;
     QLabel *labelRight;
 
+    //背景图文件
+    QFile *skinFile;
     QToolBar *toolbar{};
     //工具栏按钮
     QPushButton *personalizebt{};
@@ -125,7 +127,6 @@ public slots:
     void creatLyricsWindow();
 
     void changeBackground();
-
     void helpShow();
 
     //打开播放详情页

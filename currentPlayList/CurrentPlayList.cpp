@@ -17,6 +17,9 @@ CurrentPlayList::CurrentPlayList(QWidget *parent)
 void CurrentPlayList::setupUI() {
     this->setStyleSheet("border-radius: 10px;");
     this->setMinimumSize(200, 400);
+    //标题
+    this->setWindowTitle("播放列表");
+    this->setWindowIcon(QIcon("../resource/icon/play.svg"));
     mainLayout = new QVBoxLayout;
     playListView = new QListView;
     playListView->setStyleSheet("background-color: transparent;");

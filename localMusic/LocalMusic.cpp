@@ -48,7 +48,7 @@ LocalMusic::LocalMusic(QWidget *parent)
 }
 
 void LocalMusic::setupUI() {
-    this->setStyleSheet("border: 2px solid gray;border-radius:10px;");
+    this->setStyleSheet("LocalMusic { border: 2px solid gray; border-radius: 10px; background-color: transparent; }");
     this->setContentsMargins(3, 3, 3, 3);
     QWidget *widget = new QWidget; // 创建一个小部件用于包含水平布局和按钮
     horizontalLayout = new QHBoxLayout();// 创建水平布局用于放置按钮
@@ -61,7 +61,7 @@ void LocalMusic::setupUI() {
     reloadMusicPbt = new QPushButton(this);
     reloadMusicPbt->setToolTip("扫描本地音乐");
     reloadMusicPbt->setStyleSheet("QPushButton {"
-                                  "border: 2px;"
+                                  "border: 2px solid gray;"
                                   "border-radius:10px;"
                                   "padding: 6px;"
                                   "}"
