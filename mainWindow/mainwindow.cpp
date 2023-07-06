@@ -377,10 +377,11 @@ void MainWindow::setupUI() {
 
 void MainWindow::openPlayList() {
 
-    if (playList->isVisible()){
-        playList->hide();
-    } else{
+    if (playList->isHidden()){
+        playList->setCurrentPlaylistName(currentPlaylistName);
         playList->show();
+    } else{
+        playList->hide();
     }
 }
 

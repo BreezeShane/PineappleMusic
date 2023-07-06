@@ -42,7 +42,7 @@ private:
     QVector<QString> currentPlaylistName{};     //当前播放列表
     QVector<QString> currentPlaylist{};     //当前播放列表
     QVector<QString> currentPlaylistLrc{};  //当前播放列表对应的歌词文件列表，没有歌词文件，存储内容为 NoLrc
-    QString currentPlayName{};  //当前正在播放的音乐路径
+    QString currentPlayName{};  //当前正在播放的音乐名称
     QString currentPlay{};  //当前正在播放的音乐路径
     QString currentPlayLrc{};   //当前播放音乐的lrc歌词文件路径
     QString durationTime;
