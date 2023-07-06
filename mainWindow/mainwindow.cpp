@@ -120,11 +120,20 @@ void MainWindow::togglePlayMode() {
     }
 }
 //设置侧边栏点击
-void MainWindow::changePage(QListWidgetItem *current, QListWidgetItem *previous) const {
+void MainWindow::changePage(QListWidgetItem *current, QListWidgetItem *previous) {
     if (!current)
         current = previous;
-    mainContent->getContentPages()->setCurrentIndex(sidebar->getContentLists()->row(current));
-    if(sidebar->getContentLists()->row(current) == 0){
+    QString currentText = current->text();
+   // qDebug()<<currentText;
+    if (currentText == "播放列表") {
+        // 执行特定操作
+        int currentIndex = sidebar->getContentLists()->row(current);
+        mainContent->getContentPages()->setCurrentIndex(currentIndex);
+        openPlayListC();
+    } else {
+        // 切换到其他页面
+        int currentIndex = sidebar->getContentLists()->row(current);
+        mainContent->getContentPages()->setCurrentIndex(currentIndex);
     }
 }
 
@@ -228,6 +237,8 @@ void MainWindow::setupUI() {
     mediaPlayer = new QMediaPlayer;
     //播放列表实例化
     playList = new CurrentPlayList;
+    //侧边栏播放列表实例化
+    playListC=new PlayList;
 
     retranslateUi();
     //开始 - 暂停
@@ -356,7 +367,7 @@ void MainWindow::setupUI() {
         QUrl url1(currentPlay);
         mediaPlayer->setMedia(url1);
         mediaPlayer->play();
-        playBar->getPbtStartOrPause()->setIcon(QIcon("../resource/icon/stopp.png"));
+        playBar->getPbtStartOrPause()->setIcon(QIcon("../resource/icon/stopp.svg"));
         playBar->getSlider()->setSliderPosition(0);
     });
     connect(mediaPlayer, SIGNAL(positionChanged(qint64)), this, SLOT(onPositionChanged(qint64)));
@@ -377,6 +388,7 @@ void MainWindow::setupUI() {
     connect(helpbt, &QPushButton::clicked, this, &MainWindow::helpShow);
     //打开播放列表
     connect(playBar->getPbtPlayList(), &QPushButton::clicked, this, &MainWindow::openPlayList);
+    //打开侧边栏播放列表
 
     //播放列表点击事件
     connect(playList->getPlayListView(), &QListView::clicked, [&](const QModelIndex &index) {
@@ -398,7 +410,16 @@ void MainWindow::setupUI() {
         }
     });
 }
-
+void MainWindow::openPlayListC() {
+        qDebug()<<currentPlaylistName<<"播放列表";
+        playListC->setCurrentPlaylistName(currentPlaylistName);
+        playListC->setCurrentPlaylist(currentPlaylist);
+        playListC->setCurrentPlay(currentPlay);
+        playListC->setCurrentPlaylistLrc(currentPlaylistLrc);
+        playListC->setCurrentPlayLrc(currentPlayLrc);
+        playListC->setCurrentPlayName(currentPlayName);
+        playListC->show_list();
+}
 void MainWindow::openPlayList() {
 
     if (playList->isHidden()) {
