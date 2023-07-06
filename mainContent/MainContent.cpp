@@ -22,11 +22,13 @@ void MainContent::initContentPages() {
     favoriteListPage = new FavoriteList;
     fromNetPage = new FromNet;
     chatroomPage = new Chatroom;
+    playListPage = new PlayList;
     contentPages = new QStackedWidget;
     contentPages->addWidget(favoriteListPage);
     contentPages->addWidget(localMusicPage);
     contentPages->addWidget(fromNetPage);
     contentPages->addWidget(chatroomPage);
+    contentPages->addWidget(playListPage);
     qhBoxLayout->addWidget(contentPages);
 }
 

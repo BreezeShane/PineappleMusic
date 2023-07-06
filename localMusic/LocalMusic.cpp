@@ -26,6 +26,7 @@ LocalMusic::LocalMusic(QWidget *parent)
 
     // 创建弹窗菜单项
     QAction* addPlay = new QAction("我喜欢", menu);
+    addPlay->setIcon(QIcon("../resource/icon/like.svg"));
     menu->addAction(addPlay);
 
     // 设置ListView的setContextMenuPolicy属性

@@ -25,7 +25,7 @@ void FavoriteList::setupUI() {
     refreshList->setIcon(QIcon("../resource/icon/refresh.svg"));
     deleteMyfPbt->setToolTip("取消喜欢");
     deleteMyfPbt->setFont(QFont("宋体", 13));
-    deleteMyfPbt->setIcon(QIcon("../resource/icon/like.svg"));
+    deleteMyfPbt->setIcon(QIcon("../resource/icon/dislike.svg"));
     refreshList->setToolTip("刷新列表");
     refreshList->setStyleSheet("QPushButton {"
                                 "border: none;"

@@ -13,7 +13,7 @@
 #include <QEvent>
 #include <QtGlobal>
 #include <QToolBar>
-#include "playList/PlayList.h"
+#include "currentPlayList/CurrentPlayList.h"
 #include "musicDetail/musicDetail.h"
 
 class MainWindow : public QMainWindow {
@@ -53,7 +53,7 @@ private:
 
     musicDetail* detailWindow= nullptr;
     CloudMusic music;
-    PlayList *playList;
+    CurrentPlayList *playList;
 public:
     explicit MainWindow(QWidget *parent = nullptr);
 

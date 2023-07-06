@@ -227,7 +227,7 @@ void MainWindow::setupUI() {
     //实例化播放器
     mediaPlayer = new QMediaPlayer;
     //播放列表实例化
-    playList = new PlayList;
+    playList = new CurrentPlayList;
 
     retranslateUi();
     //开始 - 暂停
