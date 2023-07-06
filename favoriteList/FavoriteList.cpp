@@ -25,7 +25,7 @@ void FavoriteList::setupUI() {
     refreshList->setIcon(QIcon("../resource/icon/refresh.svg"));
     deleteMyfPbt->setToolTip("取消喜欢");
     deleteMyfPbt->setFont(QFont("宋体", 13));
-    deleteMyfPbt->setIcon(QIcon("../resource/icon/dislike.svg"));
+    deleteMyfPbt->setIcon(QIcon("../resource/icon/like.svg"));
     refreshList->setToolTip("刷新列表");
     refreshList->setStyleSheet("QPushButton {"
                                 "border: none;"
@@ -76,6 +76,7 @@ void FavoriteList::playListUp() {
     updatePlayList();
 }
 void FavoriteList::deleteMyFavorite() {
+
     QTimer *timer = new QTimer(this);
     connect(deleteMyfPbt, &QPushButton::clicked, this, [=]() {
         // 设置新的图标
@@ -100,6 +101,7 @@ void FavoriteList::deleteMyFavorite() {
     model->removeRow(selectedIndex.row());
     favoriteList.removeAt(selectedIndex.row());
     favoriteListName.removeAt(selectedIndex.row());
+    favoriteListLrc.removeAt(selectedIndex.row());
 
 // 从m3u文件中删除对应的数据
     QFile musicPlaylist("../resource/favoriteListFile.m3u");
@@ -131,6 +133,7 @@ void FavoriteList::updatePlayList() {
     // 清空 favoriteList
     favoriteList.clear();
     favoriteListName.clear();
+    favoriteListLrc.clear();
     QFile musicPlaylistFile ("../resource/favoriteListFile.m3u");
     auto *model = new QStandardItemModel;
     favoriteListView->setModel(model);

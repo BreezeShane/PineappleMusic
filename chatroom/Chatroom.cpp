@@ -48,6 +48,7 @@ void Chatroom::setupUI() {
 
     nickNameInput = new QLineEdit();
     nickNameInput->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Maximum);
+    nickNameInput->setPlaceholderText("输入昵称");
     nickNameInput->setFixedHeight(32);
     nickNameInput->setStyleSheet("QLineEdit{"
                                  "background-color: #F5F5F5;"
@@ -99,6 +100,7 @@ void Chatroom::setupUI() {
 
     messageInput = new QLineEdit();
     messageInput->setFixedHeight(32);
+    messageInput->setPlaceholderText("输入消息");
     messageInput->setStyleSheet("QLineEdit{"
                                  "background-color: #F5F5F5;"
                                  "border: 2px solid gray;"

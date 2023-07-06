@@ -21,6 +21,7 @@ private:
     QHBoxLayout *horizontalLayout{};
     QPushButton *reloadMusicPbt{};
     QPushButton *addMusicPlayPbt{};
+    QPushButton *reflashpbt{};
     QSpacerItem *horizontalSpacer{};
     QListView *musicListView{};
     QFile *localPlayListFile{};
@@ -29,6 +30,9 @@ private:
     QVector<QString> localMusicList{};
     QVector<QString> localMusicListLrc{};
     QString currentPlay{};  //当前正在播放的音乐路径
+    QString currentPlayLrc{};  //当前正在播放的歌词路径
+
+    QString scanPath;
 
 
 public:
@@ -50,10 +54,14 @@ public:
 
     void setLocalMusicListName(const QVector<QString> &localMusicListName);
 
+    void addDownload();
+
+
     ~LocalMusic() override;
 
 public slots:
-
+    void reflash_mushic();
+    void setScanPath();
     void scanLocalMusic();
 };
 

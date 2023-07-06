@@ -15,6 +15,7 @@
 #include <QToolBar>
 #include "currentPlayList/CurrentPlayList.h"
 #include "musicDetail/musicDetail.h"
+#include "musicDetail/PlayDetail.h"
 
 class MainWindow : public QMainWindow {
 Q_OBJECT
@@ -39,6 +40,8 @@ private:
     QLabel *labelLeft;
     QLabel *labelRight;
 
+    //背景图文件
+    QFile *skinFile;
     QToolBar *toolbar{};
     //工具栏按钮
     QPushButton *personalizebt{};
@@ -56,7 +59,8 @@ private:
     qreal currentSpeed;
     qreal newSpeed;
 
-    musicDetail* detailWindow= nullptr;
+//    musicDetail* detailWindow= nullptr;
+    PlayDetail* detailWindow= nullptr;
     CloudMusic music;
     CurrentPlayList *playList;
     PlayList *playListC;
@@ -68,6 +72,7 @@ public:
     void lyricsUi();
 
     void retranslateUi();
+
 
     QVector<int> timestamps;
     QVector<QString> lyrics;
@@ -123,7 +128,6 @@ public slots:
     void creatLyricsWindow();
 
     void changeBackground();
-
     void helpShow();
 
     //打开播放详情页
