@@ -25,7 +25,6 @@
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 
     lyricsUi();
-
     setupUI();
     playBar->getSlider()->installEventFilter(this);
     connect(sidebar->getContentLists(),  //将显示列表与堆栈窗口关联，点击列表中的按键，显示相应的窗口
@@ -49,20 +48,31 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
                      this,
                      SLOT(creatLyricsWindow()));
 
+    QObject::connect(mediaPlayer, &QMediaPlayer::mediaStatusChanged, [=](qint64 position) {
+        lyrics.clear();
+        timestamps.clear();
+        getLyrics(currentPlayLrc);
+        qDebug() << currentPlayLrc;
+    });
+
+    QObject::connect(mediaPlayer, &QMediaPlayer::positionChanged, [=](qint64 position) {
+        displayLyrics();
+    });
 }
 
 void MainWindow::lyricsUi() {
 
     widget = new QWidget;
-    QVBoxLayout *layoutV = new QVBoxLayout(); // 创建垂直布局
-    QHBoxLayout *layoutB_1 = new QHBoxLayout(); // 创建水平布局
-    QHBoxLayout *layoutB_2 = new QHBoxLayout(); // 创建水平布局
-    QLabel *labelLeft = new QLabel("llll");
-    QLabel *labelRight = new QLabel("rrrr");
+    layoutV = new QVBoxLayout(); // 创建垂直布局
+    layoutB_1 = new QHBoxLayout(); // 创建水平布局
+    layoutB_2 = new QHBoxLayout(); // 创建水平布局
+    labelLeft = new QLabel("");
+    labelRight = new QLabel("");
 
     widget->setGeometry(500, 700, 1000, 150);
     widget->setWindowFlags(Qt::FramelessWindowHint);
-    widget->setWindowOpacity(1);
+    widget->setWindowFlags(Qt::Window | Qt::WindowStaysOnTopHint);
+    widget->setWindowOpacity(0.8);
 
     layoutB_1->addWidget(labelLeft);
     layoutB_1->addSpacerItem(new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum));
@@ -76,9 +86,8 @@ void MainWindow::lyricsUi() {
     widget->setLayout(layoutV);
 }
 
-void MainWindow::creatLyricsWindow() {
-
-    if (currenLyricsModel == yes) {
+void MainWindow::creatLyricsWindow(){
+    if(currenLyricsModel == yes){
         widget->show();
     } else {
         widget->hide();
@@ -100,21 +109,17 @@ void MainWindow::lyricsModel() {
 
 // 槽函数，用于切换播放模式
 void MainWindow::togglePlayMode() {
-
     switch (currentPlayMode) {
         case SingleLoop:
             currentPlayMode = Sequential;
-            //playBar->getPbtModel()->setText("顺序播放");
             playBar->getPbtModel()->setIcon(QIcon("../resource/icon/sequence.svg"));
             break;
         case Sequential:
             currentPlayMode = Random;
-            //playBar->getPbtModel()->setText("随机播放");
             playBar->getPbtModel()->setIcon(QIcon("../resource/icon/random.svg"));
             break;
         case Random:
             currentPlayMode = SingleLoop;
-            //playBar->getPbtModel()->setText("单曲循环");
             playBar->getPbtModel()->setIcon(QIcon("../resource/icon/onlyone.svg"));
             break;
     }
@@ -286,7 +291,7 @@ void MainWindow::setupUI() {
             currentPlaylistLrc = mainContent->getPlayListPage()->getFavoriteListLrc();
             currentPlay = currentPlaylist[row];
             currentPlayName = currentPlaylistName[row];
-//            currentPlayLrc = currentPlaylistLrc[row];
+            currentPlayLrc = currentPlaylistLrc[row];
             mediaPlayer->setMedia(QUrl::fromLocalFile(currentPlay));
             mediaPlayer->play();
 
@@ -488,16 +493,17 @@ void MainWindow::startOrPauseMusic() {
     }
 }
 
-
 void MainWindow::previousMusic() {
     switch (currentPlayMode) {
         case SingleLoop:
             // 如果启用了单曲循环，则上一首歌曲是当前歌曲
             if (!currentPlaylist.empty() && !currentPlay.isEmpty()) {
                 mediaPlayer->stop();
-                for (QVector<QString>::iterator it = currentPlaylist.begin(); it != currentPlaylist.end() - 1; it++) {
-                    if (*it == currentPlay) {
-                        currentPlay = *(it);
+                for (int it = 0; it <= currentPlaylist.size() - 1; it++) {
+                    if (currentPlaylist[it] == currentPlay) {
+                        currentPlay = currentPlaylist[it];
+                        currentPlayLrc = currentPlaylistLrc[it];
+                        currentPlayName = currentPlaylistName[it];
                         break;
                     }
                 }
@@ -507,15 +513,19 @@ void MainWindow::previousMusic() {
             // 否则，获取上一首歌曲的索引
             if (!currentPlaylist.empty() && !currentPlay.isEmpty()) {
                 mediaPlayer->stop();
-                for (QVector<QString>::iterator it = currentPlaylist.begin(); it != currentPlaylist.end() - 1; it++) {
-                    if (currentPlay == *currentPlaylist.begin()) {
-                        currentPlay = *(currentPlaylist.end() - 1);
+                for (int it = 0; it <= currentPlaylist.size() - 1; it++) {
+                    if(currentPlay == currentPlaylist[0]) {
+                        currentPlay = currentPlaylist[currentPlaylist.size()-1];
+                        currentPlayLrc = currentPlaylistLrc[currentPlaylistLrc.size()-1];
+                        currentPlayName = currentPlaylistName[currentPlaylistName.size()-1];
                         break;
-                    } else if (currentPlay == *(currentPlaylist.end() - 1)) {
-                        currentPlay = *(currentPlaylist.end() - 2);
+                    } /*else if(currentPlay == currentPlaylist[size()]){
+                        currentPlay = *(currentPlaylist.end()-2);
                         break;
-                    } else if (*it == currentPlay) {
-                        currentPlay = *(it - 1);
+                    }*/else if (currentPlaylist[it] == currentPlay) {
+                        currentPlay = currentPlaylist[it-1];
+                        currentPlayLrc = currentPlaylistLrc[it-1];
+                        currentPlayName = currentPlaylistName[it-1];
                         break;
                     }
                 }
@@ -529,13 +539,12 @@ void MainWindow::previousMusic() {
             // 如果是随机播放，则获取一个随机索引
             if (!currentPlaylist.empty() && !currentPlay.isEmpty()) {
                 mediaPlayer->stop();
-                for (QVector<QString>::iterator it = currentPlaylist.begin(); it != currentPlaylist.end() - 1; ++it) {
-                    for (QVector<QString>::iterator it = currentPlaylist.begin();
-                         it != currentPlaylist.end() - 1; it++) {
-                        if (*it == currentPlay) {
-                            currentPlay = currentPlaylist[random_number % currentPlaylist.size()];
-                            break;
-                        }
+                for (int it = 0; it <= currentPlaylist.size() - 1; ++it) {
+                    if (currentPlaylist[it] == currentPlay) {
+                        currentPlay = currentPlaylist[random_number%currentPlaylist.size()];
+                        currentPlayLrc = currentPlaylistLrc[random_number%currentPlaylistLrc.size()];
+                        currentPlayName = currentPlaylistName[random_number%currentPlaylistName.size()];
+                        break;
                     }
                 }
             }
@@ -544,17 +553,21 @@ void MainWindow::previousMusic() {
     mediaPlayer->setMedia(QUrl::fromLocalFile(currentPlay));
     mediaPlayer->play();
     playBar->getPbtStartOrPause()->setIcon(QIcon("../resource/icon/stopp.svg"));
+    playBar->setMusicName(currentPlayName);
 }
 
 void MainWindow::nextMusic() {
+    getLyrics(currentPlayLrc);
     switch (currentPlayMode) {
         case SingleLoop:
             // 如果启用了单曲循环，则下一首歌曲是当前歌曲
             if (!currentPlaylist.empty() && !currentPlay.isEmpty()) {
                 mediaPlayer->stop();
-                for (QVector<QString>::iterator it = currentPlaylist.begin(); it != currentPlaylist.end() - 1; it++) {
-                    if (*it == currentPlay) {
-                        currentPlay = *(it);
+                for (int it = 0; it <= currentPlaylist.size() - 1; it++) {
+                    if (currentPlaylist[it] == currentPlay) {
+                        currentPlay = currentPlaylist[it];
+                        currentPlayLrc = currentPlaylistLrc[it];
+                        currentPlayName = currentPlaylistName[it];
                         break;
                     }
                 }
@@ -564,12 +577,16 @@ void MainWindow::nextMusic() {
             // 否则，获取下一首歌曲的索引
             if (!currentPlaylist.empty() && !currentPlay.isEmpty()) {
                 mediaPlayer->stop();
-                for (QVector<QString>::iterator it = currentPlaylist.begin(); it != currentPlaylist.end() - 1; it++) {
-                    if (currentPlay == *(currentPlaylist.end() - 1)) {
-                        currentPlay = *currentPlaylist.begin();
+                for (int it = 0; it <= currentPlaylist.size() - 1; it++) {
+                    if(currentPlay == currentPlaylist[currentPlaylist.size()-1]) {
+                        currentPlay = currentPlaylist[0];
+                        currentPlayLrc = currentPlaylistLrc[0];
+                        currentPlayName = currentPlaylistName[0];
                         break;
-                    } else if (*it == currentPlay) {
-                        currentPlay = *(it + 1);
+                    } else if (currentPlaylist[it] == currentPlay) {
+                        currentPlay = currentPlaylist[it+1];
+                        currentPlayLrc = currentPlaylistLrc[it+1];
+                        currentPlayName = currentPlaylistName[it+1];
                         break;
                     }
                 }
@@ -583,22 +600,21 @@ void MainWindow::nextMusic() {
             // 如果是随机播放，则获取一个随机索引
             if (!currentPlaylist.empty() && !currentPlay.isEmpty()) {
                 mediaPlayer->stop();
-                for (QVector<QString>::iterator it = currentPlaylist.begin(); it != currentPlaylist.end() - 1; ++it) {
-                    for (QVector<QString>::iterator it = currentPlaylist.begin();
-                         it != currentPlaylist.end() - 1; it++) {
-                        if (*it == currentPlay) {
-                            currentPlay = currentPlaylist[random_number % currentPlaylist.size()];
-                            break;
-                        }
+                for (int it = 0; it <= currentPlaylist.size() - 1; ++it) {
+                    if (currentPlaylist[it] == currentPlay) {
+                        currentPlay = currentPlaylist[random_number%currentPlaylist.size()];
+                        currentPlayLrc = currentPlaylistLrc[random_number%currentPlaylistLrc.size()];
+                        currentPlayName = currentPlaylistName[random_number%currentPlaylistLrc.size()];
+                        break;
                     }
                 }
-
             }
             break;
     }
     mediaPlayer->setMedia(QUrl::fromLocalFile(currentPlay));
     mediaPlayer->play();
     playBar->getPbtStartOrPause()->setIcon(QIcon("../resource/icon/stopp.svg"));
+    playBar->setMusicName(currentPlayName);
 }
 
 //进度条滑块数值改变槽函数
@@ -688,6 +704,54 @@ void MainWindow::openDetailWindow() {
         }
     }
 //    win->setMusic(music);
+}
+
+//获取歌词
+void MainWindow::getLyrics(const QString& filepath){
+//    qDebug() << filepath;
+    QFile file(filepath);
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+        return;
+    QTextStream in(&file);
+    while (!in.atEnd()) {
+        QString line = in.readLine();
+        if (line.startsWith("[") && line.contains("]")) {
+            int pos = line.indexOf("]");
+            QString timestampStr = line.mid(1, pos - 1);
+            QString lyricsStr = line.mid(pos + 1).trimmed();
+            qDebug() << lyricsStr;
+            QTime timestamp = QTime::fromString(timestampStr, "mm:ss.zzz");
+            if (!timestamp.isValid()) {
+                qDebug() << "Invalid timestamp: " << timestampStr;
+                continue;
+            }
+            int timestampMs = timestamp.minute() * 60 * 1000 + timestamp.second() * 1000 + timestamp.msec();
+            timestamps.append(timestampMs);
+            lyrics.append(lyricsStr);
+        }
+    }
+}
+
+void MainWindow::displayLyrics() {
+  int currentTime = mediaPlayer->position(); // 获取当前播放时间
+    // 查找当前应该显示哪一句歌词
+    int currentIndex = -1;
+    for (int i = 0; i < timestamps.size()-1; i = i+1) {
+        if (timestamps[i] > currentTime+1000) {
+            qDebug()<< currentTime;
+            break;
+        }
+        currentIndex = i;
+    }
+    qDebug() << currentIndex;
+    // 更新歌词显示
+    if (currentIndex >= 0 && currentIndex%2==0 && currentIndex <= lyrics.size() ) {
+        labelLeft->setText(lyrics[currentIndex]);
+        qDebug()<< lyrics[currentIndex];
+    } else if (currentIndex >= 0 && currentIndex % 2 != 0 && currentIndex <= lyrics.size() ){
+        labelRight->setText(lyrics[currentIndex]);
+        qDebug()<< lyrics[currentIndex];
+    }
 }
 
 MainWindow::~MainWindow() = default;

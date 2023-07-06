@@ -8,6 +8,7 @@
 #include <QFrame>
 #include <QListView>
 #include <QVBoxLayout>
+#include <QPushButton>
 class CurrentPlayList : public QFrame
 {
 Q_OBJECT
@@ -20,6 +21,7 @@ private:
     QString currentPlayName{};  //当前正在播放的音乐名称
     QString currentPlay{};  //当前正在播放的音乐路径
     QString currentPlayLrc{};   //当前播放音乐的lrc歌词文件路径
+    QPushButton* saveLocal{};
 public:
     explicit CurrentPlayList(QWidget *parent = nullptr);
     void setupUI();
@@ -51,6 +53,7 @@ public:
     const QString &getCurrentPlayLrc() const;
 
     void setCurrentPlayLrc(const QString &currentPlayLrc);
+    void saveCurrentMusic();
 
     ~CurrentPlayList() override;
 protected:

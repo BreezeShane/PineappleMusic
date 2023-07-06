@@ -34,6 +34,11 @@ private:
     PlayBar *playBar{};
     //歌词窗口
     QWidget *widget;
+    QVBoxLayout *layoutV;
+    QHBoxLayout *layoutB_1;
+    QHBoxLayout *layoutB_2;
+    QLabel *labelLeft;
+    QLabel *labelRight;
 
     QToolBar *toolbar{};
     //工具栏按钮
@@ -65,6 +70,9 @@ public:
     void lyricsUi();
 
     void retranslateUi();
+
+    QVector<int> timestamps;
+    QVector<QString> lyrics;
 
     //打开侧边栏播放列表
     void openPlayListC();
@@ -122,6 +130,8 @@ public slots:
 
     //打开播放详情页
     void openDetailWindow();
+    void displayLyrics();
+    void getLyrics(const QString& filepath);
 
     //打开播放列表
     void openPlayList();

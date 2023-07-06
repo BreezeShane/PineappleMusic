@@ -5,6 +5,7 @@
 #include "CurrentPlayList.h"
 #include <QDebug>
 #include <QStandardItemModel>
+#include <QFileDialog>
 
 CurrentPlayList::CurrentPlayList(QWidget *parent)
         : QFrame(parent) {
@@ -17,11 +18,39 @@ void CurrentPlayList::setupUI() {
     this->setMinimumSize(200, 400);
     mainLayout = new QVBoxLayout;
     playListView = new QListView;
-
+    playListView->setStyleSheet("background-color: transparent;");
+    saveLocal=new QPushButton("保存");
     mainLayout->addWidget(playListView);
-    this->setLayout(mainLayout);
-}
+    mainLayout->addWidget(saveLocal);
 
+    // 设置背景图的样式
+    QPalette palette;
+    palette.setBrush(backgroundRole(), QBrush(QPixmap("../resource/image/4.jpg")));
+    this->setPalette(palette);
+    this->setLayout(mainLayout);
+    connect(saveLocal, &QPushButton::clicked, this, &CurrentPlayList::saveCurrentMusic);
+}
+void CurrentPlayList::saveCurrentMusic() {
+    QModelIndex index = playListView->currentIndex();
+    int row = index.row();
+    currentPlay = currentPlaylist[row];
+
+    // 创建文件对话框，让用户选择保存的文件路径和名称
+    QString filePath = QFileDialog::getSaveFileName(this, "Save Music", "", "Music Files (*.mp3)");
+
+    // 检查用户是否选择了文件路径
+    if (!filePath.isEmpty()) {
+        QFile file(filePath);
+
+        if (file.open(QIODevice::WriteOnly)) {
+            file.write(currentPlay.toUtf8());
+            file.close();
+            qDebug() << "Music saved to" << filePath;
+        } else {
+            qDebug() << "Failed to open file for writing.";
+        }
+    }
+}
 QListView *CurrentPlayList::getPlayListView() const {
     return playListView;
 }

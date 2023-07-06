@@ -47,16 +47,7 @@ void PlayList::setCurrentPlaylistName(const QVector<QString> &currentPlaylistNam
      PlayList::currentPlaylistName = currentPlaylistName;
 }
 
-//void PlayList::showEvent(QShowEvent *event) {
-//    QWidget::showEvent(event);
-//    auto *model = new QStandardItemModel;
-//    for (const QString &name: currentPlaylistName) {
-//        qDebug()<<currentPlaylistName<<"侧边栏";
-//        auto *item = new QStandardItem(name);
-//        model->appendRow(item);
-//    }
-//    playListView->setModel(model);
-//}
+
 void PlayList::show_list() {
     model->clear(); // 清空模型数据
     this->setCurrentPlaylistName(currentPlaylistName);
