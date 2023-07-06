@@ -110,7 +110,7 @@ void PlayBar::setupUI() {
 
     pbtPlayList = new QPushButton();
     pbtPlayList->setStyleSheet("border: none;");
-    pbtPlayList->setIcon(QIcon("../resource/icon/playList.svg"));
+    pbtPlayList->setIcon(QIcon("../resource/icon/currentPlayList.svg"));
 
     qhBoxLayout->addWidget(album);
 

@@ -2,13 +2,13 @@
 // Created by juncheng on 2023/7/6.
 //
 
-#ifndef PINEAPPLEMUSIC_PLAYLIST_H
-#define PINEAPPLEMUSIC_PLAYLIST_H
+#ifndef PINEAPPLEMUSIC_CURRENTPLAYLIST_H
+#define PINEAPPLEMUSIC_CURRENTPLAYLIST_H
 
 #include <QFrame>
 #include <QListView>
 #include <QVBoxLayout>
-class PlayList : public QFrame
+class CurrentPlayList : public QFrame
 {
 Q_OBJECT
 private:
@@ -21,7 +21,7 @@ private:
     QString currentPlay{};  //当前正在播放的音乐路径
     QString currentPlayLrc{};   //当前播放音乐的lrc歌词文件路径
 public:
-    explicit PlayList(QWidget *parent = nullptr);
+    explicit CurrentPlayList(QWidget *parent = nullptr);
     void setupUI();
 
     QListView *getPlayListView() const;
@@ -52,11 +52,11 @@ public:
 
     void setCurrentPlayLrc(const QString &currentPlayLrc);
 
-    ~PlayList() override;
+    ~CurrentPlayList() override;
 protected:
     void showEvent(QShowEvent *event) override;
 
     void hideEvent(QHideEvent *event) override;
 };
 
-#endif //PINEAPPLEMUSIC_PLAYLIST_H
+#endif //PINEAPPLEMUSIC_CURRENTPLAYLIST_H
