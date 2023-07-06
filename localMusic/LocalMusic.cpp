@@ -26,6 +26,7 @@ LocalMusic::LocalMusic(QWidget *parent)
 
     // 创建弹窗菜单项
     QAction* addPlay = new QAction("我喜欢", menu);
+    addPlay->setIcon(QIcon("../resource/icon/like.svg"));
     menu->addAction(addPlay);
 
     // 设置ListView的setContextMenuPolicy属性
@@ -104,7 +105,6 @@ void LocalMusic::setupUI() {
     horizontalLayout->addSpacing(10); // 添加一些间距
     horizontalLayout->addWidget(addMusicPlayPbt);
 
-//    horizontalLayout->addWidget(reloadMusicPbt);
 
     widget->setLayout(horizontalLayout); // 将水平布局设置为小部件的布局
     verticalLayout->addWidget(widget);
@@ -124,7 +124,7 @@ void LocalMusic::setupUI() {
 void LocalMusic::retranslateUi() {
 //    reloadMusicPbt->setText("重新扫描");
     reloadMusicPbt->setIcon(QIcon("../resource/icon/search.svg"));
-} // retranslateUi
+}
 
 void LocalMusic::scanLocalMusic() {
     // 创建一个QMediaPlayer对象
@@ -182,7 +182,6 @@ void LocalMusic::scanLocalMusic() {
         }
 
     }
-
     localPlayListFile->close();
     updateMusicList();
 }
@@ -215,7 +214,6 @@ void LocalMusic::updateMusicList() {
     for (const QString &line: titleLines) {
         QStringList parts = line.split(QRegExp(":"));
         if (parts.size() == 2) {
-
             QString title = parts[1];
             auto *item = new QStandardItem(title);
             localMusicListName.push_back(title);
@@ -255,7 +253,7 @@ void LocalMusic::addMusicToPlaylist() {
         if (index.isValid())
         {
             musicName = index.data(Qt::DisplayRole).toString();
-            qDebug() << "jjj" << index.data(Qt::DisplayRole).toString() << endl;
+//            qDebug() << "jjj" << index.data(Qt::DisplayRole).toString() << endl;
             playlistModel->appendRow(new QStandardItem(musicName));
         }
 

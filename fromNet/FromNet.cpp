@@ -16,6 +16,7 @@
 #include <QMenu>
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QTimer>
 
 FromNet::FromNet(QWidget *parent)
         : QFrame(parent) {
@@ -140,7 +141,7 @@ void FromNet::setupUI() {
             songId = index.data(Qt::UserRole).toInt();
         }
 
-        QString url = "https://service-qbrcywo4-1314545420.gz.apigw.tencentcs.com/release/song/url";
+        QString url = "http://service-qbrcywo4-1314545420.gz.apigw.tencentcs.com/release/song/url";
         QUrlQuery query;
         query.addQueryItem("id", QString::number(songId));
         url.append("?" + query.toString());
@@ -188,7 +189,7 @@ void FromNet::search_music() {
     songs.clear();
     keyword = keyword_input->text();
     auto *manager = new QNetworkAccessManager(this);
-    QString url = "https://service-qbrcywo4-1314545420.gz.apigw.tencentcs.com/release/search";
+    QString url = "http://service-qbrcywo4-1314545420.gz.apigw.tencentcs.com/release/search";
     QUrlQuery query;
     query.addQueryItem("keywords", keyword);
     query.addQueryItem("limit", "2");
@@ -290,6 +291,11 @@ void FromNet::downloadFile(const QUrl &url, const QString &filePath) {
         if (file.open(QIODevice::WriteOnly)) {
             file.write(reply->readAll());
             file.close();
+
+            // 在文件下载完成后，创建 QTimer 对象，定时显示提示框
+            QTimer::singleShot(500, this, [=](){
+                QMessageBox::information(nullptr, "下载完成", "文件已下载完成！");
+            });
         }
     }
 

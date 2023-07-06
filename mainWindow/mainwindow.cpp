@@ -20,6 +20,7 @@
 #include "musicDetail/musicDetail.h"
 #include <QGraphicsEffect>
 #include <QGraphicsOpacityEffect>
+#include "favoriteList/FavoriteList.h"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 
@@ -37,7 +38,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
         }
     });
     // 播放模式切换按键
-    QObject::connect(playBar->getPbtModel(), SIGNAL(clicked()),this,SLOT(togglePlayMode()));
+    QObject::connect(playBar->getPbtModel(), SIGNAL(clicked()), this, SLOT(togglePlayMode()));
 
     QObject::connect(playBar->getPbtLyrics(), SIGNAL(clicked()),
                      this,
@@ -59,7 +60,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     });
 }
 
-void MainWindow::lyricsUi(){
+void MainWindow::lyricsUi() {
 
     widget = new QWidget;
     layoutV = new QVBoxLayout(); // 创建垂直布局
@@ -88,7 +89,7 @@ void MainWindow::lyricsUi(){
 void MainWindow::creatLyricsWindow(){
     if(currenLyricsModel == yes){
         widget->show();
-    }else{
+    } else {
         widget->hide();
     }
 }
@@ -123,11 +124,22 @@ void MainWindow::togglePlayMode() {
             break;
     }
 }
-
-void MainWindow::changePage(QListWidgetItem *current, QListWidgetItem *previous) const {
+//设置侧边栏点击
+void MainWindow::changePage(QListWidgetItem *current, QListWidgetItem *previous) {
     if (!current)
         current = previous;
-    mainContent->getContentPages()->setCurrentIndex(sidebar->getContentLists()->row(current));
+    QString currentText = current->text();
+   // qDebug()<<currentText;
+    if (currentText == "播放列表") {
+        // 执行特定操作
+        int currentIndex = sidebar->getContentLists()->row(current);
+        mainContent->getContentPages()->setCurrentIndex(currentIndex);
+        openPlayListC();
+    } else {
+        // 切换到其他页面
+        int currentIndex = sidebar->getContentLists()->row(current);
+        mainContent->getContentPages()->setCurrentIndex(currentIndex);
+    }
 }
 
 void MainWindow::setupUI() {
@@ -154,7 +166,7 @@ void MainWindow::setupUI() {
     palette.setBrush(this->backgroundRole(), QBrush(QPixmap(imagePath)));
     this->setPalette(palette);
 //    // 创建颜色调整效果
-    QGraphicsEffect* effect = new QGraphicsOpacityEffect(this);
+    QGraphicsEffect *effect = new QGraphicsOpacityEffect(this);
     effect->setEnabled("");
 
     // 创建一个QWidget作为中央部件
@@ -173,29 +185,17 @@ void MainWindow::setupUI() {
     // 播放控制栏
     playBar = new PlayBar();
     //工具栏
-    toolbar=new QToolBar();
-    toolLayout=new QHBoxLayout();
+    toolbar = new QToolBar();
+    toolLayout = new QHBoxLayout();
 
-    personalizebt=new QPushButton();
-    helpbt=new QPushButton();
+    personalizebt = new QPushButton();
+    helpbt = new QPushButton();
     personalizebt->setIcon(QIcon("../resource/icon/skin.svg"));
     helpbt->setToolTip("帮助文档");
     helpbt->setIcon(QIcon("../resource/icon/help.svg"));
     // 设置个性化按钮的样式
     personalizebt->setFont(QFont("宋体", 8));
     personalizebt->setStyleSheet("QPushButton {"
-                                     "    border: 2px;"
-                                     "border-radius:10px;"
-                                     "    padding: 6px;"
-                                     "}"
-                                     "QPushButton:hover {"
-                                     "    background-color: #FFFFF0;"
-                                     "}"
-                                     "QPushButton:pressed {"
-                                     "    background-color:#FFFFF0;"
-                                     "}");
-    personalizebt->setToolTip("个性化");
-    helpbt->setStyleSheet("QPushButton {"
                                  "    border: 2px;"
                                  "border-radius:10px;"
                                  "    padding: 6px;"
@@ -206,6 +206,18 @@ void MainWindow::setupUI() {
                                  "QPushButton:pressed {"
                                  "    background-color:#FFFFF0;"
                                  "}");
+    personalizebt->setToolTip("个性化");
+    helpbt->setStyleSheet("QPushButton {"
+                          "    border: 2px;"
+                          "border-radius:10px;"
+                          "    padding: 6px;"
+                          "}"
+                          "QPushButton:hover {"
+                          "    background-color: #FFFFF0;"
+                          "}"
+                          "QPushButton:pressed {"
+                          "    background-color:#FFFFF0;"
+                          "}");
 
     // 添加伸缩器到工具栏，将按钮推到最右边
     QWidget *spacer = new QWidget();
@@ -228,6 +240,10 @@ void MainWindow::setupUI() {
 
     //实例化播放器
     mediaPlayer = new QMediaPlayer;
+    //播放列表实例化
+    playList = new CurrentPlayList;
+    //侧边栏播放列表实例化
+    playListC=new PlayList;
 
     retranslateUi();
     //开始 - 暂停
@@ -268,7 +284,7 @@ void MainWindow::setupUI() {
     connect(mainContent->getPlayListPage()->getFavoriteListView(), &QListView::clicked, [&](const QModelIndex &index) {
         // 获取所选项的QMediaPlayer对象，并播放音乐
         int row = index.row();
-        qDebug()<<index.row();
+        qDebug() << index.row();
         if (row >= 0 && row < mainContent->getPlayListPage()->getFavoriteList().size()) {
             currentPlaylist = mainContent->getPlayListPage()->getFavoriteList();
             currentPlaylistName = mainContent->getPlayListPage()->getFavoriteListName();
@@ -285,13 +301,13 @@ void MainWindow::setupUI() {
         }
     });
 
-    connect(mainContent->getFromNetPage()->resultListView, &QListView::clicked, this, [=](const QModelIndex& index) {
+    connect(mainContent->getFromNetPage()->resultListView, &QListView::clicked, this, [=](const QModelIndex &index) {
         // 获取用户点击的项的数据
         int songId = index.data(Qt::UserRole).toInt();
-        music.setArtist(index.data(Qt::UserRole+1).toString());
-        music.setAlbumUrl(index.data(Qt::UserRole+2).toString());
-        music.setDuration(index.data(Qt::UserRole+3).toInt());
-        music.setName(index.data(Qt::UserRole+4).toString());
+        music.setArtist(index.data(Qt::UserRole + 1).toString());
+        music.setAlbumUrl(index.data(Qt::UserRole + 2).toString());
+        music.setDuration(index.data(Qt::UserRole + 3).toInt());
+        music.setName(index.data(Qt::UserRole + 4).toString());
         auto *manager = new QNetworkAccessManager(this);
         QString url = "https://service-qbrcywo4-1314545420.gz.apigw.tencentcs.com/release/song/url";
         QUrlQuery query;
@@ -332,7 +348,7 @@ void MainWindow::setupUI() {
         // 在这里处理用户点击事件，例如显示该歌曲的详细信息
         QUrl url2(music.getAlbumUrl());
         QNetworkRequest request2(url2);
-        qDebug()<<url2;
+        qDebug() << url2;
         QNetworkReply *reply2 = manager->get(request2);
         //显示专辑图
         connect(reply2, &QNetworkReply::finished, [=]() {
@@ -344,7 +360,7 @@ void MainWindow::setupUI() {
                 playBar->setAlbum(pixmap2);
             } else {
                 // 处理错误情况
-                qWarning()<<"can not load album"<<url;
+                qWarning() << "can not load album" << url;
             }
         });
         currentPlaylist.clear();
@@ -352,16 +368,16 @@ void MainWindow::setupUI() {
         currentPlaylistLrc.clear();
         currentPlaylistLrc.append("NoLrc");
         currentPlay = music.getMusicUrl();
-        currentPlayLrc ="NoLrc";
+        currentPlayLrc = "NoLrc";
         QUrl url1(currentPlay);
         mediaPlayer->setMedia(url1);
         mediaPlayer->play();
-        playBar->getPbtStartOrPause()->setIcon(QIcon("../resource/icon/stopp.png"));
+        playBar->getPbtStartOrPause()->setIcon(QIcon("../resource/icon/stopp.svg"));
         playBar->getSlider()->setSliderPosition(0);
     });
-    connect(mediaPlayer,SIGNAL(positionChanged(qint64)),this,SLOT(onPositionChanged(qint64)));
-    connect(mediaPlayer,SIGNAL(durationChanged(qint64)),this,SLOT(onDurationChanged(qint64)));
-    connect(playBar->getSlider(),SIGNAL(valueChanged(int)),this,SLOT(slot_valueChanged_progress(int)));
+    connect(mediaPlayer, SIGNAL(positionChanged(qint64)), this, SLOT(onPositionChanged(qint64)));
+    connect(mediaPlayer, SIGNAL(durationChanged(qint64)), this, SLOT(onDurationChanged(qint64)));
+    connect(playBar->getSlider(), SIGNAL(valueChanged(int)), this, SLOT(slot_valueChanged_progress(int)));
     connect(playBar->getSlider(), SIGNAL(sliderPressed()), this, SLOT(onSliderPressed()));
 
     connect(playBar->getSlider(), SIGNAL(sliderPressed()), this, SLOT(onSliderPressed()));
@@ -375,31 +391,81 @@ void MainWindow::setupUI() {
     connect(personalizebt, &QPushButton::clicked, this, &MainWindow::changeBackground);
     //打开帮助文档
     connect(helpbt, &QPushButton::clicked, this, &MainWindow::helpShow);
+    //打开播放列表
+    connect(playBar->getPbtPlayList(), &QPushButton::clicked, this, &MainWindow::openPlayList);
+    //打开侧边栏播放列表
+
+    //播放列表点击事件
+    connect(playList->getPlayListView(), &QListView::clicked, [&](const QModelIndex &index) {
+        // 获取所选项的QMediaPlayer对象，并播放音乐
+        int row = index.row();
+        qDebug() << index.row();
+        if (row >= 0 && row < playList->getCurrentPlaylist().size()) {
+            currentPlaylist = playList->getCurrentPlaylist();
+            currentPlaylistName = playList->getCurrentPlaylistName();
+            currentPlaylistLrc = playList->getCurrentPlaylistLrc();
+            currentPlay = currentPlaylist[row];
+            currentPlayName = currentPlaylistName[row];
+            mediaPlayer->setMedia(QUrl::fromLocalFile(currentPlay));
+            mediaPlayer->play();
+
+            playBar->setMusicName(currentPlayName);
+            playBar->getPbtStartOrPause()->setIcon(QIcon("../resource/icon/stopp.svg"));
+            playBar->getSlider()->setSliderPosition(0);
+        }
+    });
+}
+void MainWindow::openPlayListC() {
+        qDebug()<<currentPlaylistName<<"播放列表";
+        playListC->setCurrentPlaylistName(currentPlaylistName);
+        playListC->setCurrentPlaylist(currentPlaylist);
+        playListC->setCurrentPlay(currentPlay);
+        playListC->setCurrentPlaylistLrc(currentPlaylistLrc);
+        playListC->setCurrentPlayLrc(currentPlayLrc);
+        playListC->setCurrentPlayName(currentPlayName);
+        playListC->show_list();
+}
+void MainWindow::openPlayList() {
+
+    if (playList->isHidden()) {
+        playList->setCurrentPlaylistName(currentPlaylistName);
+        playList->setCurrentPlaylist(currentPlaylist);
+        playList->setCurrentPlay(currentPlay);
+        playList->setCurrentPlaylistLrc(currentPlaylistLrc);
+        playList->setCurrentPlayLrc(currentPlayLrc);
+        playList->setCurrentPlayName(currentPlayName);
+        playList->show();
+    } else {
+        playList->hide();
+    }
 }
 
 void MainWindow::retranslateUi() {
     //标题
     this->setWindowTitle("Pineapple Music");
-    this->setWindowIcon(QIcon("../resource/app.png"));
+    this->setWindowIcon(QIcon("../resource/icon/app.png"));
 }
+
 void MainWindow::helpShow() {
-    QMessageBox::about(this,u8"关于"," Pineapple Music| 一款精致小巧的本地音乐播放器\n"
-                                     "【歌词文件说明】需要与对应歌曲MP3在同目录且同名（.lry文件）\n"
-                                     "【使用说明】\n"
-                                     " Pineapple Music音乐播放器暂未设置快捷键使用\n"
-                                     " 上一曲/下一曲/暂停/播放  点击播放栏的相应图标即可\n"
-                                     " 顺序播放/随机播放/循环播放 点击播放栏的相应图标即可\n"
-                                     " 播放速度 可设置0.5/1/1.5/2倍数播放音乐\n"
-                                     "【添加本地音乐】点击本地音乐界面的扫描添加按钮\n"
-                                     "【查看歌曲歌词】点击播放栏界面的专辑图片\n"
-                                     "【音乐文件类型】添加过程中会自动过滤得到可播放的文件类型（.mp3/.flac/.mpga文件），所以添加时无需考虑文件类型，使用\"Ctrl+A\"选择文件夹内全部文件添加即可\n"
-                                     "\n注：鼠标移动到不认识的按钮上，会有说明哦~\n");
+    QMessageBox::about(this, u8"关于", " Pineapple Music| 一款精致小巧的本地音乐播放器\n"
+                                       "【歌词文件说明】需要与对应歌曲MP3在同目录且同名（.lry文件）\n"
+                                       "【使用说明】\n"
+                                       " Pineapple Music音乐播放器暂未设置快捷键使用\n"
+                                       " 上一曲/下一曲/暂停/播放  点击播放栏的相应图标即可\n"
+                                       " 顺序播放/随机播放/循环播放 点击播放栏的相应图标即可\n"
+                                       " 播放速度 可设置0.5/1/1.5/2倍数播放音乐\n"
+                                       "【添加本地音乐】点击本地音乐界面的扫描添加按钮\n"
+                                       "【查看歌曲歌词】点击播放栏界面的专辑图片\n"
+                                       "【音乐文件类型】添加过程中会自动过滤得到可播放的文件类型（.mp3/.flac/.mpga文件），所以添加时无需考虑文件类型，使用\"Ctrl+A\"选择文件夹内全部文件添加即可\n"
+                                       "\n注：鼠标移动到不认识的按钮上，会有说明哦~\n");
 }
+
 void MainWindow::changeBackground() {
 
     // 打开文件选择对话框，选择图片文件
-    QString imagePath = QFileDialog::getOpenFileName(this, "选择图片", QDir::homePath(), "Images (*.png *.jpg *.jpeg *.svg)");
-    qDebug()<<"换肤"<<endl;
+    QString imagePath = QFileDialog::getOpenFileName(this, "选择图片", QDir::homePath(),
+                                                     "Images (*.png *.jpg *.jpeg *.svg)");
+    qDebug() << "换肤" << endl;
     // 如果用户选择了图片文件
     if (!imagePath.isEmpty()) {
         // 设置新的背景图路径
@@ -415,6 +481,7 @@ void MainWindow::changeBackground() {
     }
 
 }
+
 void MainWindow::startOrPauseMusic() {
     if (mediaPlayer != nullptr && mediaPlayer->state() == QMediaPlayer::PlayingState) {
         mediaPlayer->pause();
@@ -467,7 +534,7 @@ void MainWindow::previousMusic() {
             // 创建一个随机数生成器
             std::srand(std::time(nullptr));
             auto random_number = std::rand();
-            qDebug()<< random_number;
+            qDebug() << random_number;
             // 如果是随机播放，则获取一个随机索引
             if (!currentPlaylist.empty() && !currentPlay.isEmpty()) {
                 mediaPlayer->stop();
@@ -528,7 +595,7 @@ void MainWindow::nextMusic() {
             // 创建一个随机数生成器
             std::srand(std::time(nullptr));
             auto random_number = std::rand();
-            qDebug()<< random_number;
+            qDebug() << random_number;
             // 如果是随机播放，则获取一个随机索引
             if (!currentPlaylist.empty() && !currentPlay.isEmpty()) {
                 mediaPlayer->stop();
@@ -550,28 +617,25 @@ void MainWindow::nextMusic() {
 }
 
 //进度条滑块数值改变槽函数
-void MainWindow::slot_valueChanged_progress(int value)
-{
-    if(qAbs (mediaPlayer->position() - value ) > 99)//不加会出现卡顿
+void MainWindow::slot_valueChanged_progress(int value) {
+    if (qAbs(mediaPlayer->position() - value) > 99)//不加会出现卡顿
         mediaPlayer->setPosition(value);    //设置播放器的当前进度
 }
 
 //当前媒体总时长改变槽函数
-void MainWindow::onDurationChanged(qint64 duration)
-{
+void MainWindow::onDurationChanged(qint64 duration) {
     playBar->getSlider()->setMaximum(duration); //设置进度条最大值 也就是歌曲时长 ms
-    int secs = duration/1000; //全部秒数
-    int mins = secs/60;//分
+    int secs = duration / 1000; //全部秒数
+    int mins = secs / 60;//分
     secs = secs % 60;//秒
-    durationTime = QString::asprintf("%02d:%02d",mins,secs);
+    durationTime = QString::asprintf("%02d:%02d", mins, secs);
     playBar->getCurrentProcess()->setText(positionTime);
     playBar->getFinalProcess()->setText(durationTime);
 }
 
 //当前进度改变槽函数
-void MainWindow::onPositionChanged(qint64 position)
-{
-    if(playBar->getSlider()->isSliderDown())
+void MainWindow::onPositionChanged(qint64 position) {
+    if (playBar->getSlider()->isSliderDown())
         return;//如果手动调整进度条，则不处理
     playBar->getSlider()->setSliderPosition(position);
     updateCurrentProcessText();
@@ -579,10 +643,11 @@ void MainWindow::onPositionChanged(qint64 position)
 
 void MainWindow::onSliderPressed() {
     updateCurrentProcessText();
-    mediaPlayer->setPosition(playBar->getSlider()->value()*mediaPlayer->duration()/playBar->getSlider()->maximum()); // 设置播放器的当前进度
+    mediaPlayer->setPosition(
+            playBar->getSlider()->value() * mediaPlayer->duration() / playBar->getSlider()->maximum()); // 设置播放器的当前进度
 }
-void MainWindow::updateCurrentProcessText()
-{
+
+void MainWindow::updateCurrentProcessText() {
     if (mediaPlayer != nullptr) {
         qint64 position = mediaPlayer->position();
         int secs = position / 1000;
@@ -592,13 +657,14 @@ void MainWindow::updateCurrentProcessText()
         playBar->getCurrentProcess()->setText(positionTime);
     }
 }
-bool MainWindow::eventFilter(QObject *obj, QEvent *event)
-{
+
+bool MainWindow::eventFilter(QObject *obj, QEvent *event) {
     if (obj == playBar->getSlider() && event->type() == QEvent::MouseMove) {
         updateCurrentProcessText();
     }
     return QMainWindow::eventFilter(obj, event);
 }
+
 void MainWindow::setPlaySpeed() {
     QObject *senderObj = sender(); // 获取信号发送者对象指针
 
@@ -617,6 +683,7 @@ void MainWindow::setPlaySpeed() {
     }
     mediaPlayer->setPlaybackRate(currentSpeed);
 }
+
 //展示播放详情页
 void MainWindow::openDetailWindow() {
     music.setName(currentPlay);
@@ -624,9 +691,17 @@ void MainWindow::openDetailWindow() {
     music.setDuration(durationTime.toInt());
     music.setPositionTime(positionTime);
     music.setLrcPath(currentPlayLrc);
-    musicDetail* win = new musicDetail(music);
+    if (detailWindow == nullptr) {
+        detailWindow = new musicDetail(music);
+        detailWindow->show();
+    } else {
+        if (detailWindow->isHidden()) {
+            detailWindow->show();
+        } else {
+            detailWindow->hide();
+        }
+    }
 //    win->setMusic(music);
-    win->show();
 }
 
 //获取歌词

@@ -13,8 +13,11 @@
 #include <QEvent>
 #include <QtGlobal>
 #include <QToolBar>
+#include "currentPlayList/CurrentPlayList.h"
+#include "musicDetail/musicDetail.h"
+
 class MainWindow : public QMainWindow {
-    Q_OBJECT
+Q_OBJECT
 private:
     // 主布局---水平布局
     QHBoxLayout *mainLayout{};
@@ -53,7 +56,10 @@ private:
     qreal currentSpeed;
     qreal newSpeed;
 
+    musicDetail* detailWindow= nullptr;
     CloudMusic music;
+    CurrentPlayList *playList;
+    PlayList *playListC;
 public:
     explicit MainWindow(QWidget *parent = nullptr);
 
@@ -66,14 +72,20 @@ public:
     QVector<int> timestamps;
     QVector<QString> lyrics;
 
+    //打开侧边栏播放列表
+    void openPlayListC();
     // 声明一个枚举类型来表示播放模式
-    enum PlayMode { SingleLoop, Sequential, Random };
+    enum PlayMode {
+        SingleLoop, Sequential, Random
+    };
 
     // 声明一个变量来跟踪当前的播放模式
     PlayMode currentPlayMode = Sequential;
 
     // 声明一个枚举类型来表示歌词状态
-    enum LyricsModel{ yes , no};
+    enum LyricsModel {
+        yes, no
+    };
 
     // 声明一个变量来跟踪当前的歌词状态
     LyricsModel currenLyricsModel = no;
@@ -82,26 +94,45 @@ public:
 
 public slots:
 
-    void changePage(QListWidgetItem *current, QListWidgetItem *previous) const;
+    void changePage(QListWidgetItem *current, QListWidgetItem *previous);
+
     void startOrPauseMusic();
+
     void previousMusic();
+
     void nextMusic();
+
     void slot_valueChanged_progress(int value);
+
     void onDurationChanged(qint64 duration);
+
     void onPositionChanged(qint64 position);
+
     void togglePlayMode();
+
     void onSliderPressed();
+
     void updateCurrentProcessText();
-    bool eventFilter(QObject* , QEvent*);
+
+    bool eventFilter(QObject *, QEvent *);
+
     void setPlaySpeed();
+
     void lyricsModel();
+
     void creatLyricsWindow();
+
     void changeBackground();
+
     void helpShow();
+
     //打开播放详情页
     void openDetailWindow();
     void displayLyrics();
     void getLyrics(const QString& filepath);
+
+    //打开播放列表
+    void openPlayList();
 };
 
 #endif // MAINWINDOW_H

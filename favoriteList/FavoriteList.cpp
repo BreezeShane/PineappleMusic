@@ -25,7 +25,7 @@ void FavoriteList::setupUI() {
     refreshList->setIcon(QIcon("../resource/icon/refresh.svg"));
     deleteMyfPbt->setToolTip("取消喜欢");
     deleteMyfPbt->setFont(QFont("宋体", 13));
-    deleteMyfPbt->setIcon(QIcon("../resource/icon/like.svg"));
+    deleteMyfPbt->setIcon(QIcon("../resource/icon/dislike.svg"));
     refreshList->setToolTip("刷新列表");
     refreshList->setStyleSheet("QPushButton {"
                                 "border: none;"
@@ -93,11 +93,13 @@ void FavoriteList::deleteMyFavorite() {
 
 // 获取音乐信息
     QString selectedMusic = selectedIndex.data(Qt::DisplayRole).toString();
-    qDebug()<<"wswdwd"<<selectedMusic<<endl;
+//    qDebug()<<"wswdwd"<<selectedMusic<<endl;
 
 // 从模型中删除选中的音乐
     QStandardItemModel* model = qobject_cast<QStandardItemModel*>(favoriteListView->model());
     model->removeRow(selectedIndex.row());
+    favoriteList.removeAt(selectedIndex.row());
+    favoriteListName.removeAt(selectedIndex.row());
 
 // 从m3u文件中删除对应的数据
     QFile musicPlaylist("../resource/favoriteListFile.m3u");
@@ -126,6 +128,9 @@ void FavoriteList::deleteMyFavorite() {
 
 }
 void FavoriteList::updatePlayList() {
+    // 清空 favoriteList
+    favoriteList.clear();
+    favoriteListName.clear();
     QFile musicPlaylistFile ("../resource/favoriteListFile.m3u");
     auto *model = new QStandardItemModel;
     favoriteListView->setModel(model);
@@ -149,18 +154,18 @@ void FavoriteList::updatePlayList() {
             }
         }
     }
-
     // 添加歌曲信息到模型中
     for (const QString &line: titleLines) {
         QStringList parts = line.split(QRegExp(":"));
         if (parts.size() == 2) {
-
             QString title = parts[1];
             auto *item = new QStandardItem(title);
+            qDebug()<<title<<endl;
             favoriteListName.push_back(title);
             model->appendRow(item);
         }
     }
+    qDebug()<<favoriteList<<endl;
     musicPlaylistFile.close();
 }
 
