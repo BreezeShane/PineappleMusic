@@ -400,7 +400,7 @@ void MainWindow::setupUI() {
     connect(playList->getPlayListView(), &QListView::clicked, [&](const QModelIndex &index) {
         // 获取所选项的QMediaPlayer对象，并播放音乐
         int row = index.row();
-        qDebug() << index.row();
+       // qDebug() << index.row();
         if (row >= 0 && row < playList->getCurrentPlaylist().size()) {
             currentPlaylist = playList->getCurrentPlaylist();
             currentPlaylistName = playList->getCurrentPlaylistName();
@@ -417,7 +417,7 @@ void MainWindow::setupUI() {
     });
 }
 void MainWindow::openPlayListC() {
-        qDebug()<<currentPlaylistName<<"播放列表";
+       // qDebug()<<currentPlaylistName<<"播放列表";
         playListC->setCurrentPlaylistName(currentPlaylistName);
         playListC->setCurrentPlaylist(currentPlaylist);
         playListC->setCurrentPlay(currentPlay);
@@ -446,7 +446,7 @@ void MainWindow::retranslateUi() {
     this->setWindowTitle("Pineapple Music");
     this->setWindowIcon(QIcon("../resource/icon/app.png"));
 }
-
+//帮助文档
 void MainWindow::helpShow() {
     QMessageBox::about(this, u8"关于", " Pineapple Music| 一款精致小巧的本地音乐播放器\n"
                                        "【歌词文件说明】需要与对应歌曲MP3在同目录且同名（.lry文件）\n"
@@ -466,7 +466,7 @@ void MainWindow::changeBackground() {
     // 打开文件选择对话框，选择图片文件
     QString imagePath = QFileDialog::getOpenFileName(this, "选择图片", QDir::homePath(),
                                                      "Images (*.png *.jpg *.jpeg *.svg)");
-    qDebug() << "换肤" << endl;
+    //qDebug() << "换肤" << endl;
     // 如果用户选择了图片文件
     if (!imagePath.isEmpty()) {
         // 设置新的背景图路径

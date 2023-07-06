@@ -20,7 +20,7 @@ void Sidebar::setupUI() {
 
     QWidget *logo1 = new QWidget;
     logo1->setFixedHeight(150);
-    //logo1->setStyleSheet("border-image: url(../resource/icon/logo.png);background-size: stretch;");
+    logo1->setStyleSheet("border-image: url(../resource/icon/disk.svg);background-size: stretch;");
     mainLayout->addWidget(logo1);
 
     setupContentLists();

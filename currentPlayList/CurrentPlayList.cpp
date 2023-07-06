@@ -29,6 +29,7 @@ void CurrentPlayList::setupUI() {
     this->setPalette(palette);
     this->setLayout(mainLayout);
     connect(saveLocal, &QPushButton::clicked, this, &CurrentPlayList::saveCurrentMusic);
+
 }
 void CurrentPlayList::saveCurrentMusic() {
     QModelIndex index = playListView->currentIndex();
