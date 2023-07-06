@@ -95,8 +95,8 @@ void MainWindow::lyricsUi() {
     widget->setLayout(layoutV);
 }
 
-void MainWindow::creatLyricsWindow(){
-    if(currenLyricsModel == yes){
+void MainWindow::creatLyricsWindow() {
+    if (currenLyricsModel == yes) {
         widget->show();
     } else {
         widget->hide();
@@ -252,7 +252,7 @@ void MainWindow::setupUI() {
     //播放列表实例化
     playList = new CurrentPlayList;
     //侧边栏播放列表实例化
-    playListC=new PlayList;
+    playListC = new PlayList;
 
     retranslateUi();
     //开始 - 暂停
@@ -290,25 +290,26 @@ void MainWindow::setupUI() {
         }
     });
     //我喜欢列表点击事件
-    connect(mainContent->getFavoriteListPage()->getFavoriteListView(), &QListView::clicked, [&](const QModelIndex &index) {
-        // 获取所选项的QMediaPlayer对象，并播放音乐
-        int row = index.row();
-        qDebug() << index.row();
-        if (row >= 0 && row < mainContent->getFavoriteListPage()->getFavoriteList().size()) {
-            currentPlaylist = mainContent->getFavoriteListPage()->getFavoriteList();
-            currentPlaylistName = mainContent->getFavoriteListPage()->getFavoriteListName();
-            currentPlaylistLrc = mainContent->getFavoriteListPage()->getFavoriteListLrc();
-            currentPlay = currentPlaylist[row];
-            currentPlayName = currentPlaylistName[row];
-            currentPlayLrc = currentPlaylistLrc[row];
-            mediaPlayer->setMedia(QUrl::fromLocalFile(currentPlay));
-            mediaPlayer->play();
+    connect(mainContent->getFavoriteListPage()->getFavoriteListView(), &QListView::clicked,
+            [&](const QModelIndex &index) {
+                // 获取所选项的QMediaPlayer对象，并播放音乐
+                int row = index.row();
+                qDebug() << index.row();
+                if (row >= 0 && row < mainContent->getFavoriteListPage()->getFavoriteList().size()) {
+                    currentPlaylist = mainContent->getFavoriteListPage()->getFavoriteList();
+                    currentPlaylistName = mainContent->getFavoriteListPage()->getFavoriteListName();
+                    currentPlaylistLrc = mainContent->getFavoriteListPage()->getFavoriteListLrc();
+                    currentPlay = currentPlaylist[row];
+                    currentPlayName = currentPlaylistName[row];
+                    currentPlayLrc = currentPlaylistLrc[row];
+                    mediaPlayer->setMedia(QUrl::fromLocalFile(currentPlay));
+                    mediaPlayer->play();
 
-            playBar->setMusicName(currentPlayName);
-            playBar->getPbtStartOrPause()->setIcon(QIcon("../resource/icon/stopp.svg"));
-            playBar->getSlider()->setSliderPosition(0);
-        }
-    });
+                    playBar->setMusicName(currentPlayName);
+                    playBar->getPbtStartOrPause()->setIcon(QIcon("../resource/icon/stopp.svg"));
+                    playBar->getSlider()->setSliderPosition(0);
+                }
+            });
 
     connect(mainContent->getFromNetPage()->resultListView, &QListView::clicked, this, [=](const QModelIndex &index) {
         // 获取用户点击的项的数据
@@ -409,7 +410,7 @@ void MainWindow::setupUI() {
     connect(playList->getPlayListView(), &QListView::clicked, [&](const QModelIndex &index) {
         // 获取所选项的QMediaPlayer对象，并播放音乐
         int row = index.row();
-       // qDebug() << index.row();
+        // qDebug() << index.row();
         if (row >= 0 && row < playList->getCurrentPlaylist().size()) {
             currentPlaylist = playList->getCurrentPlaylist();
             currentPlaylistName = playList->getCurrentPlaylistName();
@@ -426,16 +427,18 @@ void MainWindow::setupUI() {
         }
     });
 }
+
 void MainWindow::openPlayListC() {
-       // qDebug()<<currentPlaylistName<<"播放列表";
-        playListC->setCurrentPlaylistName(currentPlaylistName);
-        playListC->setCurrentPlaylist(currentPlaylist);
-        playListC->setCurrentPlay(currentPlay);
-        playListC->setCurrentPlaylistLrc(currentPlaylistLrc);
-        playListC->setCurrentPlayLrc(currentPlayLrc);
-        playListC->setCurrentPlayName(currentPlayName);
-        playListC->show_list();
+    // qDebug()<<currentPlaylistName<<"播放列表";
+    playListC->setCurrentPlaylistName(currentPlaylistName);
+    playListC->setCurrentPlaylist(currentPlaylist);
+    playListC->setCurrentPlay(currentPlay);
+    playListC->setCurrentPlaylistLrc(currentPlaylistLrc);
+    playListC->setCurrentPlayLrc(currentPlayLrc);
+    playListC->setCurrentPlayName(currentPlayName);
+    playListC->show_list();
 }
+
 void MainWindow::openPlayList() {
 
     if (playList->isHidden()) {
@@ -456,6 +459,7 @@ void MainWindow::retranslateUi() {
     this->setWindowTitle("Pineapple Music");
     this->setWindowIcon(QIcon("../resource/icon/app.png"));
 }
+
 //帮助文档
 void MainWindow::helpShow() {
     QMessageBox::about(this, u8"关于", " Pineapple Music| 一款精致小巧的本地音乐播放器\n"
@@ -525,18 +529,18 @@ void MainWindow::previousMusic() {
             if (!currentPlaylist.empty() && !currentPlay.isEmpty()) {
                 mediaPlayer->stop();
                 for (int it = 0; it <= currentPlaylist.size() - 1; it++) {
-                    if(currentPlay == currentPlaylist[0]) {
-                        currentPlay = currentPlaylist[currentPlaylist.size()-1];
-                        currentPlayLrc = currentPlaylistLrc[currentPlaylistLrc.size()-1];
-                        currentPlayName = currentPlaylistName[currentPlaylistName.size()-1];
+                    if (currentPlay == currentPlaylist[0]) {
+                        currentPlay = currentPlaylist[currentPlaylist.size() - 1];
+                        currentPlayLrc = currentPlaylistLrc[currentPlaylistLrc.size() - 1];
+                        currentPlayName = currentPlaylistName[currentPlaylistName.size() - 1];
                         break;
                     } /*else if(currentPlay == currentPlaylist[size()]){
                         currentPlay = *(currentPlaylist.end()-2);
                         break;
                     }*/else if (currentPlaylist[it] == currentPlay) {
-                        currentPlay = currentPlaylist[it-1];
-                        currentPlayLrc = currentPlaylistLrc[it-1];
-                        currentPlayName = currentPlaylistName[it-1];
+                        currentPlay = currentPlaylist[it - 1];
+                        currentPlayLrc = currentPlaylistLrc[it - 1];
+                        currentPlayName = currentPlaylistName[it - 1];
                         break;
                     }
                 }
@@ -552,9 +556,9 @@ void MainWindow::previousMusic() {
                 mediaPlayer->stop();
                 for (int it = 0; it <= currentPlaylist.size() - 1; ++it) {
                     if (currentPlaylist[it] == currentPlay) {
-                        currentPlay = currentPlaylist[random_number%currentPlaylist.size()];
-                        currentPlayLrc = currentPlaylistLrc[random_number%currentPlaylistLrc.size()];
-                        currentPlayName = currentPlaylistName[random_number%currentPlaylistName.size()];
+                        currentPlay = currentPlaylist[random_number % currentPlaylist.size()];
+                        currentPlayLrc = currentPlaylistLrc[random_number % currentPlaylistLrc.size()];
+                        currentPlayName = currentPlaylistName[random_number % currentPlaylistName.size()];
                         break;
                     }
                 }
@@ -589,15 +593,15 @@ void MainWindow::nextMusic() {
             if (!currentPlaylist.empty() && !currentPlay.isEmpty()) {
                 mediaPlayer->stop();
                 for (int it = 0; it <= currentPlaylist.size() - 1; it++) {
-                    if(currentPlay == currentPlaylist[currentPlaylist.size()-1]) {
+                    if (currentPlay == currentPlaylist[currentPlaylist.size() - 1]) {
                         currentPlay = currentPlaylist[0];
                         currentPlayLrc = currentPlaylistLrc[0];
                         currentPlayName = currentPlaylistName[0];
                         break;
                     } else if (currentPlaylist[it] == currentPlay) {
-                        currentPlay = currentPlaylist[it+1];
-                        currentPlayLrc = currentPlaylistLrc[it+1];
-                        currentPlayName = currentPlaylistName[it+1];
+                        currentPlay = currentPlaylist[it + 1];
+                        currentPlayLrc = currentPlaylistLrc[it + 1];
+                        currentPlayName = currentPlaylistName[it + 1];
                         break;
                     }
                 }
@@ -613,9 +617,9 @@ void MainWindow::nextMusic() {
                 mediaPlayer->stop();
                 for (int it = 0; it <= currentPlaylist.size() - 1; ++it) {
                     if (currentPlaylist[it] == currentPlay) {
-                        currentPlay = currentPlaylist[random_number%currentPlaylist.size()];
-                        currentPlayLrc = currentPlaylistLrc[random_number%currentPlaylistLrc.size()];
-                        currentPlayName = currentPlaylistName[random_number%currentPlaylistLrc.size()];
+                        currentPlay = currentPlaylist[random_number % currentPlaylist.size()];
+                        currentPlayLrc = currentPlaylistLrc[random_number % currentPlaylistLrc.size()];
+                        currentPlayName = currentPlaylistName[random_number % currentPlaylistLrc.size()];
                         break;
                     }
                 }
@@ -706,7 +710,7 @@ void MainWindow::openDetailWindow() {
 
     if (detailWindow == nullptr) {
 //        detailWindow = new musicDetail(music);
-    musicDetail* detailWindow = new musicDetail(music, mediaPlayer, this);
+        detailWindow = new musicDetail(music, mediaPlayer);
 //        detailWindow = new PlayDetail(&music,mediaPlayer);
         detailWindow->show();
     } else {
@@ -744,7 +748,7 @@ void MainWindow::getLyrics(const QString& filepath){
 }
 
 void MainWindow::displayLyrics() {
-  int currentTime = mediaPlayer->position(); // 获取当前播放时间
+    int currentTime = mediaPlayer->position(); // 获取当前播放时间
     // 查找当前应该显示哪一句歌词
     int currentIndex = -1;
 
@@ -755,7 +759,7 @@ void MainWindow::displayLyrics() {
         currentIndex = i;
     }
     // 更新歌词显示
-    if (currentIndex >= 0 && currentIndex%2==0 && currentIndex <= lyrics.size() ) {
+    if (currentIndex >= 0 && currentIndex % 2 == 0 && currentIndex <= lyrics.size()) {
         labelLeft->setText(lyrics[currentIndex]);
     } else if (currentIndex >= 0 && currentIndex % 2 != 0 && currentIndex <= lyrics.size() ){
         labelRight->setText(lyrics[currentIndex]);

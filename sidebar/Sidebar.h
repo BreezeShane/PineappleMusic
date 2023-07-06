@@ -19,7 +19,7 @@ private:
     QListWidgetItem *favoriteList_item{};
     QListWidgetItem *fromNet_item{};
     QListWidgetItem *chatroom_item{};
-    QListWidgetItem *playList_item{};
+//    QListWidgetItem *playList_item{};
     QListWidget *contentLists{};
 
 
