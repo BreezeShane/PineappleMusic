@@ -42,7 +42,8 @@ public:
     void setMainLayout(QVBoxLayout *mainLayout);
 
     ~PlayDetail() override;
-
+public slots:
+    void displayLyrics();
 private:
     void setupUI();
 

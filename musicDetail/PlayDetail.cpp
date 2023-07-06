@@ -11,10 +11,17 @@ void PlayDetail::setupUI() {
 
     lrcLabel = new LyricWidget;
     lrcLabel->setLyricFile(music->getLrcPath());
-    lrcLabel->setCurrentTime(music->getPositionTime().toInt());
+
+    QObject::connect(mediaPlayer, &QMediaPlayer::positionChanged, [=](qint64 position) {
+        displayLyrics();
+    });
     playBar = new PlayBar(mediaPlayer);
     mainLayout->addWidget(lrcLabel);
     mainLayout->addWidget(playBar);
+    // 设置背景图的样式
+    QPalette palette;
+    palette.setBrush(backgroundRole(), QBrush(QPixmap("../resource/image/17.jpg")));
+    this->setPalette(palette);
     this->setLayout(mainLayout);
 }
 
@@ -66,6 +73,10 @@ QVBoxLayout *PlayDetail::getMainLayout() const {
 
 void PlayDetail::setMainLayout(QVBoxLayout *mainLayout) {
     PlayDetail::mainLayout = mainLayout;
+}
+
+void PlayDetail::displayLyrics() {
+    lrcLabel->setCurrentTime(mediaPlayer->position());
 }
 
 PlayDetail::~PlayDetail() = default;

@@ -6,6 +6,7 @@
 #include <QDebug>
 #include <QStandardItemModel>
 #include <QFileDialog>
+#include <QMessageBox>
 
 CurrentPlayList::CurrentPlayList(QWidget *parent)
         : QFrame(parent) {
@@ -20,6 +21,15 @@ void CurrentPlayList::setupUI() {
     playListView = new QListView;
     playListView->setStyleSheet("background-color: transparent;");
     saveLocal=new QPushButton("保存");
+    saveLocal->setStyleSheet("QPushButton{""border: 2px solid gray;"
+                                            "    padding: 4px;"
+                                            "}"
+                                            "QPushButton:hover {"
+                                            "    background-color: #F5F5DC;"
+                                            "}"
+                                            "QPushButton:pressed {"
+                                            "background-color: #FFFFF0;"
+                                            "}");
     mainLayout->addWidget(playListView);
     mainLayout->addWidget(saveLocal);
 
@@ -29,27 +39,48 @@ void CurrentPlayList::setupUI() {
     this->setPalette(palette);
     this->setLayout(mainLayout);
     connect(saveLocal, &QPushButton::clicked, this, &CurrentPlayList::saveCurrentMusic);
+
 }
-void CurrentPlayList::saveCurrentMusic() {
+void CurrentPlayList::saveCurrentMusic()
+{
     QModelIndex index = playListView->currentIndex();
     int row = index.row();
     currentPlay = currentPlaylist[row];
 
-    // 创建文件对话框，让用户选择保存的文件路径和名称
-    QString filePath = QFileDialog::getSaveFileName(this, "Save Music", "", "Music Files (*.mp3)");
+    QString sourceFilePath = currentPlay;  // 获取当前音乐的原始文件路径
 
-    // 检查用户是否选择了文件路径
-    if (!filePath.isEmpty()) {
-        QFile file(filePath);
-
-        if (file.open(QIODevice::WriteOnly)) {
-            file.write(currentPlay.toUtf8());
-            file.close();
-            qDebug() << "Music saved to" << filePath;
-        } else {
-            qDebug() << "Failed to open file for writing.";
-        }
+    QString destinationFolderPath = QFileDialog::getExistingDirectory(nullptr, "Select Destination Folder", QDir::homePath());
+    if (destinationFolderPath.isNull()) {
+        QMessageBox::information(this, "提示", "请选择目标文件夹");
+        return;
     }
+
+    QFileInfo fileInfo(sourceFilePath);
+    QString destinationFilePath = destinationFolderPath + "/" + fileInfo.fileName();
+
+    // 打开当前音乐文件
+    QFile sourceFile(sourceFilePath);
+    if (!sourceFile.open(QIODevice::ReadOnly)) {
+        QMessageBox::critical(this, "错误", "无法打开音乐文件");
+        return;
+    }
+
+    // 创建目标文件并打开以进行写入
+    QFile destinationFile(destinationFilePath);
+    if (!destinationFile.open(QIODevice::WriteOnly)) {
+        QMessageBox::critical(this, "错误", "无法创建目标文件");
+        return;
+    }
+
+    // 读取源文件并将数据写入目标文件
+    QByteArray data = sourceFile.readAll();
+    destinationFile.write(data);
+
+    // 关闭文件
+    sourceFile.close();
+    destinationFile.close();
+
+    QMessageBox::information(this, "提示", "音乐已保存到目标文件夹");
 }
 QListView *CurrentPlayList::getPlayListView() const {
     return playListView;
