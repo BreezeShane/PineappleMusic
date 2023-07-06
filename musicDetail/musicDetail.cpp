@@ -27,28 +27,47 @@ musicDetail::musicDetail(QWidget *parent) :
     uiBar->setGeometry(154,409,717,358);
 }
 
-//<<<<<<< HEAD
+
 musicDetail::musicDetail(const CloudMusic& currMusic, QMediaPlayer * player, QWidget *parent) :
         QWidget(parent), ui(new Ui::musicDetail) {
-//    this->setStyleSheet("background-color: transparent;border: 0px solid gray;border-radius:10px;");
+   // this->setStyleSheet("background-color: transparent;border: 0px solid gray;border-radius:10px;");
     mediaPlayer = player;
 //=======
 //musicDetail::musicDetail(CloudMusic currMusic, QWidget *parent) :
 //        QWidget(parent), ui(new Ui::musicDetail) { // on Coding...
-////    qDebug()<<"music detail!";
-////    qDebug()<<currMusic.getName();
-////    qDebug()<<currMusic.getAlbumUrl();
-//    //标题
-//    this->setWindowTitle("歌词详情");
-//    this->setWindowIcon(QIcon("../resource/icon/music.svg"));
-//    this->setStyleSheet("background-color: transparent;border: 2px solid gray;border-radius:10px;");
-//>>>>>>> fd0bdf3e850b0be4f558e771c37462e0ccff27be
+//    qDebug()<<"music detail!";
+//    qDebug()<<currMusic.getName();
+//    qDebug()<<currMusic.getAlbumUrl();
+    //标题
+    this->setWindowTitle("歌词详情");
+    this->setWindowIcon(QIcon("../resource/icon/music.svg"));
+
     uiBar = new PlayBar(this);
     uiBar->setupUI();
     ui->setupUi(this);
     uiBar->move((this->width() - ui->verticalLayoutWidget->width()) / 2, (this->height() + 3 * ui->verticalLayoutWidget->height()) / 4);
     uiBar->resize(ui->verticalLayoutWidget->width(), ui->verticalLayoutWidget->height());
 
+    //设置颜色
+    QPalette palette1 = ui->label_1->palette();  // 获取label的调色板
+    palette1.setColor(QPalette::WindowText, Qt::white);  // 设置文字颜色为白色
+    ui->label_1->setPalette(palette1);  // 应用修改后的调色板到label
+
+    QPalette palette2 = ui->label_2->palette();  // 获取label的调色板
+    palette2.setColor(QPalette::WindowText, Qt::white);
+    ui->label_2->setPalette(palette2);  // 应用修改后的调色板到label
+
+    QPalette palette3 = ui->label_3->palette();  // 获取label的调色板
+    palette3.setColor(QPalette::WindowText, Qt::white);
+    ui->label_3->setPalette(palette3);  // 应用修改后的调色板到label
+
+    QPalette palette4 = ui->label_4->palette();  // 获取label的调色板
+    palette4.setColor(QPalette::WindowText, Qt::white);
+    ui->label_4->setPalette(palette4);  // 应用修改后的调色板到label
+
+    QPalette palette5 = ui->label_5->palette();  // 获取label的调色板
+    palette5.setColor(QPalette::WindowText, Qt::white);
+    ui->label_5->setPalette(palette5);  // 应用修改后的调色板到label
     uiBar->setAlbum(currMusic.getAlbumUrl());
     const QString& lrcFilePath = currMusic.getLrcPath();
     if (lrcFilePath == "NoLrc") {
@@ -78,11 +97,6 @@ musicDetail::musicDetail(const CloudMusic& currMusic, QMediaPlayer * player, QWi
     QMap<int, QString>::iterator it = map.begin();
     connect(mediaPlayer, &QMediaPlayer::positionChanged, this, &musicDetail::onPositionChanged);
 }
-
-//void musicDetail::paintEvent(QPaintEvent *event) {
-//    QPainter painter(this);
-//    painter.drawPixmap(0,0,1200,800, QPixmap("../resource/bgp/bgp_musicDetail.jpg"));
-//}
 
 void musicDetail::onPositionChanged(qint64 position) {
     int pos = position / 10;
