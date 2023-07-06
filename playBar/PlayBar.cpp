@@ -81,6 +81,7 @@ void PlayBar::setupUI() {
 
     speedMenu = new QMenu(speedMenuBar);
     speedMenuBar->addAction(speedMenu->menuAction());
+    speedMenu->setStyleSheet("background: rgb(255, 255, 255);");
     speedMenu->setTitle(tr("1.0x"));
     //QMenu *playMenu = speedMenu->addMenu("1.0x");
 
@@ -114,6 +115,7 @@ void PlayBar::setupUI() {
     qhBoxLayout->addLayout(playCentralQv);
 
     qhBoxLayout->addWidget(pbtPlayList);    //播放列表按键
+    qhBoxLayout->addWidget(speedMenuBar);    //播放列表按键
     qhBoxLayout->addWidget(pbtLyrics);
     qhBoxLayout->addWidget(pbtModel);
     qhBoxLayout->addWidget(pbtPrevious);
