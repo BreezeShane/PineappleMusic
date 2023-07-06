@@ -78,11 +78,9 @@ void FromNet::setupUI() {
     QMenu* menu = new QMenu(resultListView);
 
     // 创建弹窗菜单项
-    QAction* playAction = new QAction("播放", menu);
+
     QAction* download = new QAction("下载", menu);
-    QAction* addPlay = new QAction("添加播放", menu);
-    menu->addAction(playAction);
-    menu->addAction(addPlay);
+
     menu->addAction(download);
 
 
@@ -102,34 +100,23 @@ void FromNet::setupUI() {
         }
     });
 
-    // 创建删除项的槽函数
-    connect(playAction, &QAction::triggered, [=]() {
-        // 获取ListView的选中项
-        QModelIndexList indexes = resultListView->selectionModel()->selectedIndexes();
-
-        // 删除选中项
-        for (const QModelIndex& index : indexes) {
-            resultListView->model()->removeRow(index.row());
-        }
-    });
-
-    // 创建添加播放项的槽函数
-    connect(addPlay, &QAction::triggered, [=]() {
-        // 获取ListView的选中项
-        QModelIndexList indexes = resultListView->selectionModel()->selectedIndexes();
-
-
-    });
 
     // 创建下载项的槽函数
     connect(download, &QAction::triggered, [=]() {
 
-        QString filename = QFileDialog::getExistingDirectory(nullptr, "Select Directory", QDir::homePath());
-        //QString filename = QFileDialog::getSaveFileName(this,"保存文件位置",QDir::currentPath());
-        qDebug()<<filename;
-        if(filename.isNull()){
-            QMessageBox::information(this,"提示", "请输入文件名");
-            return ;
+//        QString filename = QFileDialog::getExistingDirectory(nullptr, "Select Directory", QDir::homePath());
+//        //QString filename = QFileDialog::getSaveFileName(this,"保存文件位置",QDir::currentPath());
+//        qDebug()<<filename;
+//        if(filename.isNull()){
+//            QMessageBox::information(this,"提示", "请输入文件名");
+//            return ;
+//        }
+        //创建默认下载路径
+        QString filename = "C:/Music";
+        QDir folder(filename);
+        if (!folder.exists())
+        {
+            folder.mkpath(".");
         }
         // 获取ListView的选中项
         QModelIndexList indexes = resultListView->selectionModel()->selectedIndexes();
@@ -302,5 +289,6 @@ void FromNet::downloadFile(const QUrl &url, const QString &filePath) {
     reply->deleteLater();
     manager->deleteLater();
 }
+
 
 FromNet::~FromNet() = default;

@@ -85,7 +85,7 @@ void LocalMusic::setupUI() {
     addMusicPlayPbt=new QPushButton("我喜欢");
     addMusicPlayPbt->setFont(QFont("宋体", 13));
 
-        addMusicPlayPbt->setIcon(QIcon("../resource/icon/islike.svg"));
+    addMusicPlayPbt->setIcon(QIcon("../resource/icon/islike.svg"));
 
 
     addMusicPlayPbt->setStyleSheet("QPushButton {"
@@ -99,8 +99,22 @@ void LocalMusic::setupUI() {
                                    "QPushButton:pressed {"
                                    "background-color: #FFFFF0;"
                                    "}");
+    reflashpbt = new QPushButton(this);
+    reflashpbt->setIcon(QIcon("../resource/icon/refresh.svg"));
+    reflashpbt->setStyleSheet("QPushButton {"
+                                  "border: 2px;"
+                                  "border-radius:10px;"
+                                  "padding: 6px;"
+                                  "}"
+                                  "QPushButton:hover {"
+                                  "    background-color: #FFFFF0;"
+                                  "}"
+                                  "QPushButton:pressed {"
+                                  "    background-color:#FFFFF0;"
+                                  "}");
     // 在水平布局中添加按钮
     horizontalLayout->addStretch(); // 将按钮推到最右侧
+    horizontalLayout->addWidget(reflashpbt);
     horizontalLayout->addWidget(reloadMusicPbt);
     horizontalLayout->addSpacing(10); // 添加一些间距
     horizontalLayout->addWidget(addMusicPlayPbt);
@@ -113,9 +127,9 @@ void LocalMusic::setupUI() {
     localPlayListFile = new QFile("../resource/localMusicList.m3u");
     favoriteListFile=new QFile("../resource/favoriteListFile.m3u");
 
-
-
-    connect(reloadMusicPbt, SIGNAL(clicked()), this, SLOT(scanLocalMusic()));
+    //
+    connect(reflashpbt,SIGNAL(clicked()), this, SLOT(scanLocalMusic()));
+    connect(reloadMusicPbt, SIGNAL(clicked()), this, SLOT(setScanPath()));
     connect(addMusicPlayPbt, &QPushButton::clicked, this, &LocalMusic::addMusicToPlaylist);
     updateMusicList();
     retranslateUi();
@@ -126,16 +140,20 @@ void LocalMusic::retranslateUi() {
     reloadMusicPbt->setIcon(QIcon("../resource/icon/search.svg"));
 }
 
+//设置扫描路径
+void LocalMusic::setScanPath() {
+    // 创建一个文件对话框，让用户选择要扫描的目录
+    scanPath = QFileDialog::getExistingDirectory(nullptr, "Select Directory", QDir::homePath());
+    scanLocalMusic();
+}
+
 void LocalMusic::scanLocalMusic() {
     // 创建一个QMediaPlayer对象
-    // 创建一个文件对话框，让用户选择要扫描的目录
-    QString scanPath = QFileDialog::getExistingDirectory(nullptr, "Select Directory", QDir::homePath());
-
     if (!localPlayListFile->open(QIODevice::WriteOnly | QIODevice::Text)) {
         qWarning() << "Failed to open playlist file for writing.";
         return;
     }
-
+    addDownload();
     // 遍历目录中的所有文件
     QDir dir(scanPath);
     QStringList filters;
@@ -180,13 +198,16 @@ void LocalMusic::scanLocalMusic() {
             // handle other file types
             continue;
         }
-
     }
     localPlayListFile->close();
     updateMusicList();
 }
 
 void LocalMusic::updateMusicList() {
+    localMusicList.clear();
+    localMusicListLrc.clear();
+    localMusicListName.clear();
+
     auto *model = new QStandardItemModel;
     musicListView->setModel(model);
     if (!localPlayListFile->open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -209,6 +230,7 @@ void LocalMusic::updateMusicList() {
             }
         }
     }
+    localPlayListFile->close();
 
     // 添加歌曲信息到模型中
     for (const QString &line: titleLines) {
@@ -220,7 +242,7 @@ void LocalMusic::updateMusicList() {
             model->appendRow(item);
         }
     }
-    localPlayListFile->close();
+
 }
 void LocalMusic::addMusicToPlaylist() {
     QModelIndex index = musicListView->currentIndex();
@@ -269,13 +291,13 @@ void LocalMusic::addMusicToPlaylist() {
         out << "#EXTINF:" << musicName << endl;
         out << currentPlay << endl;
 
-
         favoriteListFile->close();
 
     } catch (const std::exception& e) {
         qWarning() << "An exception occurred: " << e.what();
     }
 }
+
 
 QListView *LocalMusic::getMusicListView() const {
     return musicListView;
@@ -295,6 +317,61 @@ const QVector<QString> &LocalMusic::getLocalMusicListName() const {
 
 void LocalMusic::setLocalMusicListName(const QVector<QString> &localMusicListName) {
     LocalMusic::localMusicListName = localMusicListName;
+}
+
+//添加下载后的文件
+void LocalMusic::addDownload() {
+    QString download_path = "C:\\Music";
+    // 遍历目录中的所有文件
+    QDir dir(download_path);
+    QStringList filters;
+    filters << "*.mp3" << "*.lrc";
+    dir.setNameFilters(filters);
+    QFileInfoList fileList = dir.entryInfoList();
+    for (const QFileInfo &fileInfo: fileList) {
+        QString suffix = fileInfo.suffix();
+        if (suffix == "mp3") {
+            // handle mp3 file
+            // 获取文件元数据
+            QMediaPlayer player;
+            player.setMedia(QUrl::fromLocalFile(fileInfo.filePath()));
+
+            // 获取LRC文件名和路径
+            QString lrcFileName = fileInfo.completeBaseName() + ".lrc";
+            QString lrcFilePath = fileInfo.absolutePath() + "/" + lrcFileName;
+            QFileInfo lrcFileInfo(lrcFilePath);
+
+            // 获取MP3文件的长度和标题
+//        QString lengthString = QString::number(player.duration() / 1000);
+            QString title = player.metaData("Title").toString();
+            if (title.isEmpty()) {
+                title = fileInfo.fileName();
+            }
+
+            // 写入m3u文件中
+            QTextStream out(localPlayListFile);
+            out.setCodec("UTF-8");
+//        out << "#EXTINF:" << lengthString << "," << title << "\n";
+            out << "#EXTINF:" << title << "\n";
+            out << fileInfo.filePath() << "\n";
+            if (lrcFileInfo.exists() && lrcFileInfo.isFile()) {
+                out << "lrc#" << lrcFileInfo.filePath() << "\n";
+            } else {
+                out << "lrc#NoLrc" << "\n";
+            }
+        } else if (suffix == "lrc") {
+            // handle lrc file
+            continue;
+        } else {
+            // handle other file types
+            continue;
+        }
+    }
+    //localPlayListFile->close();
+}
+
+void LocalMusic::reflash_mushic() {
+
 }
 
 

@@ -33,9 +33,11 @@ public:
     void downloadFile(const QUrl &url, const QString &filePath);
 
     void updateResultView();
+
     ~FromNet() override;
 public slots:
     void search_music();
+
 };
 
 #endif //PINEAPPLEMUSIC_FROMNET_H
