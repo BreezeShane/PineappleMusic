@@ -11,7 +11,10 @@ void PlayDetail::setupUI() {
 
     lrcLabel = new LyricWidget;
     lrcLabel->setLyricFile(music->getLrcPath());
-    lrcLabel->setCurrentTime(music->getPositionTime().toInt());
+
+    QObject::connect(mediaPlayer, &QMediaPlayer::positionChanged, [=](qint64 position) {
+        displayLyrics();
+    });
     playBar = new PlayBar(mediaPlayer);
     mainLayout->addWidget(lrcLabel);
     mainLayout->addWidget(playBar);
@@ -66,6 +69,10 @@ QVBoxLayout *PlayDetail::getMainLayout() const {
 
 void PlayDetail::setMainLayout(QVBoxLayout *mainLayout) {
     PlayDetail::mainLayout = mainLayout;
+}
+
+void PlayDetail::displayLyrics() {
+    lrcLabel->setCurrentTime(mediaPlayer->position());
 }
 
 PlayDetail::~PlayDetail() = default;

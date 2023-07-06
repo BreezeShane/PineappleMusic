@@ -11,9 +11,9 @@ LyricWidget::LyricWidget(QWidget *parent)
         : QLabel(parent)
         , m_currentIndex(0)
 {
-    this->setAlignment(Qt::AlignCenter);
-    this->setFont(QFont("Microsoft YaHei", 16));
-    this->setStyleSheet("color: white;");
+    setAlignment(Qt::AlignCenter);
+    setFont(QFont("Microsoft YaHei", 16));
+    setStyleSheet("color: white;");
 }
 
 void LyricWidget::setLyricFile(const QString &fileName)
