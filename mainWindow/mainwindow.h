@@ -59,8 +59,8 @@ private:
     qreal currentSpeed;
     qreal newSpeed;
 
-//    musicDetail* detailWindow= nullptr;
-    PlayDetail* detailWindow= nullptr;
+    musicDetail* detailWindow= nullptr;
+//    PlayDetail* detailWindow= nullptr;
     CloudMusic music;
     CurrentPlayList *playList;
     PlayList *playListC;
