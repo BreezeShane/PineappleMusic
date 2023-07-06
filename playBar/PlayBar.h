@@ -43,6 +43,7 @@ private:
     QHBoxLayout *playCentralQh{};
     MySlider *sliderProcess{};
     QLabel *music_name{};
+    QPushButton* pbtPlayList{};
 public:
     explicit PlayBar(QWidget *parent = nullptr);
 
@@ -81,6 +82,8 @@ public:
     QLabel *getMusicName() const;
 
     void setMusicName(QString musicName);
+
+    QPushButton *getPbtPlayList() const;
 
     ~PlayBar() override;
 

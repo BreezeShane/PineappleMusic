@@ -24,7 +24,7 @@ void PlayBar::setupUI() {
 
     playCentralQv = new QVBoxLayout;
     playCentralQh = new QHBoxLayout;
-    music_name = new QLabel("music name");
+    music_name = new QLabel("UnKnow");
     music_name->setStyleSheet("QLabel { border: none; padding-left: 10px; }");
     speedMenuBar = new QMenuBar();
     QSizePolicy sizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
@@ -101,6 +101,9 @@ void PlayBar::setupUI() {
     action3->setText("1.5x");
     action4->setText("2.0x");
 
+    pbtPlayList = new QPushButton();
+    pbtPlayList->setIcon(QIcon("../resource/icon/playList.svg"));
+
     qhBoxLayout->addWidget(album);
 
     playCentralQv->addWidget(music_name);
@@ -110,6 +113,7 @@ void PlayBar::setupUI() {
     playCentralQv->addLayout(playCentralQh);
     qhBoxLayout->addLayout(playCentralQv);
 
+    qhBoxLayout->addWidget(pbtPlayList);    //播放列表按键
     qhBoxLayout->addWidget(pbtLyrics);
     qhBoxLayout->addWidget(pbtModel);
     qhBoxLayout->addWidget(pbtPrevious);
@@ -203,6 +207,10 @@ QLabel *PlayBar::getMusicName() const {
 
 void PlayBar::setMusicName(QString musicName) {
     music_name->setText(musicName);
+}
+
+QPushButton *PlayBar::getPbtPlayList() const {
+    return pbtPlayList;
 }
 
 PlayBar::~PlayBar() = default;

@@ -2,7 +2,6 @@
 #include <QDesktopWidget>
 #include <QVBoxLayout>
 #include <iostream>
-#include <QTime>
 #include <QTimer>
 #include <QPropertyAnimation>
 #include <QMessageBox>
@@ -19,7 +18,6 @@
 #include "playBar/PlayBar.h"
 #include "musicDetail/musicDetail.h"
 #include <QGraphicsEffect>
-#include <QGraphicsOpacityEffect>
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 
@@ -223,6 +221,8 @@ void MainWindow::setupUI() {
 
     //实例化播放器
     mediaPlayer = new QMediaPlayer;
+    //播放列表实例化
+    playList = new PlayList;
 
     retranslateUi();
     //开始 - 暂停
@@ -370,6 +370,18 @@ void MainWindow::setupUI() {
     connect(personalizebt, &QPushButton::clicked, this, &MainWindow::changeBackground);
     //打开帮助文档
     connect(helpbt, &QPushButton::clicked, this, &MainWindow::helpShow);
+    //打开播放列表
+    connect(playBar->getPbtPlayList(), &QPushButton::clicked, this, &MainWindow::openPlayList);
+
+}
+
+void MainWindow::openPlayList() {
+
+    if (playList->isVisible()){
+        playList->hide();
+    } else{
+        playList->show();
+    }
 }
 
 void MainWindow::retranslateUi() {
