@@ -14,11 +14,6 @@ LyricWidget::LyricWidget(QWidget *parent)
     this->setAlignment(Qt::AlignCenter);
     this->setFont(QFont("Microsoft YaHei", 16));
     this->setStyleSheet("background-color: transparent;");
-    // 设置背景图的样式
-    QPalette palette;
-    palette.setBrush(backgroundRole(), QBrush(QPixmap("../resource/image/4.jpg")));
-    this->setPalette(palette);
-
 }
 
 void LyricWidget::setLyricFile(const QString &fileName)
