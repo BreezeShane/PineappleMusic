@@ -20,6 +20,7 @@
 #include "musicDetail/musicDetail.h"
 #include <QGraphicsEffect>
 #include <QGraphicsOpacityEffect>
+#include "favoriteList/FavoriteList.h"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 
@@ -118,11 +119,13 @@ void MainWindow::togglePlayMode() {
             break;
     }
 }
-
+//设置侧边栏点击
 void MainWindow::changePage(QListWidgetItem *current, QListWidgetItem *previous) const {
     if (!current)
         current = previous;
     mainContent->getContentPages()->setCurrentIndex(sidebar->getContentLists()->row(current));
+    if(sidebar->getContentLists()->row(current) == 0){
+    }
 }
 
 void MainWindow::setupUI() {
