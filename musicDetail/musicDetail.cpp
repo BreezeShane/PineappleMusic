@@ -30,17 +30,9 @@ musicDetail::musicDetail(QWidget *parent) :
 
 musicDetail::musicDetail(const CloudMusic& currMusic, QMediaPlayer * player, QWidget *parent) :
         QWidget(parent), ui(new Ui::musicDetail) {
-   // this->setStyleSheet("background-color: transparent;border: 0px solid gray;border-radius:10px;");
     mediaPlayer = player;
-//=======
-//musicDetail::musicDetail(CloudMusic currMusic, QWidget *parent) :
-//        QWidget(parent), ui(new Ui::musicDetail) { // on Coding...
-//    qDebug()<<"music detail!";
-//    qDebug()<<currMusic.getName();
-//    qDebug()<<currMusic.getAlbumUrl();
-    //标题
     this->setWindowTitle("歌词详情");
-    this->setWindowIcon(QIcon("../resource/icon/music.svg"));
+    this->setWindowIcon(QIcon("../resource/icon/disk.svg"));
 
     uiBar = new PlayBar(this);
     uiBar->setupUI();
@@ -49,6 +41,7 @@ musicDetail::musicDetail(const CloudMusic& currMusic, QMediaPlayer * player, QWi
     uiBar->resize(ui->verticalLayoutWidget->width(), ui->verticalLayoutWidget->height());
 
     //设置颜色
+    uiBar->setStyleSheet("background-color: white;border: 0px solid gray;border-radius:10px;");
     QPalette palette1 = ui->label_1->palette();  // 获取label的调色板
     palette1.setColor(QPalette::WindowText, Qt::white);  // 设置文字颜色为白色
     ui->label_1->setPalette(palette1);  // 应用修改后的调色板到label
