@@ -58,7 +58,6 @@ public:
 
     void retranslateUi();
 
-
     // 声明一个枚举类型来表示播放模式
     enum PlayMode { SingleLoop, Sequential, Random };
 

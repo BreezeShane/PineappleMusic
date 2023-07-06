@@ -8,6 +8,7 @@
 #include <QWidget>
 #include <QFile>
 #include <QFrame>
+#include <QMediaPlayer>
 #include "playBar/PlayBar.h"
 #include "model/CloudMusic.h"
 
@@ -23,14 +24,17 @@ Q_OBJECT
 
 public:
     explicit musicDetail(QWidget *parent = nullptr);
-    explicit musicDetail(CloudMusic currMusic,QWidget *parent = nullptr);
+    explicit musicDetail(const CloudMusic& currMusic, QMediaPlayer* player,QWidget *parent = nullptr);
     void paintEvent(QPaintEvent *event) override; // Set background pic.
+    void onPositionChanged(qint64 position);
 
     ~musicDetail() override;
 
 private:
     Ui::musicDetail *ui;
     PlayBar *uiBar;
+    QMediaPlayer* mediaPlayer;
+    QMap<int, QString> map;
 };
 
 

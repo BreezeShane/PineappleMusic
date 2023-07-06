@@ -1,4 +1,3 @@
 /cmake-build-debug/
 /.idea/
-/resource/local_playlist.m3u
-/resource/favoriteListFile.m3u
+/resource/*.m3u

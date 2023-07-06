@@ -619,7 +619,7 @@ void MainWindow::openDetailWindow() {
     music.setDuration(durationTime.toInt());
     music.setPositionTime(positionTime);
     music.setLrcPath(currentPlayLrc);
-    musicDetail* win = new musicDetail(music);
+    musicDetail* win = new musicDetail(music, mediaPlayer, this);
 //    win->setMusic(music);
     win->show();
 }
