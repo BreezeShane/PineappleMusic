@@ -15,6 +15,7 @@
 #include <QMenu>
 #include <QMenuBar>
 #include <QAction>
+#include <QMediaPlayer>
 #include "qSlider/MySlider.h"
 
 class PlayBar : public QFrame {
@@ -24,6 +25,7 @@ private:
     QPushButton *album{};    //专辑图片
     QPushButton *pbtModel{};  //播放模式按钮
     QPushButton *pbtLyrics{};
+    QMediaPlayer* mediaPlayer{};
 public:
     QPushButton *getPbtLyrics() const;
 
@@ -43,8 +45,10 @@ private:
     QHBoxLayout *playCentralQh{};
     MySlider *sliderProcess{};
     QLabel *music_name{};
+    QPushButton* pbtPlayList{};
 public:
     explicit PlayBar(QWidget *parent = nullptr);
+    explicit PlayBar(QMediaPlayer* mediaPlayer,QWidget *parent = nullptr);
 
     void setupUI();
 
@@ -81,6 +85,8 @@ public:
     QLabel *getMusicName() const;
 
     void setMusicName(QString musicName);
+
+    QPushButton *getPbtPlayList() const;
 
     ~PlayBar() override;
 

@@ -22,11 +22,13 @@ void MainContent::initContentPages() {
     favoriteListPage = new FavoriteList;
     fromNetPage = new FromNet;
     chatroomPage = new Chatroom;
+    playListPage = new PlayList;
     contentPages = new QStackedWidget;
     contentPages->addWidget(favoriteListPage);
     contentPages->addWidget(localMusicPage);
     contentPages->addWidget(fromNetPage);
     contentPages->addWidget(chatroomPage);
+    contentPages->addWidget(playListPage);
     qhBoxLayout->addWidget(contentPages);
 }
 
@@ -42,13 +44,7 @@ void MainContent::setLocalMusicPage(LocalMusic *localMusicPage) {
     MainContent::localMusicPage = localMusicPage;
 }
 
-FavoriteList *MainContent::getPlayListPage() const {
-    return favoriteListPage;
-}
 
-void MainContent::setPlayListPage(FavoriteList *playListPage) {
-    MainContent::favoriteListPage = playListPage;
-}
 
 FromNet *MainContent::getFromNetPage() const {
     return fromNetPage;
@@ -56,6 +52,30 @@ FromNet *MainContent::getFromNetPage() const {
 
 void MainContent::setFromNetPage(FromNet *fromNetPage) {
     MainContent::fromNetPage = fromNetPage;
+}
+
+FavoriteList *MainContent::getFavoriteListPage() const {
+    return favoriteListPage;
+}
+
+void MainContent::setFavoriteListPage(FavoriteList *favoriteListPage) {
+    MainContent::favoriteListPage = favoriteListPage;
+}
+
+Chatroom *MainContent::getChatroomPage() const {
+    return chatroomPage;
+}
+
+void MainContent::setChatroomPage(Chatroom *chatroomPage) {
+    MainContent::chatroomPage = chatroomPage;
+}
+
+PlayList *MainContent::getPlayListPage() const {
+    return playListPage;
+}
+
+void MainContent::setPlayListPage(PlayList *playListPage) {
+    MainContent::playListPage = playListPage;
 }
 
 MainContent::~MainContent() = default;

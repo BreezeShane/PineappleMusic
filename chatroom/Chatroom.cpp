@@ -48,6 +48,7 @@ void Chatroom::setupUI() {
 
     nickNameInput = new QLineEdit();
     nickNameInput->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Maximum);
+    nickNameInput->setPlaceholderText("输入昵称");
     nickNameInput->setFixedHeight(32);
     nickNameInput->setStyleSheet("QLineEdit{"
                                  "background-color: #F5F5F5;"
@@ -78,7 +79,7 @@ void Chatroom::setupUI() {
 
     //消息显示框
     infoListView = new QListView();
-    //infoListView->setFont(QFont("Arial", 14));
+    infoListView->setFont(QFont("宋体", 12));
     infoListView->setSpacing(7);
     infoListView->setStyleSheet("QListView {"
                                   "background-color: #F5F5F5;"
@@ -99,6 +100,7 @@ void Chatroom::setupUI() {
 
     messageInput = new QLineEdit();
     messageInput->setFixedHeight(32);
+    messageInput->setPlaceholderText("输入消息");
     messageInput->setStyleSheet("QLineEdit{"
                                  "background-color: #F5F5F5;"
                                  "border: 2px solid gray;"
@@ -158,13 +160,13 @@ void Chatroom::ClientDate() {
     QString message = name + "       " + str +"\n     " + info;
 
     //在listview中显示
-    QStandardItem *item2 = new QStandardItem();
+    QStandardItem *item2 = new QStandardItem(message);
 
-    QFont font1("宋体", 12, QFont::Normal);
-    QFont font2("Times", 15, QFont::Normal);
-    item2->setData(message, Qt::DisplayRole);
-    item2->setData(font1, Qt::FontRole);
-    item2->setData(font2, Qt::FontRole + 1);
+//    QFont font1("宋体", 12, QFont::Normal);
+//    QFont font2("Times", 15, QFont::Normal);
+//    item2->setData(message, Qt::DisplayRole);
+//    item2->setData(font1, Qt::FontRole);
+//    item2->setData(font2, Qt::FontRole + 1);
 
     item2->setTextAlignment(Qt::AlignLeft);
     model->appendRow(item2);
@@ -193,7 +195,7 @@ void Chatroom::server_start() {
 
     QString information = name + " : " + message;
 
-    QString local_info = "[我] "+ name + "       " + str + "\n     " + message;
+    QString local_info = "[我] "+ name + "       " + str + "\n       " + message;
     QByteArray data = QString(information).toUtf8();
 
     //发送
@@ -203,11 +205,11 @@ void Chatroom::server_start() {
     //在listview中显示
     QStandardItem *item1 = new QStandardItem(local_info);
 
-    QFont font1("宋体", 12, QFont::Normal);
-    QFont font2("Times", 15, QFont::Normal);
-    item1->setData(local_info, Qt::DisplayRole);
-    item1->setData(font1, Qt::FontRole);
-    item1->setData(font2, Qt::FontRole + 1);
+//    QFont font1("宋体", 12, QFont::Normal);
+//    QFont font2("Times", 15, QFont::Normal);
+//    item1->setData(local_info, Qt::DisplayRole);
+//    item1->setData(font1, Qt::FontRole);
+//    item1->setData(font2, Qt::FontRole + 1);
     item1->setTextAlignment(Qt::AlignLeft);
     model->appendRow(item1);
     infoListView->setModel(model);
@@ -254,7 +256,7 @@ void Chatroom::on_join_clicked() {
         connect(socket,&QTcpSocket::connected,[=](){
            // QMessageBox::information(this,"连接提示","连接成功");
             QMessageBox* msgBox = new QMessageBox(QMessageBox::Information, "连接提示", "连接成功", QMessageBox::NoButton, this);
-            QTimer::singleShot(2000, msgBox, &QMessageBox::close);
+            QTimer::singleShot(1400, msgBox, &QMessageBox::close);
             msgBox->exec();
         });
 

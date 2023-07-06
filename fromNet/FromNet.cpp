@@ -16,6 +16,7 @@
 #include <QMenu>
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QTimer>
 
 FromNet::FromNet(QWidget *parent)
         : QFrame(parent) {
@@ -30,6 +31,7 @@ void FromNet::setupUI() {
     topLayout = new QHBoxLayout;
     keyword_input = new QLineEdit;
     keyword_input->setFixedHeight(50);
+    keyword_input->setPlaceholderText("输入歌曲名称搜索");
     keyword_input->setStyleSheet("QLineEdit{"
                                  "background-color: #F5F5F5;"
                                  "border: 2px solid gray;"
@@ -77,11 +79,9 @@ void FromNet::setupUI() {
     QMenu* menu = new QMenu(resultListView);
 
     // 创建弹窗菜单项
-    QAction* playAction = new QAction("播放", menu);
+
     QAction* download = new QAction("下载", menu);
-    QAction* addPlay = new QAction("添加播放", menu);
-    menu->addAction(playAction);
-    menu->addAction(addPlay);
+
     menu->addAction(download);
 
 
@@ -90,38 +90,34 @@ void FromNet::setupUI() {
 
 // 创建customContextMenuRequested信号槽
     connect(resultListView, &QListView::customContextMenuRequested, [=](const QPoint& pos) {
-        // 在ListView上显示自定义菜单
-        menu->exec(resultListView->mapToGlobal(pos));
-    });
 
-    // 创建删除项的槽函数
-    connect(playAction, &QAction::triggered, [=]() {
-        // 获取ListView的选中项
-        QModelIndexList indexes = resultListView->selectionModel()->selectedIndexes();
+        // 获取右键单击的项的索引
+        QModelIndex index = resultListView->indexAt(pos);
 
-        // 删除选中项
-        for (const QModelIndex& index : indexes) {
-            resultListView->model()->removeRow(index.row());
+        // 如果右键单击的位置在任何项上，则显示自定义菜单
+        if (index.isValid()) {
+            // 在ListView上显示自定义菜单
+            menu->exec(resultListView->mapToGlobal(pos));
         }
     });
 
-    // 创建添加播放项的槽函数
-    connect(addPlay, &QAction::triggered, [=]() {
-        // 获取ListView的选中项
-        QModelIndexList indexes = resultListView->selectionModel()->selectedIndexes();
-
-
-    });
 
     // 创建下载项的槽函数
     connect(download, &QAction::triggered, [=]() {
 
-        QString filename = QFileDialog::getExistingDirectory(nullptr, "Select Directory", QDir::homePath());
-        //QString filename = QFileDialog::getSaveFileName(this,"保存文件位置",QDir::currentPath());
-        qDebug()<<filename;
-        if(filename.isNull()){
-            QMessageBox::information(this,"提示", "请输入文件名");
-            return ;
+//        QString filename = QFileDialog::getExistingDirectory(nullptr, "Select Directory", QDir::homePath());
+//        //QString filename = QFileDialog::getSaveFileName(this,"保存文件位置",QDir::currentPath());
+//        qDebug()<<filename;
+//        if(filename.isNull()){
+//            QMessageBox::information(this,"提示", "请输入文件名");
+//            return ;
+//        }
+        //创建默认下载路径
+        QString filename = "C:/Music";
+        QDir folder(filename);
+        if (!folder.exists())
+        {
+            folder.mkpath(".");
         }
         // 获取ListView的选中项
         QModelIndexList indexes = resultListView->selectionModel()->selectedIndexes();
@@ -133,7 +129,7 @@ void FromNet::setupUI() {
             songId = index.data(Qt::UserRole).toInt();
         }
 
-        QString url = "https://service-qbrcywo4-1314545420.gz.apigw.tencentcs.com/release/song/url";
+        QString url = "http://service-qbrcywo4-1314545420.gz.apigw.tencentcs.com/release/song/url";
         QUrlQuery query;
         query.addQueryItem("id", QString::number(songId));
         url.append("?" + query.toString());
@@ -181,7 +177,7 @@ void FromNet::search_music() {
     songs.clear();
     keyword = keyword_input->text();
     auto *manager = new QNetworkAccessManager(this);
-    QString url = "https://service-qbrcywo4-1314545420.gz.apigw.tencentcs.com/release/search";
+    QString url = "http://service-qbrcywo4-1314545420.gz.apigw.tencentcs.com/release/search";
     QUrlQuery query;
     query.addQueryItem("keywords", keyword);
     query.addQueryItem("limit", "2");
@@ -283,11 +279,17 @@ void FromNet::downloadFile(const QUrl &url, const QString &filePath) {
         if (file.open(QIODevice::WriteOnly)) {
             file.write(reply->readAll());
             file.close();
+
+            // 在文件下载完成后，创建 QTimer 对象，定时显示提示框
+            QTimer::singleShot(500, this, [=](){
+                QMessageBox::information(nullptr, "下载完成", "文件已下载完成！");
+            });
         }
     }
 
     reply->deleteLater();
     manager->deleteLater();
 }
+
 
 FromNet::~FromNet() = default;

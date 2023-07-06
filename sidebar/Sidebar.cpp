@@ -20,7 +20,7 @@ void Sidebar::setupUI() {
 
     QWidget *logo1 = new QWidget;
     logo1->setFixedHeight(150);
-    //logo1->setStyleSheet("border-image: url(../resource/icon/logo.png);background-size: stretch;");
+    logo1->setStyleSheet("border-image: url(../resource/icon/disk.svg);background-size: stretch;");
     mainLayout->addWidget(logo1);
 
     setupContentLists();
@@ -61,6 +61,12 @@ void Sidebar::setupContentLists() {
     chatroom_item->setIcon(QIcon("../resource/icon/message.svg"));
     chatroom_item->setTextAlignment(Qt::AlignHCenter);
     chatroom_item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+
+    playList_item = new QListWidgetItem(contentLists);
+    playList_item->setText(tr("播放列表"));
+    playList_item->setIcon(QIcon("../resource/icon/play.svg"));
+    playList_item->setTextAlignment(Qt::AlignHCenter);
+    playList_item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 }
 
 QListWidget *Sidebar::getContentLists() const {

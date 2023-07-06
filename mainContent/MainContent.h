@@ -13,6 +13,7 @@
 #include "favoriteList/FavoriteList.h"
 #include "fromNet/FromNet.h"
 #include "chatroom/Chatroom.h"
+#include "playList/PlayList.h"
 class MainContent : public QFrame
 {
     Q_OBJECT
@@ -23,6 +24,7 @@ private:
     FavoriteList* favoriteListPage;
     FromNet* fromNetPage;
     Chatroom* chatroomPage;
+    PlayList* playListPage;
 public:
     QStackedWidget *getContentPages() const;
 
@@ -34,9 +36,17 @@ public:
 
     void setLocalMusicPage(LocalMusic *localMusicPage);
 
-    FavoriteList *getPlayListPage() const;
+    FavoriteList *getFavoriteListPage() const;
 
-    void setPlayListPage(FavoriteList *playListPage);
+    void setFavoriteListPage(FavoriteList *favoriteListPage);
+
+    Chatroom *getChatroomPage() const;
+
+    void setChatroomPage(Chatroom *chatroomPage);
+
+    PlayList *getPlayListPage() const;
+
+    void setPlayListPage(PlayList *playListPage);
 
     FromNet *getFromNetPage() const;
 
