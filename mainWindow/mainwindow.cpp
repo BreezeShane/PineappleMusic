@@ -281,17 +281,17 @@ void MainWindow::setupUI() {
         }
     });
     //我喜欢列表点击事件
-    connect(mainContent->getPlayListPage()->getFavoriteListView(), &QListView::clicked, [&](const QModelIndex &index) {
+    connect(mainContent->getFavoriteListPage()->getFavoriteListView(), &QListView::clicked, [&](const QModelIndex &index) {
         // 获取所选项的QMediaPlayer对象，并播放音乐
         int row = index.row();
         qDebug() << index.row();
-        if (row >= 0 && row < mainContent->getPlayListPage()->getFavoriteList().size()) {
-            currentPlaylist = mainContent->getPlayListPage()->getFavoriteList();
-            currentPlaylistName = mainContent->getPlayListPage()->getFavoriteListName();
-            currentPlaylistLrc = mainContent->getPlayListPage()->getFavoriteListLrc();
+        if (row >= 0 && row < mainContent->getFavoriteListPage()->getFavoriteList().size()) {
+            currentPlaylist = mainContent->getFavoriteListPage()->getFavoriteList();
+            currentPlaylistName = mainContent->getFavoriteListPage()->getFavoriteListName();
+            currentPlaylistLrc = mainContent->getFavoriteListPage()->getFavoriteListLrc();
             currentPlay = currentPlaylist[row];
             currentPlayName = currentPlaylistName[row];
-            currentPlayLrc = currentPlaylistLrc[row];
+//            currentPlayLrc = currentPlaylistLrc[row];
             mediaPlayer->setMedia(QUrl::fromLocalFile(currentPlay));
             mediaPlayer->play();
 
@@ -738,19 +738,19 @@ void MainWindow::displayLyrics() {
     int currentIndex = -1;
     for (int i = 0; i < timestamps.size()-1; i = i+1) {
         if (timestamps[i] > currentTime+1000) {
-            qDebug()<< currentTime;
+//            qDebug()<< currentTime;
             break;
         }
         currentIndex = i;
     }
-    qDebug() << currentIndex;
+//    qDebug() << currentIndex;
     // 更新歌词显示
     if (currentIndex >= 0 && currentIndex%2==0 && currentIndex <= lyrics.size() ) {
         labelLeft->setText(lyrics[currentIndex]);
-        qDebug()<< lyrics[currentIndex];
+//        qDebug()<< lyrics[currentIndex];
     } else if (currentIndex >= 0 && currentIndex % 2 != 0 && currentIndex <= lyrics.size() ){
         labelRight->setText(lyrics[currentIndex]);
-        qDebug()<< lyrics[currentIndex];
+//        qDebug()<< lyrics[currentIndex];
     }
 }
 
