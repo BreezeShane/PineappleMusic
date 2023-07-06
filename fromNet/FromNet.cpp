@@ -90,8 +90,15 @@ void FromNet::setupUI() {
 
 // 创建customContextMenuRequested信号槽
     connect(resultListView, &QListView::customContextMenuRequested, [=](const QPoint& pos) {
-        // 在ListView上显示自定义菜单
-        menu->exec(resultListView->mapToGlobal(pos));
+
+        // 获取右键单击的项的索引
+        QModelIndex index = resultListView->indexAt(pos);
+
+        // 如果右键单击的位置在任何项上，则显示自定义菜单
+        if (index.isValid()) {
+            // 在ListView上显示自定义菜单
+            menu->exec(resultListView->mapToGlobal(pos));
+        }
     });
 
     // 创建删除项的槽函数
