@@ -61,7 +61,7 @@ void LocalMusic::setupUI() {
     reloadMusicPbt = new QPushButton(this);
     reloadMusicPbt->setToolTip("扫描本地音乐");
     reloadMusicPbt->setStyleSheet("QPushButton {"
-                                  "border: 2px solid gray;"
+//                                  "border: 2px solid gray;"
                                   "border-radius:10px;"
                                   "padding: 6px;"
                                   "}"
@@ -83,14 +83,14 @@ void LocalMusic::setupUI() {
     musicListView->setStyleSheet("QListView{padding:5px;background-color: transparent;}"
                                  "QListView::item{padding:5px;}"
     );
-    addMusicPlayPbt = new QPushButton("我喜欢");
+    addMusicPlayPbt = new QPushButton();
     addMusicPlayPbt->setFont(QFont("宋体", 13));
 
     addMusicPlayPbt->setIcon(QIcon("../resource/icon/islike.svg"));
 
 
     addMusicPlayPbt->setStyleSheet("QPushButton {"
-                                   "border: 2px solid gray;"
+//                                   "border: 2px solid gray;"
                                    "border-radius:10px;"
                                    "padding: 6px;"
                                    "}"
@@ -250,7 +250,6 @@ void LocalMusic::addMusicToPlaylist() {
     QModelIndex index = musicListView->currentIndex();
     int row = index.row();
     QTimer *timer = new QTimer(this);
-
     connect(addMusicPlayPbt, &QPushButton::clicked, this, [=]() {
         // 设置新的图标
         addMusicPlayPbt->setIcon(QIcon("../resource/icon/like.svg"));
@@ -268,7 +267,6 @@ void LocalMusic::addMusicToPlaylist() {
         QMessageBox::information(nullptr, "提示", "请选择音乐");
         return;
     }
-
     try {
         currentPlay = localMusicList[row];
         currentPlayLrc = localMusicListLrc[row];
@@ -277,10 +275,8 @@ void LocalMusic::addMusicToPlaylist() {
 
         if (index.isValid()) {
             musicName = index.data(Qt::DisplayRole).toString();
-//            qDebug() << "jjj" << index.data(Qt::DisplayRole).toString() << endl;
             playlistModel->appendRow(new QStandardItem(musicName));
         }
-
         //把播放文件写入musicPlayList.m3u文件
         if (!favoriteListFile->open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text)) {
             qWarning() << "Failed to open playlist file for writing.";
@@ -288,7 +284,6 @@ void LocalMusic::addMusicToPlaylist() {
         }
 
         QTextStream out(favoriteListFile);
-
         out.setCodec("UTF-8");
         out << "#EXTINF:" << musicName << endl;
         out << currentPlay << endl;

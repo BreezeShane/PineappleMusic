@@ -50,7 +50,8 @@ void CurrentPlayList::saveCurrentMusic()
     int row = index.row();
     currentPlay = currentPlaylist[row];
     QString sourceFilePath = currentPlay;  // 获取当前音乐的原始文件路径
-    QString destinationFolderPath = QFileDialog::getExistingDirectory(nullptr, "Select Destination Folder", QDir::homePath());
+    QString destinationFolderPath = QFileDialog::getExistingDirectory(nullptr,
+     "Select Destination Folder", QDir::homePath());
     if (destinationFolderPath.isNull()) {
         QMessageBox::information(this, "提示", "请选择目标文件夹");
         return;

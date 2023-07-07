@@ -109,7 +109,6 @@ void FavoriteList::deleteMyFavorite() {
         QString fileContent = QString::fromUtf8(musicPlaylist.readAll());
         // 查找选中音乐所在行的起始位置
         int startIndex = fileContent.indexOf(selectedMusic);
-
         // 查找选中音乐所在行的结束位置
         int endIndex = fileContent.indexOf('\n', startIndex);
         if (endIndex == -1) { // 如果选中音乐是文件的最后一行
